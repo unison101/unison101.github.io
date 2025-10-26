@@ -1,0 +1,5613 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <title>Fortran 101</title>	  
+    <style>
+
+body {
+    /* Diseño Limpio: Fondo sutilmente gris para diferenciar del contenido */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: #2c3e50;
+    background-color: #f9f9f9; 
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal con sombra para efecto de "tarjeta" flotante */
+.theme-light {
+    max-width: 850px;
+    margin: 40px auto; /* Mayor margen superior e inferior */
+    padding: 30px 40px;
+    background-color: #ffffff; /* El contenido se ve blanco sobre el fondo gris */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Encabezado principal centrado y destacado */
+h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Fuente sans-serif para contraste */
+    text-align: center; /* Solicitud: H1 centrado */
+    font-size: 2.5em;
+    color: #00a8a8; /* Color de acento */
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #00a8a8; /* Línea de acento gruesa */
+}
+
+/* Otros Encabezados */
+h2 {
+    color: #34495e;
+    font-size: 1.8em;
+    border-left: 5px solid #00a8a8; /* Barra lateral de acento */
+    padding-left: 10px;
+    margin-top: 2em;
+    margin-bottom: 0.8em;
+}
+
+/* Enlaces */
+a:not(.boton) {
+    color: #00a8a8;
+    text-decoration: none;
+    border-bottom: 1px dashed #00a8a8; /* Subrayado punteado moderno */
+}
+
+a:not(.boton):hover {
+    color: #008888;
+    border-bottom: 1px solid #008888;
+}
+
+/* Botones (Clase .boton) */
+.boton {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 8px 5px 8px 0;
+    background-color: #00a8a8;
+    color: #ffffff;
+    text-decoration: none;
+    border: none;
+    border-radius: 50px; /* Bordes muy redondeados (píldora) */
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85em;
+}
+
+.boton:hover {
+    background-color: #008888;
+    transform: translateY(-1px); /* Efecto 3D sutil */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Código y Bloques de Código */
+code {
+    background-color: #ecf0f1;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'Inconsolata', 'Fira Code', monospace;
+    font-size: 0.9em;
+    color: #c0392b; /* Rojo sutil para código en línea */
+}
+
+pre {
+    background-color: #36495b; /* Azul oscuro para bloques */
+    color: #e8eaf6; /* Texto blanco en el bloque */
+    padding: 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Inconsolata', 'Fira Code', monospace;
+    font-size: 0.95em;
+    margin-bottom: 25px;
+}
+        
+    </style>
+    
+  
+    
+  </head>
+<body class="theme-light">
+
+
+
+
+<h1>FORTRAN 101</h1>
+
+<h2 id="intro">INTRODUCCIÓN</h2>
+
+<p>Este documento presenta una colección de 100 ejercicios diseñados para una inmersión completa y estructurada en la programación con <strong>Fortran 90</strong>. Fortran (Formula Translation) es el lenguaje fundamental en la computación científica y el cálculo de alto rendimiento (HPC), destacando por su eficiencia en el manejo de operaciones numéricas, arrays y paralelismo.</p>
+
+<p>El enfoque pedagógico de esta guía está diseñado para construir el conocimiento de forma incremental, iniciando con los conceptos sintácticos más básicos y avanzando progresivamente hacia la modularidad, la manipulación avanzada de arrays (característica clave de Fortran 90) y la gestión de la precisión numérica.</p>
+
+<p>La estructura de los ejercicios se divide en seis módulos clave:</p>
+
+<ol>
+<li><p><strong>Fundamentos:</strong> Sintaxis, tipos de datos, I/O simple y operadores.
+Establece la base necesaria para cualquier programa. Incluye el manejo de las peculiaridades de Fortran (ej. división entera).</p></li>
+<li><p><strong>Control de Flujo:</strong> Estructuras condicionales (<code>IF</code>, <code>CASE</code>) y bucles (<code>DO</code>).
+Introduce la capacidad de tomar decisiones y repetir operaciones, esencial antes de la manipulación de estructuras de datos complejas.</p></li>
+<li><p><strong>Arrays y Matrices:</strong> Declaración, manipulación vectorial, secciones de <em>array</em> y funciones intrínsecas (<code>SUM</code>, <code>MATMUL</code>).
+Fortran está optimizado para la computación con matrices. Este módulo explota el manejo eficiente de arrays nativo de F90.</p></li>
+<li><p><strong>Procedimientos:</strong> Organización del código mediante subrutinas y funciones, argumentos con <code>INTENT</code> y recursividad.
+Enseña la organización del código, la reutilización y el manejo de interfaces de procedimientos."</p></li>
+<li><p><strong>Modularidad y Archivos:</strong> Uso de <code>MODULE</code> para la reutilización de código, tipos derivados y E/S a archivos.
+Introduce la programación modular, crucial para proyectos grandes en F90/F95, y la persistencia de datos."</p></li>
+<li><p><strong>Programación Numérica Avanzada:</strong> Manejo de precisión (<code>KIND</code>), tipos <code>COMPLEX</code> y técnicas numéricas esenciales.
+Cubre aspectos avanzados y específicos de la ciencia/ingeniería, propósito principal de Fortran."</p></li>
+</ol>
+
+
+<p>Cada ejercicio incluye un <strong>Objetivo</strong> claro que define el concepto técnico a dominar, las <strong>Instrucciones</strong> detalladas para su implementación y una sección de <strong>Conceptos</strong> que actúa como referencia rápida a la sintaxis principal.</p>
+
+<p>El dominio de estos ejercicios proporcionará una base técnica sólida, preparando al estudiante para el desarrollo de programas eficientes y robustos en entornos de cálculo científico.</p>
+
+
+
+<h2 id="contenido">CONTENIDO</h2>
+
+<a href="#ejercicio_1" class="boton">Fundamentos</a><br>
+<a href="#ejercicio_21" class="boton">Control de Flujo</a><br>
+<a href="#ejercicio_41" class="boton">Arrays y Matrices</a><br>
+<a href="#ejercicio_61" class="boton">Procedimientos</a><br>
+<a href="#ejercicio_81" class="boton">Modularidad y Archivos</a><br>
+<a href="#ejercicio_91" class="boton">Programación Numérica</a><br>	
+
+
+
+
+
+
+
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_1">Ejercicio 1</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá la estructura básica de un programa Fortran 90, incluyendo las sentencias obligatorias y el uso de la sentencia <strong><code>PRINT</code></strong> con formato libre.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un programa simple utilizando las sentencias <code>PROGRAM</code>, <code>IMPLICIT NONE</code> y <code>END PROGRAM</code>.</li>
+<li>Utilice la sentencia <code>PRINT *</code> para mostrar el mensaje &ldquo;Hola, Mundo Fortran 90.&rdquo; en la consola.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>PROGRAM</code>, <code>END PROGRAM</code>, <code>IMPLICIT NONE</code>, <code>PRINT *</code> (Formato libre).</p>
+
+<a href="#respuesta_1" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_2">Ejercicio 2</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá el uso de la sentencia <strong><code>WRITE</code></strong> y su diferencia con <strong><code>PRINT</code></strong> al especificar unidades de salida y formatos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un programa que declare una variable entera <code>CODIGO</code>. Asigne el valor 10.</li>
+<li>Imprima el valor usando: 1) La sentencia <code>PRINT *</code>. 2) La sentencia <code>WRITE(*,*)</code> (unidad y formato por defecto). 3) La sentencia <code>WRITE(UNIT=6, FMT=*)</code> (unidad estándar de salida, formato por defecto).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTEGER</code>, <code>WRITE</code>, <code>PRINT</code>, Unidad de salida <code>*</code>, Unidad de salida 6, Especificador de formato <code>*</code>.</p>
+
+<a href="#respuesta_2" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_3">Ejercicio 3</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y asignará valores a los tipos de datos numéricos intrínsecos <strong><code>INTEGER</code></strong> y <strong><code>REAL</code></strong> y practicará el uso del operador de asignación (<code>=</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera llamada <code>CONTADOR</code> y asígnele el valor 25.</li>
+<li>Declare una variable real llamada <code>TEMPERATURA</code> y asígnele el valor 36.5.</li>
+<li>Imprima ambas variables en una sola línea, separadas por un espacio.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTEGER</code>, <code>REAL</code>, Declaración, Asignación.</p>
+
+<a href="#respuesta_3" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_4">Ejercicio 4</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los operadores aritméticos básicos (<strong><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code></strong>) en expresiones simples y observará la jerarquía de operadores.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare variables enteras <code>A=10</code>, <code>B=5</code>, <code>C=2</code>.</li>
+<li>Calcule y muestre el resultado de las siguientes expresiones, asignando cada resultado a una variable diferente: a) <code>A + B * C</code>. b) <code>(A + B) / C</code>. c) <code>B ** C</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code>, Precedencia de operadores.</p>
+
+<a href="#respuesta_4" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_5">Ejercicio 5</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el concepto de <strong>división entera</strong> al operar con variables de tipo <code>INTEGER</code> y comprenderá la promoción de tipos a <code>REAL</code> cuando sea necesario para obtener resultados precisos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un programa que declare dos variables enteras (<code>dividendo</code>, <code>divisor</code>) con valores 11 y 4, y calcule y muestre el resultado de su división (división entera).</li>
+<li>Declare dos variables reales (<code>dividendo_r</code>, <code>divisor_r</code>) con valores 11.0 y 4.0, y calcule y almacene el resultado de su división en otra variable real. Muestre este resultado.</li>
+<li>Comente la diferencia en las salidas.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTEGER</code>, <code>REAL</code>, Operador de división (<code>/</code>), Conversión implícita de tipos, División entera.</p>
+
+<a href="#respuesta_5" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_6">Ejercicio 6</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manipulará y mostrará datos de tipo <strong><code>CHARACTER</code></strong>, incluyendo la declaración de longitud fija y el uso del operador de concatenación (<code>//</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable de carácter <code>NOMBRE</code> con longitud 10 y asígnele su nombre.</li>
+<li>Declare otra variable de carácter <code>SALUDO</code> con longitud 20 y asígnele el valor &ldquo;Hola, bienvenido &rdquo;.</li>
+<li>Imprima la frase completa concatenando <code>SALUDO</code> y <code>NOMBRE</code> en la sentencia <code>PRINT</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>CHARACTER(LEN=n)</code>, Concatenación (<code>//</code>), Longitud fija de caracteres.</p>
+
+<a href="#respuesta_6" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_7">Ejercicio 7</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la sentencia <strong><code>READ</code></strong> para la entrada de datos por consola, comprendiendo la unidad de lectura por defecto.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos variables, una entera (<code>NUMERO_ENTERO</code>) y una real (<code>NUMERO_REAL</code>).</li>
+<li>Solicite al usuario que ingrese ambos valores.</li>
+<li>Utilice la sentencia <code>READ (*, *)</code> para leer los valores desde la entrada estándar.</li>
+<li>Muestre los valores leídos y verifique que el tipo de dato se haya almacenado correctamente.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>READ (*,*)</code>, Entrada estándar <code>*</code> (Unidad 5), Lectura interactiva.</p>
+
+<a href="#respuesta_7" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_8">Ejercicio 8</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>FORMAT</code></strong> para controlar la apariencia de la salida de datos numéricos y de caracteres (<strong>I, F, A</strong>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>MASA</code> (Real, valor 45.678) y <code>ID_CLIENTE</code> (Entero, valor 1234).</li>
+<li>Escriba el valor de <code>ID_CLIENTE</code> utilizando el especificador de formato <strong><code>I5</code></strong> (5 posiciones).</li>
+<li>Escriba el valor de <code>MASA</code> utilizando el especificador <strong><code>F8.2</code></strong> (8 posiciones totales, 2 decimales).</li>
+<li>Muestre la etiqueta &ldquo;RESULTADOS:&rdquo; usando <strong><code>A</code></strong>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>WRITE(UNIT, FMT=label)</code>, <code>FORMAT</code>, Especificadores <code>I</code> (Entero), <code>F</code> (Real), <code>A</code> (Carácter).</p>
+
+<a href="#respuesta_8" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_9">Ejercicio 9</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la sentencia <strong><code>PARAMETER</code></strong> para definir constantes simbólicas de forma legible y eficiente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una constante simbólica llamada <code>DIAS_SEMANA</code> con el valor 7.</li>
+<li>Defina una constante real <code>PI</code> con el valor 3.14159.</li>
+<li>Declare una variable real <code>RADIO</code> con valor 10.0 y use la constante <code>PI</code> para calcular y mostrar el área (Área = π * Radio**2).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>PARAMETER</code>, Constantes simbólicas, Legibilidad del código.</p>
+
+<a href="#respuesta_9" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_10">Ejercicio 10</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá y utilizará el tipo de dato <strong><code>LOGICAL</code></strong> y sus valores booleanos para representar condiciones de verdad.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos variables lógicas: <code>ES_MAYOR</code> y <code>ES_PAR</code>.</li>
+<li>Asigne <code>ES_MAYOR</code> al valor <code>.TRUE.</code> y <code>ES_PAR</code> al valor <code>.FALSE.</code>.</li>
+<li>Muestre los valores de ambas variables.</li>
+<li>Muestre el resultado de la operación <code>ES_MAYOR .AND. ES_PAR</code> y <code>ES_MAYOR .OR. ES_PAR</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>LOGICAL</code>, Valores <code>.TRUE.</code>, <code>.FALSE.</code>, Operadores lógicos <code>.AND.</code>, <code>.OR.</code>.</p>
+
+<a href="#respuesta_10" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_11">Ejercicio 11</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los <strong>operadores relacionales</strong> de Fortran 90 (<code>.LT.</code>, <code>.GT.</code>, <code>.LE.</code>, <code>.GE.</code>, <code>.EQ.</code>, <code>.NE.</code>) para comparar valores numéricos y obtendrá un resultado de tipo lógico.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos variables enteras: <code>VALOR_A = 25</code> y <code>VALOR_B = 30</code>.</li>
+<li>Declare tres variables lógicas: <code>ES_MENOR</code>, <code>ES_IGUAL</code>, <code>ES_DIFERENTE</code>.</li>
+<li>Asigne los resultados de las siguientes comparaciones: <code>VALOR_A</code> menor que <code>VALOR_B</code>, <code>VALOR_A</code> igual a <code>VALOR_B</code>, y <code>VALOR_A</code> diferente de <code>VALOR_B</code>.</li>
+<li>Muestre el valor de las tres variables lógicas.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores relacionales (<code>.LT.</code>, <code>.EQ.</code>, <code>.NE.</code>), Tipos lógicos.</p>
+
+<a href="#respuesta_11" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_12">Ejercicio 12</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la forma moderna de los operadores relacionales (<strong><code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>==</code>, <code>/=</code></strong>) introducida en Fortran 90.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Repita el Ejercicio 11, pero reemplace los operadores relacionales antiguos (<code>.LT.</code>, <code>.EQ.</code>, etc.) por sus equivalentes modernos (<code>&lt;</code>, <code>==</code>, etc.).</li>
+<li>Verifique que los resultados lógicos sean idénticos.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores relacionales modernos (<code>&lt;</code>, <code>&gt;</code>), Equivalencia sintáctica.</p>
+
+<a href="#respuesta_12" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_13">Ejercicio 13</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante gestionará el <strong>truncamiento de datos</strong> al asignar un valor real a una variable entera y utilizará la función intrínseca <strong><code>INT()</code></strong> para forzar una conversión explícita.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable real <code>VALOR_R = 7.99</code>.</li>
+<li>Declare una variable entera <code>VALOR_I</code>.</li>
+<li>Asigne <code>VALOR_R</code> directamente a <code>VALOR_I</code>. Muestre <code>VALOR_I</code> y observe el truncamiento.</li>
+<li>Asigne <code>INT(VALOR_R)</code> a otra variable entera <code>VALOR_I2</code>. Muestre <code>VALOR_I2</code> y comente la diferencia con el punto anterior.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Conversión de tipos (coerción), Truncamiento, Función intrínseca <code>INT()</code>.</p>
+
+<a href="#respuesta_13" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_14">Ejercicio 14</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>REAL()</code></strong> para realizar la conversión explícita de un entero a un real y evitar la división entera.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos enteros: <code>NUM = 20</code> y <code>DEN = 7</code>.</li>
+<li>Calcule y muestre la división entera (<code>NUM / DEN</code>).</li>
+<li>Calcule y muestre la división real aplicando la función <code>REAL()</code> a al menos uno de los operandos antes de la división para forzar el resultado real.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>División de reales, Función intrínseca <code>REAL()</code>, Conversión explícita de tipos.</p>
+
+<a href="#respuesta_14" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_15">Ejercicio 15</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la E/S con formato para controlar la precisión y la alineación de la salida de números <strong><code>REAL</code></strong> utilizando los especificadores <strong><code>F</code></strong> y <strong><code>E</code></strong> (notación científica).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable real <code>VELOCIDAD = 299792.458</code>.</li>
+<li>Muestre <code>VELOCIDAD</code> usando el especificador <strong><code>F12.3</code></strong> (total 12 posiciones, 3 decimales).</li>
+<li>Muestre la misma variable usando el especificador <strong><code>E15.8</code></strong> (notación científica, 15 posiciones, 8 decimales).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>FORMAT</code>, Especificador <code>F</code> (Formato fijo), Especificador <code>E</code> (Notación científica), Precisión de formato.</p>
+
+<a href="#respuesta_15" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_16">Ejercicio 16</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la sentencia <strong><code>DATA</code></strong> para la inicialización estática y no ejecutable de variables al inicio del programa.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare variables enteras <code>X</code>, <code>Y</code>, <code>Z</code>.</li>
+<li>Utilice la sentencia <code>DATA</code> para inicializar <code>X</code> con 50, <code>Y</code> con 100, y <code>Z</code> con 150.</li>
+<li>Muestre la suma de las tres variables.</li>
+<li><em>Opcional: Verifique si la sentencia <code>DATA</code> debe ir antes o después de sentencias ejecutables.</em></li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>DATA</code>, Inicialización estática, Sentencias no ejecutables.</p>
+
+<a href="#respuesta_16" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_17">Ejercicio 17</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manipulará y accederá a una porción de una cadena de caracteres (<strong>Subcadena</strong> o <em>Substring</em>), comprendiendo la indexación basada en 1.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una cadena de caracteres <code>TEXTO = "Fortran 90 Programacion"</code>.</li>
+<li>Extraiga y muestre la palabra &ldquo;Fortran&rdquo; (posiciones 1 a 7).</li>
+<li>Extraiga y muestre la subcadena que contiene solo el número &ldquo;90&rdquo; (posiciones 9 a 10).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Subcadenas (<code>cadena(inicio:fin)</code>), Indexación basada en 1, <code>CHARACTER</code>.</p>
+
+<a href="#respuesta_17" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_18">Ejercicio 18</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará las funciones intrínsecas de cadena <strong><code>LEN()</code></strong> y <strong><code>INDEX()</code></strong> para determinar la longitud de una cadena y la posición de una subcadena.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una cadena <code>FRASE = "El compilador gfortran es rapido"</code>.</li>
+<li>Muestre la longitud total de <code>FRASE</code> usando <code>LEN()</code>.</li>
+<li>Use la función <code>INDEX()</code> para encontrar la posición inicial de la subcadena &ldquo;gfortran&rdquo; dentro de <code>FRASE</code>. Muestre la posición.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>LEN()</code>, Función intrínseca <code>INDEX()</code>.</p>
+
+<a href="#respuesta_18" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_19">Ejercicio 19</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manipulará el tipo <strong><code>LOGICAL</code></strong> utilizando los operadores de equivalencia lógica (<code>.EQV.</code>, <code>.NEQV.</code>) y negación (<code>.NOT.</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos variables lógicas: <code>P = .TRUE.</code> y <code>Q = .FALSE.</code>.</li>
+<li>Muestre el resultado de la negación de <code>P</code> (<code>.NOT. P</code>).</li>
+<li>Muestre el resultado de <code>P</code> es lógicamente equivalente a <code>Q</code> (<code>P .EQV. Q</code>).</li>
+<li>Muestre el resultado de <code>P</code> no es lógicamente equivalente a <code>Q</code> (<code>P .NEQV. Q</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operador <code>.NOT.</code>, Operadores de equivalencia lógica (<code>.EQV.</code>, <code>.NEQV.</code>).</p>
+
+<a href="#respuesta_19" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_20">Ejercicio 20</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante diseñará una tabla de constantes y usará la <strong>E/S con formato</strong> para crear un reporte sencillo, integrando todos los tipos básicos y el espaciado.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina constantes <code>PARAMETER</code>: <code>NOMBRE_PROYECTO</code> (Carácter), <code>VERSION</code> (Real), <code>MAX_ITERACIONES</code> (Entero), <code>FINALIZADO</code> (Lógico).</li>
+<li>Asigne valores: &ldquo;ANALISIS NUMERICO&rdquo;, 1.5, 500, <code>.TRUE.</code>.</li>
+<li>Utilice una única sentencia <code>WRITE</code> con un <strong><code>FORMAT</code></strong> para generar una salida que contenga todos los datos con alineación y etiquetas limpias, usando especificadores <code>A</code>, <code>F</code>, <code>I</code>, y <code>L</code> (Lógico).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Integración de <code>PARAMETER</code> y <code>FORMAT</code>, Especificadores <code>A</code>, <code>F</code>, <code>I</code>, <code>L</code>, Espaciado (<code>X</code>).</p>
+
+<a href="#respuesta_20" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_21">Ejercicio 21</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia de control de flujo <strong><code>IF</code></strong> (<em>Simple</em>) para ejecutar un bloque de código basado en una única condición lógica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera <code>NUMERO</code>.</li>
+<li>Lea un valor para <code>NUMERO</code> desde la consola.</li>
+<li>Utilice una sentencia <code>IF</code> para comprobar si <code>NUMERO</code> es positivo (mayor que 0). Si es positivo, imprima &ldquo;El número es positivo.&rdquo;</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>IF</code>, Operador relacional <code>&gt;</code>, Entrada de datos.</p>
+
+<a href="#respuesta_21" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_22">Ejercicio 22</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la estructura de control <strong><code>IF-ELSE</code></strong> para ejecutar uno de dos bloques de código mutuamente excluyentes.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare y lea un valor para la variable entera <code>EDAD</code>.</li>
+<li>Utilice la estructura <code>IF-ELSE</code> para comprobar si <code>EDAD</code> es mayor o igual a 18.</li>
+<li>Si es verdadero (<code>.TRUE.</code>), imprima &ldquo;Es mayor de edad&rdquo;. Si es falso (<code>.FALSE.</code>), imprima &ldquo;Es menor de edad&rdquo;.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Estructura <code>IF-ELSE</code>, Operador relacional <code>&gt;=</code>.</p>
+
+<a href="#respuesta_22" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_23">Ejercicio 23</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la estructura de control <strong><code>IF-ELSE IF-ELSE</code></strong> para gestionar múltiples condiciones anidadas o secuenciales.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable real <code>CALIFICACION</code> y lea su valor (entre 0.0 y 10.0).</li>
+<li>Utilice la estructura <code>IF-ELSE IF-ELSE</code> para clasificar la calificación:
+
+<ul>
+<li>Si es <code>&gt;= 9.0</code>, imprimir &ldquo;Excelente&rdquo;.</li>
+<li>Si es <code>&gt;= 7.0</code> y <code>&lt; 9.0</code>, imprimir &ldquo;Notable&rdquo;.</li>
+<li>En cualquier otro caso (<code>&lt; 7.0</code>), imprimir &ldquo;Insuficiente&rdquo;.</li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Estructura <code>IF-ELSE IF-ELSE</code>, Gestión de múltiples condiciones.</p>
+
+<a href="#respuesta_23" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_24">Ejercicio 24</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el <strong><code>IF</code> Lógico Condensado</strong> (<em>Logical IF Statement</em>) para ejecutar una única instrucción de forma concisa.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera <code>X = 5</code>.</li>
+<li>Utilice la sentencia <code>IF</code> condensada (en una sola línea) para cambiar el valor de <code>X</code> a 100 si <code>X</code> es menor que 10.</li>
+<li>Muestre el valor final de <code>X</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>IF</code> lógica (una línea), Concisión.</p>
+
+<a href="#respuesta_24" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_25">Ejercicio 25</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará un bucle de recuento fijo utilizando la sentencia <strong><code>DO-END DO</code></strong> y controlará el paso (incremento) del contador.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>DO</code> cuyo contador (<code>I</code>) inicie en 1 y termine en 10.</li>
+<li>Dentro del bucle, imprima solo los números impares (1, 3, 5, 7, 9) utilizando un paso de 2 en la sentencia <code>DO</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle <code>DO-END DO</code>, Contador, Paso de bucle (Incremento).</p>
+
+<a href="#respuesta_25" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_26">Ejercicio 26</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará bucles <strong><code>DO</code> anidados</strong> para recorrer una estructura bidimensional y aplicará un formato de salida constante.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice dos bucles <code>DO</code> anidados: el bucle externo para las filas (<code>I = 1 a 3</code>) y el interno para las columnas (<code>J = 1 a 3</code>).</li>
+<li>Dentro del bucle interno, imprima el producto <code>I * J</code>.</li>
+<li>Asegúrese de que cada fila (bucle externo) se imprima en una línea separada.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucles <code>DO</code> anidados, Control de salida de línea en I/O.</p>
+
+<a href="#respuesta_26" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_27">Ejercicio 27</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>EXIT</code></strong> para terminar prematuramente la ejecución de un bucle <code>DO</code> basándose en una condición interna.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>DO</code> que debería ejecutarse de 1 a 100.</li>
+<li>Dentro del bucle, compruebe si el contador (<code>I</code>) ha alcanzado el valor 42.</li>
+<li>Si <code>I = 42</code>, utilice <code>EXIT</code> para terminar el bucle.</li>
+<li>Fuera del bucle, imprima el último valor de <code>I</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>EXIT</code>, Terminación prematura de bucle, Condicional <code>IF</code> dentro de bucle.</p>
+
+<a href="#respuesta_27" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_28">Ejercicio 28</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>CYCLE</code></strong> para omitir la ejecución del resto del bloque de código dentro de un bucle y pasar a la siguiente iteración.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>DO</code> que itere de 1 a 10.</li>
+<li>Dentro del bucle, use <code>IF</code> para comprobar si el contador (<code>I</code>) es divisible por 3.</li>
+<li>Si es divisible por 3, utilice <code>CYCLE</code> para omitir la impresión.</li>
+<li>En los demás casos, imprima el valor de <code>I</code>. (Salida esperada: 1, 2, 4, 5, 7, 8, 10).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>CYCLE</code>, Continuación de la siguiente iteración, Operador <code>MODULO</code>.</p>
+
+<a href="#respuesta_28" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_29">Ejercicio 29</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará las etiquetas de bucle (nombres) en las sentencias <strong><code>DO</code></strong>, <strong><code>EXIT</code></strong> y <strong><code>CYCLE</code></strong> para controlar bucles anidados de forma precisa.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree dos bucles <code>DO</code> anidados y nombre el bucle externo como <code>BUCLE_EXTERNO</code>.</li>
+<li>Dentro del bucle interno, si una condición (ej. <code>I*J &gt; 20</code>) es verdadera, use <code>EXIT BUCLE_EXTERNO</code> para terminar la ejecución de <strong>ambos</strong> bucles.</li>
+<li>Imprima los valores de <code>I</code> y <code>J</code> inmediatamente después del <code>EXIT</code> para verificar la terminación.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Etiquetas de bucle (nombres), Control de bucles anidados con <code>EXIT</code> etiquetado.</p>
+
+<a href="#respuesta_29" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_30">Ejercicio 30</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia de control <strong><code>SELECT CASE</code></strong> para sustituir una cadena de estructuras <code>IF-ELSE IF</code> complejas, mejorando la legibilidad.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare y lea una variable entera <code>OPCION</code> (valores posibles: 1 a 3).</li>
+<li>Utilice la estructura <code>SELECT CASE</code> para evaluar <code>OPCION</code>:
+
+<ul>
+<li>Caso 1: Imprimir &ldquo;Opción de Archivo&rdquo;.</li>
+<li>Caso 2: Imprimir &ldquo;Opción de Edición&rdquo;.</li>
+<li>Caso 3: Imprimir &ldquo;Opción de Configuración&rdquo;.</li>
+<li><code>CASE DEFAULT</code>: Imprimir &ldquo;Opción no válida&rdquo;.</li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>SELECT CASE</code>, <code>CASE</code> discreto, <code>CASE DEFAULT</code>, Legibilidad del código.</p>
+
+<a href="#respuesta_30" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_31">Ejercicio 31</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>SELECT CASE</code></strong> utilizando rangos y conjuntos de valores discretos para la evaluación de un número.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare y lea una variable entera <code>NUMERO_DADO</code> (simulando un dado, valores 1-6).</li>
+<li>Utilice <code>SELECT CASE</code> para evaluar <code>NUMERO_DADO</code>:
+
+<ul>
+<li>Caso 1: Imprimir &ldquo;Valor mínimo&rdquo;.</li>
+<li>Caso 6: Imprimir &ldquo;Valor máximo&rdquo;.</li>
+<li>Casos 2 a 5: Imprimir &ldquo;Valor intermedio&rdquo;.</li>
+<li><code>CASE DEFAULT</code>: Imprimir &ldquo;Error de lectura&rdquo;.</li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>SELECT CASE</code> con rangos (<code>valor:valor</code>), Conjuntos discretos (<code>CASE (v1, v2)</code>), <code>CASE DEFAULT</code>.</p>
+
+<a href="#respuesta_31" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_32">Ejercicio 32</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará un bucle de condición infinita (<code>DO</code> sin límites) y utilizará la sentencia <strong><code>EXIT</code></strong> para simular un bucle <code>WHILE</code> (<em>pre-condicional</em>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Inicialice una variable entera <code>CONTADOR</code> a 1.</li>
+<li>Cree un bucle <code>DO</code> sin contador de control.</li>
+<li>Dentro del bucle, use un <code>IF</code> para comprobar si <code>CONTADOR</code> es mayor que 15. Si es así, use <code>EXIT</code>.</li>
+<li>Imprima el valor de <code>CONTADOR</code> y luego increméntelo en 1.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle <code>DO</code> infinito, Simulación de <code>WHILE</code>, Sentencia <code>EXIT</code>.</p>
+
+<a href="#respuesta_32" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_33">Ejercicio 33</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante simulará un bucle <code>DO WHILE</code> utilizando la forma pre-condicional explícita de Fortran 90.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera <code>INTENTO = 0</code>.</li>
+<li>Utilice la sentencia <strong><code>DO WHILE</code></strong> para ejecutar el cuerpo del bucle <strong>mientras</strong> <code>INTENTO</code> sea menor que 5.</li>
+<li>Dentro del bucle, incremente <code>INTENTO</code> e imprima su valor.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>DO WHILE</code>, Bucle pre-condicional.</p>
+
+<a href="#respuesta_33" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_34">Ejercicio 34</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>MODULO()</code></strong> junto con <code>IF</code> para determinar la paridad de un número entero.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera <code>NUMERO</code>.</li>
+<li>Lea un valor para <code>NUMERO</code>.</li>
+<li>Utilice <code>IF</code> y la función <code>MODULO()</code> para determinar si <code>NUMERO</code> es par (<code>MODULO(NUMERO, 2) == 0</code>).</li>
+<li>Imprima &ldquo;El número es par&rdquo; o &ldquo;El número es impar&rdquo; según corresponda.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>MODULO()</code>, Paridad, Condicional <code>IF</code>.</p>
+
+<a href="#respuesta_34" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_35">Ejercicio 35</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará un <strong>Menú de Opciones</strong> interactivo utilizando una estructura de bucle infinito con <code>SELECT CASE</code> y una sentencia <code>EXIT</code> controlada por el usuario.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un bucle <code>DO</code> infinito.</li>
+<li>Dentro del bucle, muestre un menú: (1) Iniciar, (2) Configurar, (0) Salir.</li>
+<li>Lea la opción del usuario.</li>
+<li>Use <code>SELECT CASE</code> para manejar las opciones, imprimiendo un mensaje. Use <code>CASE (0)</code> para ejecutar <code>EXIT</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle infinito con <code>EXIT</code>, Interacción con el usuario, Menú de opciones.</p>
+
+<a href="#respuesta_35" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_36">Ejercicio 36</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante gestionará una <strong>secuencia de Fibonacci</strong> utilizando un bucle <code>DO</code> simple, aplicando la asignación secuencial de variables.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare tres variables enteras: <code>A</code>, <code>B</code>, <code>C</code>. Inicialice <code>A=0</code> y <code>B=1</code>.</li>
+<li>Escriba un bucle <code>DO</code> para generar los primeros 10 términos de la secuencia de Fibonacci.</li>
+<li>Dentro del bucle, calcule el siguiente término (<code>C = A + B</code>) e imprima <code>C</code>.</li>
+<li>Actualice las variables para la siguiente iteración (<code>A = B</code>, <code>B = C</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle <code>DO</code> de recuento, Asignación secuencial, Generación de series.</p>
+
+<a href="#respuesta_36" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_37">Ejercicio 37</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará un bucle <code>DO</code> para calcular el factorial de un número entero positivo (<code>N</code>), aplicando el acumulador y la multiplicación.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un entero <code>N</code> y lea su valor (ej. 5).</li>
+<li>Inicialice un entero <code>FACTORIAL</code> a 1 (acumulador).</li>
+<li>Escriba un bucle <code>DO</code> de 1 hasta <code>N</code>.</li>
+<li>Dentro del bucle, actualice el acumulador: <code>FACTORIAL = FACTORIAL * I</code>.</li>
+<li>Muestre el resultado final.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Acumulador (Multiplicación), Bucle <code>DO</code>, Factorial.</p>
+
+<a href="#respuesta_37" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_38">Ejercicio 38</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante anidará bucles <code>DO</code> para simular la operación de un reloj digital, controlando horas, minutos y segundos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba tres bucles <code>DO</code> anidados: Segundos (0 a 59), Minutos (0 a 59), Horas (0 a 23).</li>
+<li>Dentro del bucle más interno, imprima la hora en formato HH:MM:SS.</li>
+<li>Utilice <code>EXIT</code> en el bucle de Horas si la hora llega a <code>01:00:00</code> para terminar la simulación anticipadamente.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucles <code>DO</code> triplemente anidados, Simulación, Control de bucle con <code>EXIT</code>.</p>
+
+<a href="#respuesta_38" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_39">Ejercicio 39</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el operador lógico <strong><code>.NOT.</code></strong> dentro de un condicional <code>IF</code> para negar una expresión relacional compleja.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare tres enteros: <code>X=10</code>, <code>Y=20</code>, <code>Z=30</code>.</li>
+<li>Escriba un <code>IF</code> que compruebe si <strong>NO</strong> es verdad que (<code>X</code> es mayor que 5 Y <code>Y</code> es menor que 10).</li>
+<li>Si la condición negada es verdadera, imprima &ldquo;La condición compuesta es falsa&rdquo;.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operador <code>.NOT.</code>, Negación de expresiones compuestas, Precedencia de operadores lógicos.</p>
+
+<a href="#respuesta_39" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_40">Ejercicio 40</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante diseñará un algoritmo para determinar si un año dado es bisiesto, integrando el uso de <code>IF-ELSE IF</code> y el operador <code>MODULO()</code>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare y lea una variable entera <code>ANIO</code>.</li>
+<li>Implemente la lógica bisiesta:
+
+<ul>
+<li>El año es bisiesto si es divisible por 400.</li>
+<li>O es divisible por 4 PERO no es divisible por 100.</li>
+</ul>
+</li>
+<li>Utilice <code>IF-ELSE IF</code> y los operadores lógicos para imprimir &ldquo;Es Bisiesto&rdquo; o &ldquo;No es Bisiesto&rdquo;.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Lógica de año bisiesto, Uso combinado de <code>MODULO()</code>, <code>IF-ELSE IF</code>, Operadores lógicos (<code>.AND.</code>, <code>.OR.</code>).</p>
+
+<a href="#respuesta_40" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_41">Ejercicio 41</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará un <strong>array unidimensional</strong> (vector) de tamaño fijo y lo inicializará estáticamente utilizando un constructor de <em>array</em> (lista de valores).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>VECTOR</code> de 5 elementos.</li>
+<li>Inicialice <code>VECTOR</code> utilizando el constructor <code>(/ valor1, valor2, ... /)</code> con los valores <code>(/ 10, 20, 30, 40, 50 /)</code>.</li>
+<li>Imprima el array completo en una sola sentencia.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>DIMENSION(n)</code>, Array 1D, Constructor de <em>array</em> (<code>(/.../)</code>).</p>
+
+<a href="#respuesta_41" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_42">Ejercicio 42</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante accederá y modificará <strong>elementos individuales</strong> de un array mediante su índice, comprendiendo la indexación basada en 1 por defecto en Fortran.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array real <code>DATOS</code> de 10 elementos e inicialícelo a cero.</li>
+<li>Asigne el valor 99.9 al primer elemento.</li>
+<li>Asigne el valor 1.5 al elemento en la posición media (índice 5).</li>
+<li>Imprima solo los elementos 1, 5 y 10.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Acceso por índice (<code>array(i)</code>), Indexación basada en 1, Asignación de elementos.</p>
+
+<a href="#respuesta_42" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_43">Ejercicio 43</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará un <strong>array bidimensional</strong> (matriz) de tamaño fijo y lo recorrerá utilizando bucles <code>DO</code> anidados para imprimir sus elementos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una matriz entera <code>MATRIZ</code> de $3\times3$.</li>
+<li>Utilice dos bucles <code>DO</code> anidados para asignar a cada elemento el valor de su fila más su columna (<code>MATRIZ(I, J) = I + J</code>).</li>
+<li>Utilice los mismos bucles anidados para imprimir la matriz de forma que se vea como una matriz $3\times3$ en la salida.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Array 2D (<code>DIMENSION(n, m)</code>), Bucles anidados para recorrido.</p>
+
+<a href="#respuesta_43" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_44">Ejercicio 44</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el concepto de <strong>rango de índices</strong> para modificar una <strong>sección de array</strong> completa con una sola sentencia, sin usar bucles.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>VECTOR</code> de 100 elementos e inicialícelo a 0.</li>
+<li>Asigne el valor 1 a los elementos del 1 al 10.</li>
+<li>Asigne el valor 2 a los elementos del 50 al 60.</li>
+<li>Imprima la sección modificada del 9 al 12 (ej. para verificar la frontera).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Secciones de <em>array</em> (<code>array(inicio:fin)</code>), Operaciones vectoriales, Asignación por rango.</p>
+
+<a href="#respuesta_44" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_45">Ejercicio 45</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará operaciones aritméticas a arrays completos (vectorización) para multiplicar cada elemento por un escalar.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos arrays reales <code>A</code> y <code>B</code> de 5 elementos.</li>
+<li>Inicialice <code>A = (/ 1.0, 2.0, 3.0, 4.0, 5.0 /)</code>.</li>
+<li>Asigne a <code>B</code> el resultado de multiplicar cada elemento de <code>A</code> por 2.5 (<code>B = A * 2.5</code>).</li>
+<li>Imprima el array resultante <code>B</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Vectorización, Multiplicación por escalar, Operaciones elemento a elemento.</p>
+
+<a href="#respuesta_45" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_46">Ejercicio 46</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el mecanismo de <strong><code>TRIPLET</code></strong> en una sección de <em>array</em> para seleccionar elementos con un <em>stride</em> (paso) específico.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>NUMEROS</code> de 20 elementos e inicialícelo con valores del 1 al 20.</li>
+<li>Declare un segundo array <code>SUBSECCION</code> de 5 elementos.</li>
+<li>Asigne a <code>SUBSECCION</code> los elementos de <code>NUMEROS</code> que se encuentran en las posiciones impares (1, 3, 5, 7, 9) utilizando el <em>triplet</em> de sección (<code>NUMEROS(inicio:fin:paso)</code>).</li>
+<li>Imprima <code>SUBSECCION</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sección de <em>array</em> con <em>stride</em> (<code>start:end:step</code>), Triplet.</p>
+
+<a href="#respuesta_46" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_47">Ejercicio 47</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará las funciones intrínsecas de reducción de arrays <strong><code>SUM()</code></strong> y <strong><code>PRODUCT()</code></strong> para obtener resultados escalares a partir de un array.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>DATOS = (/ 1, 2, 3, 4, 5 /)</code>.</li>
+<li>Declare variables escalares <code>SUMA</code> y <code>PRODUCTO</code>.</li>
+<li>Use <code>SUM(DATOS)</code> para calcular y almacenar la suma de los elementos.</li>
+<li>Use <code>PRODUCT(DATOS)</code> para calcular y almacenar el producto de los elementos.</li>
+<li>Muestre ambos resultados.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>SUM()</code>, Función intrínseca <code>PRODUCT()</code>, Reducción.</p>
+
+<a href="#respuesta_47" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_48">Ejercicio 48</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>MAXVAL()</code></strong> o <strong><code>MINVAL()</code></strong> para encontrar el valor extremo en un array.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array real <code>TEMPERATURAS = (/ 25.5, 30.1, 19.8, 35.0, 28.7 /)</code>.</li>
+<li>Declare variables reales <code>MAX_T</code> y <code>MIN_T</code>.</li>
+<li>Use la función intrínseca apropiada para encontrar la temperatura máxima y mínima.</li>
+<li>Muestre ambos valores.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>MAXVAL()</code>, Función intrínseca <code>MINVAL()</code>.</p>
+
+<a href="#respuesta_48" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_49">Ejercicio 49</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>DOT_PRODUCT()</code></strong> para calcular el producto escalar (producto punto) entre dos vectores.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare y inicialice dos vectores reales <code>V1</code> y <code>V2</code> de 3 elementos con valores arbitrarios (ej. <code>V1=(/ 1.0, 2.0, 3.0 /)</code>, <code>V2=(/ 4.0, 5.0, 6.0 /)</code>).</li>
+<li>Declare una variable real <code>PRODUCTO_ESCALAR</code>.</li>
+<li>Use <code>DOT_PRODUCT(V1, V2)</code> para calcular el producto escalar.</li>
+<li>Muestre el resultado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>DOT_PRODUCT()</code>, Producto escalar de vectores.</p>
+
+<a href="#respuesta_49" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_50">Ejercicio 50</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>MATMUL()</code></strong> para realizar la multiplicación de matrices, verificando las dimensiones compatibles.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una matriz <code>A</code> de $2\times3$ y una matriz <code>B</code> de $3\times2$. Inicialice ambas con valores arbitrarios.</li>
+<li>Declare una matriz <code>C</code> para almacenar el resultado de la multiplicación matricial $C = A \times B$ (dimensión $2\times2$).</li>
+<li>Use <code>MATMUL(A, B)</code> para calcular y almacenar el resultado en <code>C</code>.</li>
+<li>Imprima la matriz resultante <code>C</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>MATMUL()</code>, Multiplicación matricial, Verificación de dimensiones.</p>
+
+<a href="#respuesta_50" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_51">Ejercicio 51</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la sentencia <strong><code>WHERE-END WHERE</code></strong> para aplicar asignaciones condicionales a elementos de un array basándose en una máscara lógica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>PUNTOS</code> de 10 elementos e inicialícelo con valores aleatorios entre 0 y 100.</li>
+<li>Utilice la sentencia <code>WHERE</code> para asignar el valor 0 a todos los elementos de <code>PUNTOS</code> que sean menores que 50.</li>
+<li>Imprima el array original y el array modificado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>WHERE-END WHERE</code>, Asignación condicional, Máscara lógica.</p>
+
+<a href="#respuesta_51" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_52">Ejercicio 52</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la forma más compleja de asignación condicional: <strong><code>WHERE-ELSEWHERE-END WHERE</code></strong>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>A</code> de 5 elementos (valores arbitrarios).</li>
+<li>Utilice <code>WHERE</code> para:
+
+<ul>
+<li>Si el elemento es par, asignarle el valor 1.</li>
+<li><code>ELSEWHERE</code> (si es impar), asignarle el valor -1.</li>
+</ul>
+</li>
+<li>Imprima el array resultante.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>WHERE-ELSEWHERE-END WHERE</code>, Condición doble, Paridad.</p>
+
+<a href="#respuesta_52" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_53">Ejercicio 53</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>ALL()</code></strong> o <strong><code>ANY()</code></strong> en arrays para determinar si todos o alguno de los elementos cumplen una condición lógica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array lógico <code>BANDERA = (/ .TRUE., .TRUE., .FALSE., .TRUE. /)</code>.</li>
+<li>Use <code>ALL(BANDERA)</code> para comprobar si todos los elementos son <code>.TRUE.</code>. Imprima el resultado.</li>
+<li>Use <code>ANY(BANDERA)</code> para comprobar si al menos un elemento es <code>.TRUE.</code>. Imprima el resultado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>ALL()</code>, Función intrínseca <code>ANY()</code>, Operaciones lógicas en arrays.</p>
+
+<a href="#respuesta_53" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_54">Ejercicio 54</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>COUNT()</code></strong> para determinar cuántos elementos de un array cumplen una condición lógica específica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>EDADES</code> de 8 elementos con valores entre 10 y 50.</li>
+<li>Utilice <code>COUNT()</code> con una expresión de máscara para determinar cuántas personas son mayores o iguales a 18 años.</li>
+<li>Muestre el número de elementos que cumplen la condición.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>COUNT()</code>, Máscara condicional, Conteo de elementos.</p>
+
+<a href="#respuesta_54" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_55">Ejercicio 55</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>RESHAPE()</code></strong> para cambiar la forma (dimensiones) de un array sin alterar sus datos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un vector <code>VEC_1D</code> de 6 enteros e inicialícelo con valores del 1 al 6.</li>
+<li>Declare una matriz <code>MAT_2D</code> de $2\times3$.</li>
+<li>Utilice <code>MAT_2D = RESHAPE(VEC_1D, SHAPE=(/ 2, 3 /))</code> para convertir el vector en matriz.</li>
+<li>Imprima <code>MAT_2D</code> para verificar el cambio de forma (la matriz debe contener: fila 1: 1, 3, 5; fila 2: 2, 4, 6).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>RESHAPE()</code>, Cambio de forma, Argumento <code>SHAPE</code>.</p>
+
+<a href="#respuesta_55" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_56">Ejercicio 56</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>SIZE()</code></strong> para obtener el tamaño total de un array y la función <strong><code>UBOUND()</code></strong> para obtener el límite superior de una dimensión específica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una matriz <code>CUBICA</code> de $4\times5\times2$.</li>
+<li>Use <code>SIZE(CUBICA)</code> para obtener el número total de elementos.</li>
+<li>Use <code>UBOUND(CUBICA, DIM=2)</code> para obtener el límite superior de la segunda dimensión (debe ser 5).</li>
+<li>Muestre ambos resultados.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>SIZE()</code>, Función intrínseca <code>UBOUND()</code>, Número de elementos.</p>
+
+<a href="#respuesta_56" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_57">Ejercicio 57</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y manipulará un <strong>Array Asignable</strong> (<code>ALLOCATABLE</code>), comprendiendo la diferencia con un array de tamaño fijo.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>DATOS</code> con el atributo <code>ALLOCATABLE</code>.</li>
+<li>Utilice la sentencia <strong><code>ALLOCATE</code></strong> para asignarle un tamaño de 25 elementos.</li>
+<li>Utilice un bucle <code>DO</code> simple para llenar el array con valores.</li>
+<li>Utilice la sentencia <strong><code>DEALLOCATE</code></strong> para liberar la memoria al finalizar.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>ALLOCATABLE</code>, <code>ALLOCATE</code>, <code>DEALLOCATE</code>, Array dinámico.</p>
+
+<a href="#respuesta_57" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_58">Ejercicio 58</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>ALLOCATED()</code></strong> para verificar si la memoria de un array asignable ha sido correctamente asignada antes de intentar usarlo.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array real <code>BUFFER</code> con el atributo <code>ALLOCATABLE</code>.</li>
+<li>Utilice un <code>IF</code> para comprobar si <code>BUFFER</code> está asignado usando <code>ALLOCATED(BUFFER)</code>. Imprima el estado inicial (debe ser <code>.FALSE.</code>).</li>
+<li>Use <code>ALLOCATE</code> para asignarle 5 elementos.</li>
+<li>Vuelva a comprobar el estado con <code>ALLOCATED()</code> e imprima el nuevo estado (debe ser <code>.TRUE.</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>ALLOCATED()</code>, Control de asignación de memoria, Sentencia <code>IF</code>.</p>
+
+<a href="#respuesta_58" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_59">Ejercicio 59</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la <strong>E/S implícita</strong> de arrays utilizando bucles implícitos de <code>DO</code> en sentencias <code>READ</code> y <code>WRITE</code> para mayor eficiencia y concisión.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>A</code> de 10 elementos.</li>
+<li>Utilice un <strong>bucle implícito</strong> en la sentencia <code>READ</code> para leer los 10 elementos de la consola en una sola línea.</li>
+<li>Utilice un <strong>bucle implícito</strong> en la sentencia <code>WRITE</code> para imprimir los 10 elementos en una única línea, separados por un espacio.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle implícito en I/O (<code>(exp, i=start, end)</code>), E/S concisa.</p>
+
+<a href="#respuesta_59" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_60">Ejercicio 60</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el <strong><code>DIMENSION</code></strong> de un array para aplicar las funciones <strong><code>MAXLOC()</code></strong> y <strong><code>MINLOC()</code></strong> y encontrar la posición (índice) de los valores extremos en el array.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un array entero <code>DATOS = (/ 10, 50, 5, 80, 25 /)</code>.</li>
+<li>Declare arrays enteros <code>POS_MAX</code> y <code>POS_MIN</code> de tamaño 1.</li>
+<li>Use <code>MAXLOC(DATOS)</code> y <code>MINLOC(DATOS)</code> para obtener el índice de la posición del valor máximo y mínimo, respectivamente.</li>
+<li>Muestre las posiciones. (El índice del máximo debe ser 4, el del mínimo debe ser 3).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función intrínseca <code>MAXLOC()</code>, Función intrínseca <code>MINLOC()</code>, Búsqueda de índice.</p>
+
+<a href="#respuesta_60" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_61">Ejercicio 61</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá y llamará una <strong><code>SUBROUTINE</code></strong> simple sin argumentos para encapsular una tarea específica (ej. mostrar un mensaje de bienvenida).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba el programa principal.</li>
+<li>Defina una <code>SUBROUTINE</code> llamada <code>SALUDAR</code>.</li>
+<li>Dentro de la subrutina, imprima &ldquo;Iniciando proceso&hellip;&rdquo;.</li>
+<li>Llame a la subrutina desde el programa principal.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>SUBROUTINE</code>, <code>CALL</code>, Encapsulamiento de código.</p>
+
+<a href="#respuesta_61" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_62">Ejercicio 62</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará una <code>SUBROUTINE</code> con <strong>argumentos de entrada</strong> para realizar una operación y mostrar el resultado internamente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>SUMAR_Y_MOSTRAR</code> que acepte dos argumentos enteros (<code>A</code>, <code>B</code>).</li>
+<li>Dentro de la subrutina, calcule la suma y muestre el resultado con una etiqueta.</li>
+<li>Desde el programa principal, llame a la subrutina con los valores 15 y 7.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Paso de argumentos (por posición), <code>SUBROUTINE</code> con entradas.</p>
+
+<a href="#respuesta_62" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_63">Ejercicio 63</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará una <code>SUBROUTINE</code> utilizando el atributo <strong><code>INTENT(IN)</code></strong> para asegurar que una variable de entrada no sea modificada dentro del procedimiento.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>CALCULAR_IVA</code> que acepte un precio base como argumento con el atributo <code>INTENT(IN)</code>.</li>
+<li>Dentro de la subrutina, intente (y comente) una línea que modifique el precio base.</li>
+<li>Calcule y muestre el precio con IVA (21%).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTENT(IN)</code>, Protección de datos de entrada, Errores en tiempo de compilación.</p>
+
+<a href="#respuesta_63" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_64">Ejercicio 64</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará una <code>SUBROUTINE</code> con argumentos de <strong>salida</strong> utilizando el atributo <strong><code>INTENT(OUT)</code></strong> para devolver un resultado al programa llamador.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>OBTENER_AREA</code> que acepte el radio (<code>INTENT(IN)</code>) y devuelva el área (<code>INTENT(OUT)</code>).</li>
+<li>En el programa principal, declare el radio y el área. Llame a la subrutina.</li>
+<li>Muestre el valor del área en el programa principal.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTENT(OUT)</code>, Devolución de valores por argumento.</p>
+
+<a href="#respuesta_64" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_65">Ejercicio 65</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará una <code>SUBROUTINE</code> con argumentos de <strong>entrada/salida</strong> utilizando el atributo <strong><code>INTENT(INOUT)</code></strong> para modificar una variable existente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>INCREMENTAR_CONTADOR</code> que acepte un argumento <code>CONTADOR</code> con <code>INTENT(INOUT)</code>.</li>
+<li>Dentro de la subrutina, incremente <code>CONTADOR</code> en 10.</li>
+<li>En el programa principal, inicialice <code>CONTADOR = 5</code>. Llame a la subrutina y muestre el valor final (debe ser 15).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTENT(INOUT)</code>, Modificación de variables pasadas por referencia.</p>
+
+<a href="#respuesta_65" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_66">Ejercicio 66</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá y utilizará una <strong><code>FUNCTION</code></strong> simple con argumentos para devolver un valor escalar, contrastando su uso con una <code>SUBROUTINE</code>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>FUNCTION</code> llamada <code>CUADRADO</code> que acepte un entero <code>X</code> y devuelva el cuadrado de <code>X</code>.</li>
+<li>En el programa principal, llame a la función directamente dentro de una expresión de asignación: <code>RESULTADO = CUADRADO(8)</code>.</li>
+<li>Muestre <code>RESULTADO</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>FUNCTION</code>, Retorno de valor escalar, Uso en expresiones.</p>
+
+<a href="#respuesta_66" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_67">Ejercicio 67</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá una <code>FUNCTION</code> cuyo valor de retorno es un tipo <strong><code>LOGICAL</code></strong> para verificar una condición.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>FUNCTION</code> lógica llamada <code>ES_CERO</code> que acepte un argumento real <code>VALOR</code>.</li>
+<li>La función debe devolver <code>.TRUE.</code> si <code>VALOR</code> es igual a 0.0, y <code>.FALSE.</code> en caso contrario.</li>
+<li>Use la función en una sentencia <code>IF</code> en el programa principal.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>LOGICAL FUNCTION</code>, Retorno booleano, Uso de <code>IF</code>.</p>
+
+<a href="#respuesta_67" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_68">Ejercicio 68</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>ALLOCATABLE</code></strong> en argumentos <strong><code>INTENT(OUT)</code></strong> de una subrutina para asignar memoria dentro de un procedimiento y devolver el array resultante.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>GENERAR_VECTOR</code> que reciba un tamaño (<code>INTENT(IN)</code>) y devuelva un array asignable <code>VECTOR_OUT</code> (<code>INTENT(OUT)</code>).</li>
+<li>Dentro de la subrutina, use <code>ALLOCATE</code> para dimensionar <code>VECTOR_OUT</code> y llénelo con valores secuenciales.</li>
+<li>En el programa principal, declare el vector asignable y llame a la subrutina. Imprima el array devuelto.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>ALLOCATABLE</code> como argumento de salida, <code>ALLOCATE</code> dentro de <code>SUBROUTINE</code>.</p>
+
+<a href="#respuesta_68" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_69">Ejercicio 69</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>LEN()</code></strong> de un argumento de tipo <code>CHARACTER</code> para gestionar la longitud de cadenas de caracteres pasadas a un procedimiento.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>IMPRIMIR_LONGITUD</code> que acepte una cadena <code>TEXTO</code> (declarada con <code>LEN=*</code>).</li>
+<li>Dentro de la subrutina, use <code>LEN(TEXTO)</code> para determinar e imprimir la longitud de la cadena recibida.</li>
+<li>Llame a la subrutina con dos cadenas de longitud diferente (ej. &ldquo;Corto&rdquo;, &ldquo;Muy Largo&rdquo;).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>CHARACTER(LEN=*)</code>, Longitud asumida, Función intrínseca <code>LEN()</code>.</p>
+
+<a href="#respuesta_69" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_70">Ejercicio 70</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el atributo <strong><code>SAVE</code></strong> a una variable local dentro de una subrutina para preservar su valor entre llamadas sucesivas.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>CONTAR_LLAMADAS</code>.</li>
+<li>Declare una variable entera <code>CONTEO</code> con el atributo <code>SAVE</code> e inicialícela a 0.</li>
+<li>En cada llamada, incremente <code>CONTEO</code> e imprima el valor.</li>
+<li>En el programa principal, llame a la subrutina 5 veces.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Atributo <code>SAVE</code>, Variables persistentes locales, Estado entre llamadas.</p>
+
+<a href="#respuesta_70" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_71">Ejercicio 71</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá una <strong><code>FUNCTION</code></strong> con argumentos de <strong>forma asumida</strong> (<code>DIMENSION(*)</code>) para que la función pueda aceptar arrays 1D de cualquier tamaño.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>FUNCTION</code> llamada <code>CALCULAR_PROMEDIO</code> que acepte un array real 1D con <code>DIMENSION(*)</code> y devuelva su promedio.</li>
+<li>Utilice la función <code>SIZE()</code> para obtener el tamaño real del array.</li>
+<li>Llame a la función desde el programa principal con dos arrays de diferente tamaño.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Dimensión asumida (<code>DIMENSION(*)</code>), Array de entrada genérico, Función <code>SIZE()</code>.</p>
+
+<a href="#respuesta_71" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_72">Ejercicio 72</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la <strong>recursividad</strong> en una <code>FUNCTION</code> para calcular el factorial de un número, demostrando el mecanismo <code>RESULT()</code>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>FUNCTION</code> llamada <code>FACTORIAL</code> que acepte un entero <code>N</code>.</li>
+<li>Declare el nombre de resultado de la función usando <code>RECURSIVE FUNCTION ... RESULT(R)</code>.</li>
+<li>Implemente la lógica recursiva: si <code>N</code> es 0 o 1, el resultado es 1; si no, el resultado es N × FACTORIAL(N-1).</li>
+<li>Muestre el factorial de 6.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>RECURSIVE FUNCTION</code>, <code>RESULT(name)</code>, Recursividad, Casos base.</p>
+
+<a href="#respuesta_72" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_73">Ejercicio 73</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el bloque <strong><code>CONTAINS</code></strong> para definir procedimientos internos (locales) que solo son accesibles desde el procedimiento anfitrión (externo).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> principal llamada <code>PROCESO_DATOS</code>.</li>
+<li>Dentro de <code>PROCESO_DATOS</code>, después de la sentencia <code>CONTAINS</code>, defina una <code>SUBROUTINE</code> interna simple, <code>PROCESO_AUXILIAR</code>.</li>
+<li>Llame a <code>PROCESO_AUXILIAR</code> desde <code>PROCESO_DATOS</code>.</li>
+<li>Intente (y comente) llamar a <code>PROCESO_AUXILIAR</code> directamente desde el programa principal para observar el error.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bloque <code>CONTAINS</code>, Procedimientos internos, Ámbito local.</p>
+
+<a href="#respuesta_73" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_74">Ejercicio 74</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manejará <strong>Argumentos Opcionales</strong> utilizando el atributo <code>OPTIONAL</code> y la función intrínseca <strong><code>PRESENT()</code></strong>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>REGISTRAR_USUARIO</code> que acepte <code>NOMBRE</code> (obligatorio) y <code>EMAIL</code> (<code>OPTIONAL</code>).</li>
+<li>Dentro de la subrutina, use <code>IF (PRESENT(EMAIL))</code> para imprimir el correo solo si fue proporcionado.</li>
+<li>Llame a la subrutina dos veces: una con solo el nombre y otra con el nombre y el correo.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>OPTIONAL</code>, Función intrínseca <code>PRESENT()</code>, Argumentos variables.</p>
+
+<a href="#respuesta_74" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_75">Ejercicio 75</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará el paso de argumentos por <strong>Palabra Clave</strong> (<em>Keyword Arguments</em>) para mejorar la legibilidad del código.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una <code>SUBROUTINE</code> llamada <code>CONFIGURAR</code> con argumentos con nombre como <code>TEMPERATURA</code>, <code>VELOCIDAD</code> y <code>MODO_SEGURIDAD</code>.</li>
+<li>Llame a <code>CONFIGURAR</code> desde el programa principal, pasando los argumentos en orden no secuencial utilizando sus palabras clave (ej. <code>CALL CONFIGURAR(MODO_SEGURIDAD=5, TEMPERATURA=90.0)</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Paso de argumentos por palabra clave, Legibilidad de la llamada a procedimiento.</p>
+
+<a href="#respuesta_75" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_76">Ejercicio 76</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante escribirá una <code>FUNCTION</code> que devuelve un array (o un vector), demostrando que las funciones en Fortran 90 pueden devolver estructuras de datos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>FUNCTION</code> llamada <code>VECTOR_UNITARIO</code> que acepte un tamaño (<code>INTENT(IN)</code>) y devuelva un array real con esa dimensión, donde todos los elementos son 1.0.</li>
+<li>Declare el tipo de retorno de la función con el atributo <code>ALLOCATABLE</code> y asígnelo dentro del cuerpo de la función.</li>
+<li>En el programa principal, reciba el array devuelto y muéstrelo.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función que devuelve un <em>array</em>, <code>ALLOCATABLE</code> en función, Declaración de retorno.</p>
+
+<a href="#respuesta_76" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_77">Ejercicio 77</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el atributo <strong><code>PURE</code></strong> en una <code>FUNCTION</code> para indicar que no tiene efectos secundarios y puede ser optimizada por el compilador.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>PURE FUNCTION</code> llamada <code>MEDIA_ARITMETICA</code> que acepte dos reales y devuelva su promedio.</li>
+<li>(No es necesario verificar la optimización, solo la sintaxis.) Intente (y comente) usar una sentencia I/O dentro de la función pura para observar el error de compilación.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Atributo <code>PURE</code>, Función sin efectos secundarios, Seguridad.</p>
+
+<a href="#respuesta_77" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_78">Ejercicio 78</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>SELECTED_REAL_KIND()</code></strong> para especificar una precisión numérica requerida para un procedimiento.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un parámetro <code>DP</code> utilizando <code>SELECTED_REAL_KIND(P=15)</code> para la precisión doble estándar.</li>
+<li>Escriba una <code>SUBROUTINE</code> que reciba un argumento real con el tipo <code>REAL(KIND=DP)</code>.</li>
+<li>En el programa principal, declare una variable con esta precisión y pásela a la subrutina.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>KIND</code>, <code>SELECTED_REAL_KIND()</code>, Precisión numérica.</p>
+
+<a href="#respuesta_78" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_79">Ejercicio 79</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el atributo <strong><code>ELEMENTAL</code></strong> en una <code>FUNCTION</code> para indicar que puede operar sobre arrays elemento por elemento.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>ELEMENTAL FUNCTION</code> llamada <code>CUBICO</code> que acepte un real <code>X</code> y devuelva X<sup>3</sup>.</li>
+<li>En el programa principal, declare un array real <code>VEC_IN</code> (ej. 3 elementos).</li>
+<li>Asigne a un nuevo array <code>VEC_OUT</code> el resultado de aplicar la función <code>CUBICO(VEC_IN)</code> directamente, sin usar bucles.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Atributo <code>ELEMENTAL</code>, Operaciones elemento a elemento, Vectorización implícita.</p>
+
+<a href="#respuesta_79" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_80">Ejercicio 80</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante gestionará el <strong>Array de Forma Asumida</strong> en múltiples dimensiones (<code>DIMENSION(:,:)</code>) dentro de una subrutina.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba una <code>SUBROUTINE</code> llamada <code>TRANSFORMAR_MATRIZ</code> que acepte una matriz real <code>M</code> con <code>DIMENSION(:,:)</code>.</li>
+<li>Dentro de la subrutina, use las funciones <code>SIZE()</code> y <code>UBOUND()</code> para determinar sus dimensiones en tiempo de ejecución.</li>
+<li>Calcule y muestre la transpuesta de <code>M</code> usando la función intrínseca <code>TRANSPOSE(M)</code>.</li>
+<li>Llame a la subrutina con una matriz 4×2.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Dimensión de forma asumida (<code>: , :</code>), <code>TRANSPOSE()</code>, Determinación de dimensiones en procedimientos.</p>
+
+<a href="#respuesta_80" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_81">Ejercicio 81</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá un <strong><code>MODULE</code></strong> simple para encapsular una constante numérica y utilizará la sentencia <strong><code>USE</code></strong> en el programa principal.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un <code>MODULE</code> llamado <code>CONSTANTES_FISICAS</code>.</li>
+<li>Dentro del módulo, defina la constante real <code>GRAVEDAD</code> (valor 9.81) usando <code>PARAMETER</code>.</li>
+<li>En el programa principal, use la sentencia <code>USE CONSTANTES_FISICAS</code> para acceder y mostrar el valor de la constante <code>GRAVEDAD</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>MODULE</code>, <code>END MODULE</code>, <code>USE</code>, Encapsulamiento de constantes.</p>
+
+<a href="#respuesta_81" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_82">Ejercicio 82</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá un <code>MODULE</code> para contener una <code>SUBROUTINE</code> que luego será utilizada por el programa principal, demostrando la reutilización de procedimientos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un <code>MODULE</code> llamado <code>UTILIDADES_MATH</code>.</li>
+<li>Dentro del módulo, defina una <code>SUBROUTINE</code> <code>RESTAR(A, B, RESULTADO)</code> con la implementación de la resta.</li>
+<li>En el programa principal, use <code>UTILIDADES_MATH</code> y llame a la subrutina para calcular 100 - 45. Muestre el resultado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Reutilización de código, Procedimientos en módulos, Abstracción.</p>
+
+<a href="#respuesta_82" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_83">Ejercicio 83</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>ONLY</code></strong> junto con <code>USE</code> para importar selectivamente solo los componentes necesarios de un módulo, limitando el espacio de nombres.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un <code>MODULE</code> llamado <code>BIBLIOTECA</code> que contenga una <code>FUNCTION</code> <code>SUMAR</code> y otra <code>RESTAR</code>.</li>
+<li>En el programa principal, use <code>USE BIBLIOTECA, ONLY: SUMAR</code>.</li>
+<li>Llame y muestre el resultado de <code>SUMAR(5, 3)</code>.</li>
+<li>Intente (y comente) llamar a la función <code>RESTAR</code> para verificar que no es accesible.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>USE ... ONLY</code>, Control de espacio de nombres.</p>
+
+<a href="#respuesta_83" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_84">Ejercicio 84</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manejará la <strong>E/S de archivos secuenciales</strong> (lectura/escritura) utilizando las sentencias <strong><code>OPEN</code></strong>, <strong><code>WRITE</code></strong>, y <strong><code>CLOSE</code></strong>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice la sentencia <code>OPEN(UNIT=10, FILE='datos.txt', STATUS='REPLACE')</code> para abrir un archivo.</li>
+<li>Escriba los números 10, 20, 30 en líneas separadas en el archivo, usando la unidad 10.</li>
+<li>Cierre el archivo con <code>CLOSE(UNIT=10)</code>.</li>
+<li>Verifique el contenido del archivo generado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>OPEN</code>, <code>CLOSE</code>, Unidad de archivo, <code>STATUS='REPLACE'</code>, E/S secuencial.</p>
+
+<a href="#respuesta_84" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_85">Ejercicio 85</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la <strong>lectura de archivos secuenciales</strong> utilizando las sentencias <strong><code>OPEN</code></strong>, <strong><code>READ</code></strong> y la condición <strong><code>IOSTAT</code></strong> para detectar el final del archivo (<code>END OF FILE</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Abra el archivo <code>datos.txt</code> creado en el Ejercicio 84 (utilice <code>STATUS='OLD'</code>).</li>
+<li>Utilice un bucle <code>DO</code> infinito con una sentencia <code>READ(UNIT=10, FMT=*, IOSTAT=IOERR)</code> para leer los datos.</li>
+<li>Dentro del bucle, use un <code>IF</code> para comprobar si <code>IOERR</code> es distinto de cero y use <code>EXIT</code> si se alcanza el final del archivo (<code>IOERR &lt; 0</code>).</li>
+<li>Imprima los datos leídos.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>READ</code> de archivo, <code>STATUS='OLD'</code>, <code>IOSTAT</code>, Detección de <code>END OF FILE</code> (EOF).</p>
+
+<a href="#respuesta_85" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_86">Ejercicio 86</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá y utilizará un <strong>Tipo Derivado</strong> (<strong><code>TYPE</code></strong>) para crear una estructura de datos personalizada.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un <code>TYPE</code> llamado <code>PUNTO</code> con dos componentes reales: <code>X</code> y <code>Y</code>.</li>
+<li>Declare una variable de este tipo: <code>P1</code>.</li>
+<li>Asigne valores a los componentes de <code>P1</code> utilizando la notación de porcentaje (<code>%</code>) y muestre los valores.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>TYPE</code>, Tipo derivado, Componentes, Notación de porcentaje (<code>%</code>).</p>
+
+<a href="#respuesta_86" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_87">Ejercicio 87</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará un <code>MODULE</code> para exportar la definición de un <strong>Tipo Derivado</strong> y un procedimiento que opera sobre dicho tipo.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un <code>MODULE</code> que contenga el <code>TYPE PUNTO</code> del Ejercicio 86.</li>
+<li>Defina una <code>FUNCTION</code> en el módulo que acepte dos variables de tipo <code>PUNTO</code> y devuelva la distancia euclidiana entre ellas.</li>
+<li>En el programa principal, use el módulo, declare dos puntos, calcule la distancia y muéstrela.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Exportación de <code>TYPE</code> por módulo, Procedimientos que operan en tipos derivados.</p>
+
+<a href="#respuesta_87" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_88">Ejercicio 88</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la cláusula <strong><code>PUBLIC</code></strong> y <strong><code>PRIVATE</code></strong> dentro de un <code>MODULE</code> para controlar la visibilidad de los componentes.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un <code>MODULE</code> llamado <code>CONFIG_SEGURA</code>.</li>
+<li>Declare una constante entera <code>CLAVE_INTERNA</code> como <strong><code>PRIVATE</code></strong>.</li>
+<li>Declare una variable real <code>VALOR_PUBLICO</code> como <strong><code>PUBLIC</code></strong>.</li>
+<li>En el programa principal, use el módulo. Muestre <code>VALOR_PUBLICO</code> y comente el intento de acceder a <code>CLAVE_INTERNA</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>PUBLIC</code>, <code>PRIVATE</code>, Control de acceso, Ocultación de información.</p>
+
+<a href="#respuesta_88" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_89">Ejercicio 89</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará E/S de <strong>archivos de acceso directo</strong> utilizando <strong><code>ACCESS='DIRECT'</code></strong> y la sentencia <strong><code>RECL</code></strong> (Longitud de registro).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un <code>INTEGER</code> que contenga un solo registro. Determine su longitud de registro (<code>RECL</code>).</li>
+<li>Abra un archivo con <code>ACCESS='DIRECT'</code> y la longitud de registro adecuada.</li>
+<li>Utilice <code>WRITE(UNIT=12, REC=3)</code> para escribir el valor 99 en el registro número 3.</li>
+<li>Utilice <code>READ(UNIT=12, REC=3)</code> para leer el valor de vuelta. Muestre el valor leído.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>ACCESS='DIRECT'</code>, <code>RECL</code>, <code>WRITE/READ(REC=n)</code>, Acceso por número de registro.</p>
+
+<a href="#respuesta_89" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_90">Ejercicio 90</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante gestionará el <strong>estado de un archivo</strong> utilizando la sentencia <strong><code>INQUIRE</code></strong> para determinar si un archivo existe y está abierto.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare variables lógicas <code>EXISTE</code> y <code>ABIERTO</code>.</li>
+<li>Use <code>INQUIRE(FILE='archivo_inexistente.dat', EXIST=EXISTE)</code> para verificar si existe. Muestre el resultado.</li>
+<li>Abra un archivo (ej. unidad 15).</li>
+<li>Use <code>INQUIRE(UNIT=15, OPENED=ABIERTO)</code> para verificar si la unidad 15 está abierta. Muestre el resultado.</li>
+<li>Cierre la unidad.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INQUIRE</code>, Estado de archivo (<code>EXIST</code>), Estado de unidad (<code>OPENED</code>).</p>
+
+<a href="#respuesta_90" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_91">Ejercicio 91</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>SELECTED_INT_KIND()</code></strong> para declarar enteros con un rango mínimo garantizado.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un parámetro <code>KIND_GRANDE</code> que requiera al menos 10 dígitos (utilice <code>SELECTED_INT_KIND(10)</code>).</li>
+<li>Declare una variable entera <code>NUMERO_MAXIMO</code> con este <code>KIND</code> y asígnele un valor superior a 2 × 10<sup>9</sup>.</li>
+<li>Muestre el valor de <code>NUMERO_MAXIMO</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>SELECTED_INT_KIND()</code>, <code>KIND</code>, Enteros de precisión ampliada.</p>
+
+<a href="#respuesta_91" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_92">Ejercicio 92</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y manipulará variables de <strong>Doble Precisión</strong> (<code>KIND=8</code> o <code>SELECTED_REAL_KIND(15)</code>) para cálculos de alta exactitud.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un parámetro <code>DP</code> para doble precisión.</li>
+<li>Declare dos variables reales <code>A</code> y <code>B</code> con este <code>KIND</code>.</li>
+<li>Asigne valores con 15 cifras significativas (ej. π o e) y realice una operación de resta para observar la precisión.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Doble precisión, <code>REAL(KIND=DP)</code>, Literales con precisión (<code>_DP</code>)..</p>
+
+<a href="#respuesta_92" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_93">Ejercicio 93</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará y operará con el tipo de dato <strong><code>COMPLEX</code></strong> de Fortran 90.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare dos variables complejas: <code>Z1</code> y <code>Z2</code>.</li>
+<li>Inicialice <code>Z1 = (3.0, 4.0)</code> y <code>Z2 = (1.0, -1.0)</code>.</li>
+<li>Calcule y muestre la suma <code>Z1 + Z2</code> y el producto <code>Z1 * Z2</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>COMPLEX</code>, Inicialización de complejos (<code>(real, imag)</code>).</p>
+
+<a href="#respuesta_93" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_94">Ejercicio 94</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará las funciones intrínsecas para números complejos: <strong><code>AIMAG()</code></strong> (parte imaginaria) y <strong><code>CONJG()</code></strong> (conjugado).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un complejo <code>Z = (5.0, -12.0)</code>.</li>
+<li>Utilice <code>AIMAG(Z)</code> para extraer y mostrar la parte imaginaria.</li>
+<li>Utilice <code>CONJG(Z)</code> para calcular y mostrar el complejo conjugado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>AIMAG()</code>, Función <code>CONJG()</code>, Conjugado complejo.</p>
+
+<a href="#respuesta_94" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_95">Ejercicio 95</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la sentencia <strong><code>NAMELIST</code></strong> para la E/S de grupos de variables con nombre, común en archivos de configuración científica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare variables enteras <code>MAX_ITER</code>, <code>PASO</code>, y una real <code>TOLERANCIA</code>.</li>
+<li>Agrupe estas variables en un <code>NAMELIST</code> llamado <code>&amp;CONFIG</code>.</li>
+<li>Escriba un programa para escribir el <code>NAMELIST</code> en un archivo <code>config.dat</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>NAMELIST</code>, E/S de listas con nombre, Archivos de configuración.</p>
+
+<a href="#respuesta_95" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_96">Ejercicio 96</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará un <strong>array de tipo derivado</strong> (<code>TYPE</code>) para simular un conjunto de registros de datos científicos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un <code>TYPE</code> llamado <code>MEDICION</code> con componentes para <code>TIEMPO</code> (Real) y <code>LECTURA_SENSOR</code> (Real).</li>
+<li>Declare un array <code>SERIE</code> de 10 elementos de tipo <code>MEDICION</code>.</li>
+<li>Utilice un bucle <code>DO</code> para asignar datos de ejemplo a los componentes de los 10 elementos del array.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Array de tipos derivados, Estructura de registros.</p>
+
+<a href="#respuesta_96" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_97">Ejercicio 97</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la función intrínseca <strong><code>EXP()</code></strong> y <strong><code>LOG()</code></strong> para cálculos exponenciales y logarítmicos, comunes en modelos científicos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable real <code>X = 2.0</code>.</li>
+<li>Calcule y muestre: a) e<sup>X</sup> usando <code>EXP(X)</code>. b) ln(X) usando <code>LOG(X)</code>. c) log<sub>10</sub>(X) usando <code>LOG10(X)</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>EXP()</code>, Función <code>LOG()</code>, Función <code>LOG10()</code>, Funciones trascendentales.</p>
+
+<a href="#respuesta_97" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_98">Ejercicio 98</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>CEILING()</code></strong> o <strong><code>FLOOR()</code></strong> para manejar el redondeo de valores reales en aplicaciones discretas o de conteo.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable real <code>CAPACIDAD = 5.3</code>.</li>
+<li>Utilice la función <code>CEILING()</code> para determinar el número entero más pequeño no menor que <code>CAPACIDAD</code> (ej. cuántos contenedores completos se necesitan).</li>
+<li>Utilice la función <code>FLOOR()</code> para determinar el número entero más grande no mayor que <code>CAPACIDAD</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>CEILING()</code>, Función <code>FLOOR()</code>, Redondeo.</p>
+
+<a href="#respuesta_98" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_99">Ejercicio 99</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará un <strong>procedimiento de interfaz explícita</strong> usando la sentencia <strong><code>INTERFACE</code></strong> para una función externa, mejorando la verificación del compilador.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un bloque <code>INTERFACE</code> para una <code>FUNCTION</code> externa llamada <code>CONVERTER_TEMP</code> que acepta un <code>REAL</code> y devuelve un <code>REAL</code>.</li>
+<li>Defina el cuerpo de la función <code>CONVERTER_TEMP</code> por separado (después del <code>END PROGRAM</code> o en un módulo).</li>
+<li>Llame a la función desde el programa principal.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>INTERFACE</code>, Procedimiento externo, Verificación de interfaz.</p>
+
+<a href="#respuesta_99" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+<!-- ######## EJERCICIO ####### -->
+
+<h2 id="ejercicio_100">Ejercicio 100</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante integrará la modularidad, el manejo de precisión y los arrays asignables para resolver un problema de simulación avanzado (Ej. Suma de Serie Numérica).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un <code>MODULE</code> que contenga una <code>PURE FUNCTION</code> <code>TERMINO_SERIE</code> (con precisión doble <code>DP</code>) que calcula el n-ésimo término de una serie.</li>
+<li>En el programa principal:
+
+<ul>
+<li>Defina <code>DP</code> (doble precisión).</li>
+<li>Declare un array asignable <code>TERMINOS</code> (<code>REAL(KIND=DP)</code>) para 1000 términos.</li>
+<li>Utilice un bucle <code>DO</code> y la función del módulo para llenar el array.</li>
+<li>Use <code>SUM()</code> para obtener la suma de la serie y muéstrela con alta precisión.</li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Integración de <code>MODULE</code>, <code>PURE FUNCTION</code>, <code>ALLOCATABLE</code>, <code>KIND</code> de doble precisión, <code>SUM()</code>, Simulación de cálculo HPC básico.</p>
+
+<a href="#respuesta_100" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+  
+<br>
+
+<hr>
+
+
+
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_1">Respuesta 1</h2>
+<pre>
+! Propósito: Estructura básica de Fortran 90 y sentencia PRINT *.
+PROGRAM Ejercicio1
+    ! Sentencia obligatoria para detectar errores de tipado.
+    IMPLICIT NONE
+    
+    ! 2. Muestra el mensaje con formato libre (PRINT *).
+    PRINT *, "Hola, Mundo Fortran 90."
+    
+END PROGRAM Ejercicio1
+</pre><a href="#ejercicio_1" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_2">Respuesta 2</h2>
+<pre>
+! Propósito: Uso de WRITE y diferencia con PRINT.
+PROGRAM Ejercicio2
+    IMPLICIT NONE
+    ! 1. Declaración y asignación de variable entera.
+    INTEGER :: CODIGO = 10
+
+    ! 2. 1) Usando la sentencia PRINT * (Formato libre y unidad por defecto).
+    PRINT *, "Salida con PRINT *:", CODIGO
+
+    ! 2. 2) Usando la sentencia WRITE(*,*) (Unidad de salida * y formato * por defecto).
+    WRITE(*,*) "Salida con WRITE(*,*):", CODIGO
+
+    ! 2. 3) Usando la sentencia WRITE(UNIT=6, FMT=*) (Unidad 6: Salida estándar, formato por defecto).
+    WRITE(UNIT=6, FMT=*) "Salida con WRITE(UNIT=6, FMT=*):", CODIGO
+
+END PROGRAM Ejercicio2
+</pre><a href="#ejercicio_2" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_3">Respuesta 3</h2>
+<pre>
+! Propósito: Declaración y asignación de tipos INTEGER y REAL.
+PROGRAM Ejercicio3
+    IMPLICIT NONE
+    ! 1. Declaración y asignación de variable entera.
+    INTEGER :: CONTADOR = 25
+    ! 2. Declaración y asignación de variable real.
+    REAL :: TEMPERATURA = 36.5
+    
+    ! 3. Imprime ambas variables en la misma línea (separadas por el formato libre).
+    PRINT *, CONTADOR, TEMPERATURA
+
+END PROGRAM Ejercicio3
+</pre><a href="#ejercicio_3" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_4">Respuesta 4</h2>
+<pre>
+! Propósito: Operadores aritméticos y jerarquía.
+PROGRAM Ejercicio4
+    IMPLICIT NONE
+    INTEGER, PARAMETER :: A = 10, B = 5, C = 2
+    INTEGER :: RESULTADO_A, RESULTADO_B
+    REAL :: RESULTADO_C ! Se usa REAL para la división (b)
+
+    ! a) A + B * C. Precedencia: Multiplicación antes que Suma.
+    RESULTADO_A = A + B * C
+    PRINT *, "Resultado a) (A + B * C):", RESULTADO_A
+
+    ! b) (A + B) / C. Precedencia: Paréntesis antes que División. 
+    ! Se usa REAL() para forzar la división real, si no, sería 7.
+    RESULTADO_C = REAL(A + B) / REAL(C)
+    PRINT *, "Resultado b) ((A + B) / C):", RESULTADO_C
+
+    ! c) B ** C. Exponenciación.
+    RESULTADO_B = B ** C
+    PRINT *, "Resultado c) (B ** C):", RESULTADO_B
+
+END PROGRAM Ejercicio4
+</pre><a href="#ejercicio_4" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_5">Respuesta 5</h2>
+<pre>
+! Propósito: División entera vs. División real.
+PROGRAM Ejercicio5
+    IMPLICIT NONE
+    ! Variables para la división entera.
+    INTEGER :: DIVIDENDO = 11, DIVISOR = 4
+    INTEGER :: COCIENTE_ENTERO
+    
+    ! Variables para la división real.
+    REAL :: DIVIDENDO_R = 11.0, DIVISOR_R = 4.0
+    REAL :: COCIENTE_REAL
+    
+    ! 1. División entera: el resultado es un entero, se trunca el decimal.
+    COCIENTE_ENTERO = DIVIDENDO / DIVISOR
+    PRINT *, "División Entera (11 / 4):", COCIENTE_ENTERO
+
+    ! 2. División real: al menos un operando es REAL.
+    COCIENTE_REAL = DIVIDENDO_R / DIVISOR_R
+    PRINT *, "División Real (11.0 / 4.0):", COCIENTE_REAL
+
+    ! 3. Comentario: La salida de la división entera es 2 (truncamiento), 
+    ! mientras que la división real es 2.75 (preciso).
+    
+END PROGRAM Ejercicio5
+</pre><a href="#ejercicio_5" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_6">Respuesta 6</h2>
+<pre>
+! Propósito: Tipo CHARACTER, longitud fija y concatenación (//).
+PROGRAM Ejercicio6
+    IMPLICIT NONE
+    ! 1. Declaración con longitud fija (LEN=10).
+    CHARACTER(LEN=10) :: NOMBRE = "Gemini" 
+    ! 2. Otra variable de carácter con longitud fija.
+    CHARACTER(LEN=20) :: SALUDO = "Hola, bienvenido "
+
+    ! 3. Imprime la frase completa concatenando. 
+    ! Se usa TRIM() para eliminar los espacios en blanco sobrantes de NOMBRE.
+    PRINT *, SALUDO // TRIM(NOMBRE)
+    
+END PROGRAM Ejercicio6
+</pre><a href="#ejercicio_6" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_7">Respuesta 7</h2>
+<pre>
+! Propósito: Entrada de datos por consola usando READ (*, *).
+PROGRAM Ejercicio7
+    IMPLICIT NONE
+    INTEGER :: NUMERO_ENTERO
+    REAL :: NUMERO_REAL
+
+    ! 2. Solicitud de entrada.
+    PRINT *, "Ingrese un número entero y un número real (separados por espacio):"
+    
+    ! 3. Lee ambos valores desde la entrada estándar.
+    READ (*, *) NUMERO_ENTERO, NUMERO_REAL
+
+    ! 4. Muestra los valores leídos.
+    PRINT *, "Entero leído:", NUMERO_ENTERO
+    PRINT *, "Real leído:", NUMERO_REAL
+
+END PROGRAM Ejercicio7
+</pre><a href="#ejercicio_7" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_8">Respuesta 8</h2>
+<pre>
+! Propósito: Sentencia FORMAT y especificadores I, F, A.
+PROGRAM Ejercicio8
+    IMPLICIT NONE
+    REAL :: MASA = 45.678
+    INTEGER :: ID_CLIENTE = 1234
+    
+    ! Se usa una etiqueta (ej. 100) para referenciar el formato.
+    WRITE(*, 100) "RESULTADOS:", ID_CLIENTE, MASA
+    
+100 FORMAT (A12, 1X, I5, 1X, F8.2)
+    ! A12: Etiqueta (Carácter, 12 posiciones)
+    ! 1X: Un espacio
+    ! I5: ID_CLIENTE (Entero, 5 posiciones)
+    ! 1X: Un espacio
+    ! F8.2: MASA (Real, 8 posiciones totales, 2 decimales)
+
+END PROGRAM Ejercicio8
+</pre><a href="#ejercicio_8" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_9">Respuesta 9</h2>
+<pre>
+! Propósito: Uso de la sentencia PARAMETER para constantes simbólicas.
+PROGRAM Ejercicio9
+    IMPLICIT NONE
+    ! 1. Definición de constante entera.
+    INTEGER, PARAMETER :: DIAS_SEMANA = 7
+    ! 2. Definición de constante real.
+    REAL, PARAMETER :: PI = 3.14159
+    
+    REAL :: RADIO = 10.0
+    REAL :: AREA
+
+    ! 3. Cálculo del área usando la constante PI.
+    AREA = PI * RADIO**2
+    
+    PRINT *, "Días en la semana:", DIAS_SEMANA
+    PRINT *, "El área del círculo es:", AREA
+
+END PROGRAM Ejercicio9
+</pre><a href="#ejercicio_9" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_10">Respuesta 10</h2>
+<pre>
+! Propósito: Tipo LOGICAL y operadores lógicos.
+PROGRAM Ejercicio10
+    IMPLICIT NONE
+    ! 1. Declaración de variables lógicas.
+    LOGICAL :: ES_MAYOR, ES_PAR
+    LOGICAL :: RESULTADO_AND, RESULTADO_OR
+
+    ! 2. Asignación de valores booleanos.
+    ES_MAYOR = .TRUE.
+    ES_PAR = .FALSE.
+
+    ! 3. Muestra los valores.
+    PRINT *, "ES_MAYOR:", ES_MAYOR
+    PRINT *, "ES_PAR:", ES_PAR
+    
+    ! 4. Operación lógica AND.
+    RESULTADO_AND = ES_MAYOR .AND. ES_PAR
+    PRINT *, "ES_MAYOR .AND. ES_PAR:", RESULTADO_AND
+    
+    ! 4. Operación lógica OR.
+    RESULTADO_OR = ES_MAYOR .OR. ES_PAR
+    PRINT *, "ES_MAYOR .OR. ES_PAR:", RESULTADO_OR
+
+END PROGRAM Ejercicio10
+</pre><a href="#ejercicio_10" class="boton">Regresar al Ejercicio</a>
+
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_11">Respuesta 11</h2>
+<pre>
+! Propósito: Aplicar los operadores relacionales antiguos de Fortran 90 (.LT., .EQ., .NE.).
+PROGRAM Ejercicio11
+    IMPLICIT NONE
+    INTEGER :: VALOR_A = 25, VALOR_B = 30
+    LOGICAL :: ES_MENOR, ES_IGUAL, ES_DIFERENTE
+
+    ! 3. Asignación usando operadores relacionales antiguos.
+    ES_MENOR     = VALOR_A .LT. VALOR_B   ! ¿25 < 30? -> .TRUE.
+    ES_IGUAL     = VALOR_A .EQ. VALOR_B   ! ¿25 = 30? -> .FALSE.
+    ES_DIFERENTE = VALOR_A .NE. VALOR_B  ! ¿25 != 30? -> .TRUE.
+    
+    ! 4. Mostrar el valor de las variables lógicas.
+    PRINT *, "ES_MENOR:", ES_MENOR     
+    PRINT *, "ES_IGUAL:", ES_IGUAL    
+    PRINT *, "ES_DIFERENTE:", ES_DIFERENTE 
+
+END PROGRAM Ejercicio11
+</pre><a href="#ejercicio_11" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_12">Respuesta 12</h2>
+<pre>
+! Propósito: Aplicar los operadores relacionales modernos de Fortran 90 (<, ==, /=).
+PROGRAM Ejercicio12
+    IMPLICIT NONE
+    INTEGER :: VALOR_A = 25, VALOR_B = 30
+    LOGICAL :: ES_MENOR, ES_IGUAL, ES_DIFERENTE
+
+    ! 1. Uso de operadores relacionales modernos.
+    ES_MENOR     = VALOR_A < VALOR_B    
+    ES_IGUAL     = VALOR_A == VALOR_B   
+    ES_DIFERENTE = VALOR_A /= VALOR_B 
+    
+    ! 2. Verificación de resultados idénticos a Ejercicio 11.
+    PRINT *, "ES_MENOR (moderno):", ES_MENOR     
+    PRINT *, "ES_IGUAL (moderno):", ES_IGUAL    
+    PRINT *, "ES_DIFERENTE (moderno):", ES_DIFERENTE 
+
+END PROGRAM Ejercicio12
+</pre><a href="#ejercicio_12" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_13">Respuesta 13</h2>
+<pre>
+! Propósito: Gestionar el truncamiento de datos y usar la función INT().
+PROGRAM Ejercicio13
+    IMPLICIT NONE
+    REAL :: VALOR_R = 7.99
+    INTEGER :: VALOR_I, VALOR_I2
+
+    ! 3. Asignación directa: el decimal se trunca (7.99 -> 7).
+    VALOR_I = VALOR_R
+    PRINT *, "Valor truncado por asignación:", VALOR_I
+
+    ! 4. Conversión explícita usando INT(): también resulta en 7.
+    VALOR_I2 = INT(VALOR_R)
+    PRINT *, "Valor truncado con INT():", VALOR_I2
+
+    ! Comentario: En Fortran, la asignación de REAL a INTEGER y la función INT() 
+    ! resultan en el truncamiento (piso hacia cero) de la parte decimal.
+
+END PROGRAM Ejercicio13
+</pre><a href="#ejercicio_13" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_14">Respuesta 14</h2>
+<pre>
+! Propósito: Usar la función REAL() para obtener una división precisa.
+PROGRAM Ejercicio14
+    IMPLICIT NONE
+    INTEGER :: NUM = 20, DEN = 7
+    REAL :: DIVISION_REAL
+    
+    ! 2. División entera: el resultado es 2.
+    PRINT *, "División Entera (20 / 7):", NUM / DEN
+
+    ! 3. División real: REAL() convierte el numerador a real antes de la operación,
+    ! forzando el resultado a ser real (2.857...).
+    DIVISION_REAL = REAL(NUM) / DEN 
+    PRINT *, "División Real (REAL(20) / 7):", DIVISION_REAL
+
+END PROGRAM Ejercicio14
+</pre><a href="#ejercicio_14" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_15">Respuesta 15</h2>
+<pre>
+! Propósito: FORMAT y especificadores F (fijo) y E (científico).
+PROGRAM Ejercicio15
+    IMPLICIT NONE
+    REAL :: VELOCIDAD = 299792.458
+    
+    ! 2. Formato F12.3 (Formato fijo: 12 posiciones totales, 3 decimales).
+    WRITE(*, 100) "Velocidad (Fijo):", VELOCIDAD
+    
+    ! 3. Formato E15.8 (Notación científica: 15 posiciones, 8 decimales en mantisa).
+    WRITE(*, 200) "Velocidad (Científico):", VELOCIDAD
+    
+100 FORMAT (A, 1X, F12.3)
+200 FORMAT (A, 1X, E15.8)
+
+END PROGRAM Ejercicio15
+</pre><a href="#ejercicio_15" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_16">Respuesta 16</h2>
+<pre>
+! Propósito: Uso de la sentencia DATA para inicialización estática de X, Y, Z.
+PROGRAM Ejercicio16
+    IMPLICIT NONE
+    INTEGER :: X, Y, Z
+    INTEGER :: SUMA
+    
+    ! 2. Inicialización estática con DATA (no ejecutable).
+    DATA X / 50 /, Y / 100 /, Z / 150 / 
+    
+    ! 3. Muestra la suma de las tres variables.
+    SUMA = X + Y + Z
+    PRINT *, "X + Y + Z (50+100+150):", SUMA 
+
+END PROGRAM Ejercicio16
+</pre><a href="#ejercicio_16" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_17">Respuesta 17</h2>
+<pre>
+! Propósito: Extracción de subcadenas con indexación basada en 1.
+PROGRAM Ejercicio17
+    IMPLICIT NONE
+    CHARACTER(LEN=25) :: TEXTO = "Fortran 90 Programacion"
+    
+    ! 2. Extraer "Fortran" (posiciones 1 a 7).
+    PRINT *, "Palabra 'Fortran':", TEXTO(1:7)
+
+    ! 3. Extraer "90" (posiciones 9 a 10).
+    PRINT *, "Número '90':", TEXTO(9:10)
+
+END PROGRAM Ejercicio17
+</pre><a href="#ejercicio_17" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_18">Respuesta 18</h2>
+<pre>
+! Propósito: Aplicar las funciones intrínsecas LEN() e INDEX().
+PROGRAM Ejercicio18
+    IMPLICIT NONE
+    CHARACTER(LEN=32) :: FRASE = "El compilador gfortran es rapido"
+    INTEGER :: LONGITUD, POSICION
+    
+    ! 2. Longitud total de la FRASE.
+    LONGITUD = LEN(FRASE)
+    PRINT *, "Longitud total:", LONGITUD 
+
+    ! 3. Posición inicial de "gfortran".
+    POSICION = INDEX(FRASE, "gfortran")
+    PRINT *, "Posición de 'gfortran':", POSICION 
+
+END PROGRAM Ejercicio18
+</pre><a href="#ejercicio_18" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_19">Respuesta 19</h2>
+<pre>
+! Propósito: Uso de los operadores lógicos .NOT., .EQV. y .NEQV..
+PROGRAM Ejercicio19
+    IMPLICIT NONE
+    LOGICAL :: P = .TRUE., Q = .FALSE.
+    
+    ! 2. Negación de P.
+    PRINT *, ".NOT. P:", .NOT. P     ! .FALSE.
+
+    ! 3. Equivalencia lógica (P es igual a Q).
+    PRINT *, "P .EQV. Q:", P .EQV. Q ! .FALSE.
+
+    ! 4. No equivalencia lógica (P es diferente de Q).
+    PRINT *, "P .NEQV. Q:", P .NEQV. Q ! .TRUE.
+
+END PROGRAM Ejercicio19
+</pre><a href="#ejercicio_19" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_20">Respuesta 20</h2>
+<pre>
+! Propósito: Integración de PARAMETER y FORMAT (A, F, I, L) para un reporte.
+PROGRAM Ejercicio20
+    IMPLICIT NONE
+    ! 1. Definición de constantes PARAMETER.
+    CHARACTER(LEN=20), PARAMETER :: NOMBRE_PROYECTO = "ANALISIS NUMERICO"
+    REAL, PARAMETER :: VERSION = 1.5
+    INTEGER, PARAMETER :: MAX_ITERACIONES = 500
+    LOGICAL, PARAMETER :: FINALIZADO = .TRUE.
+    
+    ! 3. Uso de una única sentencia WRITE con FORMAT.
+    WRITE(*, 100) NOMBRE_PROYECTO, VERSION, MAX_ITERACIONES, FINALIZADO
+    
+100 FORMAT (' Proyecto: ', A20, /  & ! A20: Nombre de proyecto. /: Nueva línea.
+            ' Versión:  ', F4.1, /  & ! F4.1: Versión (4 posiciones, 1 decimal).
+            ' Max. Iters:', I5, /  & ! I5: Max. Iteraciones (5 posiciones).
+            ' Finalizado:', L1)      ! L1: Lógico (1 posición, T o F).
+    ! El símbolo '&' se usa para continuar la sentencia FORMAT en la siguiente línea.
+
+END PROGRAM Ejercicio20
+</pre><a href="#ejercicio_20" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_21">Respuesta 21</h2>
+<pre>
+! Propósito: Sentencia de control IF simple.
+PROGRAM Ejercicio21
+    IMPLICIT NONE
+    INTEGER :: NUMERO
+
+    ! 2. Lectura del valor desde la consola.
+    PRINT *, "Ingrese un número entero:"
+    READ (*, *) NUMERO
+
+    ! 3. Uso de IF para verificar si el número es positivo (> 0).
+    IF (NUMERO > 0) THEN
+        PRINT *, "El número es positivo."
+    END IF
+    
+END PROGRAM Ejercicio21
+</pre><a href="#ejercicio_21" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_22">Respuesta 22</h2>
+<pre>
+! Propósito: Estructura de control IF-ELSE (dos bloques mutuamente excluyentes).
+PROGRAM Ejercicio22
+    IMPLICIT NONE
+    INTEGER :: EDAD
+    
+    ! 1. Declarar y leer EDAD.
+    PRINT *, "Ingrese su edad:"
+    READ (*, *) EDAD
+
+    ! 2. Uso de IF-ELSE para determinar mayoría de edad (>= 18).
+    IF (EDAD >= 18) THEN
+        PRINT *, "Es mayor de edad."
+    ELSE
+        PRINT *, "Es menor de edad."
+    END IF
+
+END PROGRAM Ejercicio22
+</pre><a href="#ejercicio_22" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_23">Respuesta 23</h2>
+<pre>
+! Propósito: Estructura de decisión múltiple IF-ELSE IF-ELSE.
+PROGRAM Ejercicio23
+    IMPLICIT NONE
+    REAL :: CALIFICACION
+    
+    ! 1. Declarar y leer CALIFICACION (0.0 a 10.0).
+    PRINT *, "Ingrese la calificación (0.0 - 10.0):"
+    READ (*, *) CALIFICACION
+
+    ! 2. Clasificación usando IF-ELSE IF-ELSE.
+    IF (CALIFICACION >= 9.0) THEN
+        PRINT *, "Excelente."
+    ELSE IF (CALIFICACION >= 7.0) THEN
+        ! Se cumple si 7.0 <= CALIFICACION < 9.0
+        PRINT *, "Notable."
+    ELSE
+        ! Cualquier otro caso (< 7.0)
+        PRINT *, "Insuficiente."
+    END IF
+
+END PROGRAM Ejercicio23
+</pre><a href="#ejercicio_23" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_24">Respuesta 24</h2>
+<pre>
+! Propósito: Uso del IF Lógico Condensado (una sola línea).
+PROGRAM Ejercicio24
+    IMPLICIT NONE
+    INTEGER :: X = 5
+    
+    ! 2. IF lógico condensado: cambia X a 100 si X < 10.
+    IF (X < 10) X = 100
+    
+    ! 3. Mostrar el valor final de X (debe ser 100).
+    PRINT *, "Valor final de X:", X
+    
+END PROGRAM Ejercicio24
+</pre><a href="#ejercicio_24" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_25">Respuesta 25</h2>
+<pre>
+! Propósito: Bucle DO con la cláusula STEP (paso).
+PROGRAM Ejercicio25
+    IMPLICIT NONE
+    INTEGER :: I
+    
+    ! 1. El bucle DO itera de 1 a 10, con un paso (STEP) de 2.
+    ! Imprime los números impares: 1, 3, 5, 7, 9.
+    DO I = 1, 10, 2
+        PRINT *, "Número impar:", I
+    END DO
+
+END PROGRAM Ejercicio25
+</pre><a href="#ejercicio_25" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_26">Respuesta 26</h2>
+<pre>
+! Propósito: Bucles DO anidados para estructuras bidimensionales y control de salida.
+PROGRAM Ejercicio26
+    IMPLICIT NONE
+    INTEGER :: I, J
+    
+    ! 1. Bucle externo (Filas).
+    DO I = 1, 3
+        ! 1. Bucle interno (Columnas).
+        DO J = 1, 3
+            ! 2. Imprimir I * J. Usamos WRITE con ADVANCE="NO" para mantener la línea.
+            WRITE(*, '(I4, 1X)', ADVANCE="NO") I * J 
+        END DO
+        ! 3. Sentencia WRITE sin argumentos para forzar nueva línea al final de la fila.
+        WRITE(*, *) 
+    END DO
+
+END PROGRAM Ejercicio26
+</pre><a href="#ejercicio_26" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_27">Respuesta 27</h2>
+<pre>
+! Propósito: Aplicar la sentencia EXIT para terminar prematuramente un bucle DO.
+PROGRAM Ejercicio27
+    IMPLICIT NONE
+    INTEGER :: I
+    
+    ! 1. Bucle DO de 1 a 100.
+    DO I = 1, 100
+        
+        ! 2. Comprobar si el contador es 42.
+        IF (I == 42) THEN
+            ! 3. Terminar el bucle.
+            EXIT 
+        END IF
+        
+    END DO
+    
+    ! 4. Fuera del bucle, I debe ser 42.
+    PRINT *, "Último valor de I al salir:", I 
+
+END PROGRAM Ejercicio27
+</pre><a href="#ejercicio_27" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_28">Respuesta 28</h2>
+<pre>
+! Propósito: Aplicar la sentencia CYCLE para omitir una iteración.
+PROGRAM Ejercicio28
+    IMPLICIT NONE
+    INTEGER :: I
+    
+    ! 1. Bucle DO que itera de 1 a 10.
+    DO I = 1, 10
+        
+        ! 2. Comprobar si I es divisible por 3 (MODULO(I, 3) == 0).
+        IF (MODULO(I, 3) == 0) THEN
+            ! 3. Si es divisible por 3, salta a la siguiente iteración.
+            CYCLE 
+        END IF
+        
+        ! 4. Imprimir los demás casos.
+        PRINT *, "Imprimiendo I:", I 
+        
+    END DO
+
+END PROGRAM Ejercicio28
+</pre><a href="#ejercicio_28" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_29">Respuesta 29</h2>
+<pre>
+! Propósito: Controlar bucles anidados con la sentencia EXIT etiquetada.
+PROGRAM Ejercicio29
+    IMPLICIT NONE
+    INTEGER :: I, J
+    
+    ! 1. Bucle DO externo etiquetado (BUCLE_EXTERNO).
+    BUCLE_EXTERNO: DO I = 1, 10
+        DO J = 1, 10
+            
+            ! 2. Condición de terminación.
+            IF (I * J > 20) THEN
+                ! 3. Usar EXIT con la etiqueta para terminar ambos bucles.
+                EXIT BUCLE_EXTERNO
+            END IF
+            
+        END DO
+    END DO BUCLE_EXTERNO
+
+    ! 4. Imprimir I y J para verificar el punto de terminación.
+    PRINT *, "Bucle terminado en I =", I, " y J =", J
+
+END PROGRAM Ejercicio29
+</pre><a href="#ejercicio_29" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_30">Respuesta 30</h2>
+<pre>
+! Propósito: Aplicar la sentencia de control SELECT CASE.
+PROGRAM Ejercicio30
+    IMPLICIT NONE
+    INTEGER :: OPCION
+    
+    ! 1. Declarar y leer la opción del usuario (1 a 3).
+    PRINT *, "Ingrese una opción (1=Archivo, 2=Edición, 3=Configuración):"
+    READ (*, *) OPCION
+    
+    ! 2. Uso de SELECT CASE para evaluar OPCION.
+    SELECT CASE (OPCION)
+        CASE (1)
+            PRINT *, "Opción de Archivo."
+        CASE (2)
+            PRINT *, "Opción de Edición."
+        CASE (3)
+            PRINT *, "Opción de Configuración."
+        CASE DEFAULT
+            ! Caso para cualquier valor que no sea 1, 2 o 3.
+            PRINT *, "Opción no válida."
+    END SELECT CASE
+
+END PROGRAM Ejercicio30
+</pre><a href="#ejercicio_30" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_31">Respuesta 31</h2>
+<pre>
+! Propósito: Sentencia SELECT CASE con rangos y valores discretos.
+PROGRAM Ejercicio31
+    IMPLICIT NONE
+    INTEGER :: NUMERO_DADO
+    
+    PRINT *, "Ingrese el número de un dado (1-6):"
+    READ (*, *) NUMERO_DADO
+
+    SELECT CASE (NUMERO_DADO)
+        CASE (1)
+            PRINT *, "Valor mínimo."
+        CASE (6)
+            PRINT *, "Valor máximo."
+        CASE (2:5) ! Rango de 2 a 5
+            PRINT *, "Valor intermedio."
+        CASE DEFAULT
+            PRINT *, "Error de lectura: Valor fuera de rango (1-6)."
+    END SELECT CASE
+
+END PROGRAM Ejercicio31
+</pre><a href="#ejercicio_31" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_32">Respuesta 32</h2>
+<pre>
+! Propósito: Simular un bucle WHILE usando DO infinito y EXIT.
+PROGRAM Ejercicio32
+    IMPLICIT NONE
+    INTEGER :: CONTADOR = 1
+
+    ! 2. Bucle DO sin límites (simulación de bucle infinito).
+    DO
+        ! 3. Condición de salida (pre-condicional, como un WHILE).
+        IF (CONTADOR > 15) THEN
+            EXIT ! Termina el bucle si CONTADOR es mayor que 15.
+        END IF
+
+        ! 4. Imprimir y luego incrementar.
+        PRINT *, "Contador:", CONTADOR
+        CONTADOR = CONTADOR + 1
+    END DO
+    
+    PRINT *, "Bucle finalizado. Último valor impreso fue 15."
+
+END PROGRAM Ejercicio32
+</pre><a href="#ejercicio_32" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_33">Respuesta 33</h2>
+<pre>
+! Propósito: Bucle DO WHILE explícito.
+PROGRAM Ejercicio33
+    IMPLICIT NONE
+    INTEGER :: INTENTO = 0
+
+    ! 2. Bucle DO WHILE: ejecuta el cuerpo MIENTRAS la condición sea verdadera.
+    DO WHILE (INTENTO < 5)
+        ! 3. Incrementar e imprimir el valor.
+        INTENTO = INTENTO + 1
+        PRINT *, "Intento número:", INTENTO
+    END DO
+    
+END PROGRAM Ejercicio33
+</pre><a href="#ejercicio_33" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_34">Respuesta 34</h2>
+<pre>
+! Propósito: Usar la función intrínseca MODULO() para determinar paridad.
+PROGRAM Ejercicio34
+    IMPLICIT NONE
+    INTEGER :: NUMERO
+
+    PRINT *, "Ingrese un número entero para determinar la paridad:"
+    READ (*, *) NUMERO
+    
+    ! 3. Comprobar si el módulo (resto) de la división por 2 es cero.
+    IF (MODULO(NUMERO, 2) == 0) THEN
+        PRINT *, "El número es par."
+    ELSE
+        PRINT *, "El número es impar."
+    END IF
+
+END PROGRAM Ejercicio34
+</pre><a href="#ejercicio_34" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_35">Respuesta 35</h2>
+<pre>
+! Propósito: Menú interactivo con bucle DO infinito y SELECT CASE.
+PROGRAM Ejercicio35
+    IMPLICIT NONE
+    INTEGER :: OPCION
+
+    ! 1. Bucle DO infinito para mantener el menú activo.
+    DO
+        ! 2. Mostrar el menú.
+        PRINT *
+        PRINT *, "--- MENÚ PRINCIPAL ---"
+        PRINT *, "(1) Iniciar Proceso"
+        PRINT *, "(2) Configurar Sistema"
+        PRINT *, "(0) Salir"
+        PRINT *, "Seleccione una opción (0-2):"
+
+        ! 3. Leer la opción.
+        READ (*, *) OPCION
+        
+        ! 4. Usar SELECT CASE para manejar opciones y la salida.
+        SELECT CASE (OPCION)
+            CASE (1)
+                PRINT *, ">>> Proceso Iniciado."
+            CASE (2)
+                PRINT *, ">>> Acceso a Configuración."
+            CASE (0)
+                PRINT *, "Saliendo del programa..."
+                EXIT ! Terminar el bucle.
+            CASE DEFAULT
+                PRINT *, "!!! Opción no reconocida. Intente de nuevo."
+        END SELECT CASE
+    END DO
+
+END PROGRAM Ejercicio35
+</pre><a href="#ejercicio_35" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_36">Respuesta 36</h2>
+<pre>
+! Propósito: Generación de la secuencia de Fibonacci.
+PROGRAM Ejercicio36
+    IMPLICIT NONE
+    INTEGER :: A = 0, B = 1, C
+    INTEGER :: I
+    
+    PRINT *, "Secuencia de Fibonacci (Primeros 10 términos):"
+    
+    ! 1. Imprimir los dos primeros términos (no están en el bucle).
+    WRITE(*, '(I5)', ADVANCE="NO") A
+    WRITE(*, '(I5)', ADVANCE="NO") B
+    
+    ! Bucle para generar los 8 términos restantes (total 10).
+    DO I = 3, 10
+        ! 3. Calcular el siguiente término.
+        C = A + B
+        
+        ! Imprimir C.
+        WRITE(*, '(I5)', ADVANCE="NO") C
+        
+        ! 4. Actualizar variables para la siguiente iteración.
+        A = B
+        B = C
+    END DO
+    
+    WRITE(*, *) ! Salto de línea final
+
+END PROGRAM Ejercicio36
+</pre><a href="#ejercicio_36" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_37">Respuesta 37</h2>
+<pre>
+! Propósito: Cálculo del factorial de un número usando un bucle DO.
+PROGRAM Ejercicio37
+    IMPLICIT NONE
+    INTEGER :: N, I
+    ! FACTORIAL se declara como REAL para evitar desbordamiento rápido con enteros.
+    REAL :: FACTORIAL = 1.0 
+
+    PRINT *, "Ingrese el número N para calcular el factorial (N!):"
+    READ (*, *) N
+    
+    IF (N < 0) THEN
+        PRINT *, "Error: El factorial no está definido para números negativos."
+        STOP
+    END IF
+    
+    ! 3. Bucle DO de 1 hasta N.
+    DO I = 1, N
+        ! 4. Acumulador: FACTORIAL = FACTORIAL * I
+        FACTORIAL = FACTORIAL * I
+    END DO
+    
+    ! 5. Mostrar el resultado final.
+    PRINT *, "El factorial de", N, "es:", FACTORIAL
+
+END PROGRAM Ejercicio37
+</pre><a href="#ejercicio_37" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_38">Respuesta 38</h2>
+<pre>
+! Propósito: Simulación de reloj digital con bucles anidados y control de EXIT.
+PROGRAM Ejercicio38
+    IMPLICIT NONE
+    INTEGER :: H, M, S
+
+    ! 1. Bucle de Horas.
+    BUCLE_HORAS: DO H = 0, 23
+        ! Comprobar la condición de salida anticipada (Hora 1).
+        IF (H == 1) THEN
+            PRINT *, "Terminación anticipada de la simulación."
+            EXIT BUCLE_HORAS ! Salir del bucle externo.
+        END IF
+        
+        ! 1. Bucle de Minutos.
+        DO M = 0, 59
+            ! 1. Bucle de Segundos.
+            DO S = 0, 59
+                ! 2. Imprimir la hora en formato HH:MM:SS.
+                WRITE(*, '(I2.2, ":", I2.2, ":", I2.2)') H, M, S
+                ! La sentencia de reloj se omitirá para no detener la ejecución.
+            END DO
+        END DO
+    END DO BUCLE_HORAS
+
+END PROGRAM Ejercicio38
+</pre><a href="#ejercicio_38" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_39">Respuesta 39</h2>
+<pre>
+! Propósito: Aplicar el operador lógico .NOT. a una expresión compleja.
+PROGRAM Ejercicio39
+    IMPLICIT NONE
+    INTEGER, PARAMETER :: X = 10, Y = 20, Z = 30
+    LOGICAL :: CONDICION_NEGADA
+
+    ! 2. Condición original: (X > 5 .AND. Y < 10)
+    ! CONDICION_NEGADA = .NOT. (.TRUE. .AND. .FALSE.) 
+    ! CONDICION_NEGADA = .NOT. .FALSE. = .TRUE.
+    
+    ! 2. Implementar la negación de la condición compuesta.
+    IF (.NOT. (X > 5 .AND. Y < 10)) THEN
+        ! 3. Si la condición negada es verdadera (lo cual es), imprimir.
+        PRINT *, "La condición compuesta (X > 5 Y Y < 10) es falsa."
+    END IF
+
+END PROGRAM Ejercicio39
+</pre><a href="#ejercicio_39" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_40">Respuesta 40</h2>
+<pre>
+! Propósito: Algoritmo de año bisiesto con IF-ELSE IF y MODULO().
+PROGRAM Ejercicio40
+    IMPLICIT NONE
+    INTEGER :: ANIO
+    LOGICAL :: ES_BISIESTO
+
+    PRINT *, "Ingrese un año para verificar si es bisiesto:"
+    READ (*, *) ANIO
+    
+    ! 2. Lógica bisiesta:
+    ! Divisible por 400 (MODULO(ANIO, 400) == 0)
+    ! O (Divisible por 4 PERO no divisible por 100)
+    
+    ES_BISIESTO = (MODULO(ANIO, 400) == 0) .OR. &
+                  (MODULO(ANIO, 4) == 0 .AND. MODULO(ANIO, 100) /= 0)
+
+    ! 3. Imprimir el resultado.
+    IF (ES_BISIESTO) THEN
+        PRINT *, ANIO, "es Bisiesto."
+    ELSE
+        PRINT *, ANIO, "no es Bisiesto."
+    END IF
+
+END PROGRAM Ejercicio40
+</pre><a href="#ejercicio_40" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_41">Respuesta 41</h2>
+<pre>
+! Propósito: Declarar e inicializar un array 1D (vector) usando el constructor de array.
+PROGRAM Ejercicio41
+    IMPLICIT NONE
+    ! 1. Declarar un array entero VECTOR de 5 elementos.
+    INTEGER, DIMENSION(5) :: VECTOR
+    
+    ! 2. Inicializar VECTOR usando el constructor de array.
+    VECTOR = (/ 10, 20, 30, 40, 50 /)
+    
+    ! 3. Imprimir el array completo.
+    PRINT *, "Vector inicializado:", VECTOR
+
+END PROGRAM Ejercicio41
+</pre><a href="#ejercicio_41" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_42">Respuesta 42</h2>
+<pre>
+! Propósito: Acceder y modificar elementos individuales de un array usando su índice.
+PROGRAM Ejercicio42
+    IMPLICIT NONE
+    ! 1. Declarar un array real DATOS de 10 elementos e inicializar a cero.
+    REAL, DIMENSION(10) :: DATOS = 0.0
+    
+    ! 2. Asignar el valor 99.9 al primer elemento (índice 1).
+    DATOS(1) = 99.9
+    
+    ! 3. Asignar el valor 1.5 al elemento en la posición media (índice 5).
+    DATOS(5) = 1.5
+    
+    ! 4. Imprimir solo los elementos 1, 5 y 10.
+    PRINT *, "Elemento 1:", DATOS(1)
+    PRINT *, "Elemento 5:", DATOS(5)
+    PRINT *, "Elemento 10:", DATOS(10)
+
+END PROGRAM Ejercicio42
+</pre><a href="#ejercicio_42" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_43">Respuesta 43</h2>
+<pre>
+! Propósito: Declarar un array 2D y recorrerlo con bucles DO anidados.
+PROGRAM Ejercicio43
+    IMPLICIT NONE
+    ! 1. Declarar una matriz entera MATRIZ de 3x3.
+    INTEGER, DIMENSION(3, 3) :: MATRIZ
+    INTEGER :: I, J
+    
+    ! 2. Asignar a cada elemento el valor de su fila + columna.
+    DO I = 1, 3 ! Filas
+        DO J = 1, 3 ! Columnas
+            MATRIZ(I, J) = I + J
+        END DO
+    END DO
+    
+    ! 3. Imprimir la matriz 3x3.
+    PRINT *, "Matriz resultante:"
+    DO I = 1, 3
+        ! Usar bucle implícito para imprimir la fila en una sola línea.
+        WRITE(*, '(3I5)') (MATRIZ(I, J), J = 1, 3)
+    END DO
+
+END PROGRAM Ejercicio43
+</pre><a href="#ejercicio_43" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_44">Respuesta 44</h2>
+<pre>
+! Propósito: Modificar una sección de array completa con una sola sentencia (rango de índices).
+PROGRAM Ejercicio44
+    IMPLICIT NONE
+    ! 1. Declarar un array entero VECTOR de 100 elementos e inicializar a 0.
+    INTEGER, DIMENSION(100) :: VECTOR = 0
+    
+    ! 2. Asignar el valor 1 a los elementos del 1 al 10.
+    VECTOR(1:10) = 1
+    
+    ! 3. Asignar el valor 2 a los elementos del 50 al 60.
+    VECTOR(50:60) = 2
+    
+    ! 4. Imprimir la sección modificada del 9 al 12.
+    PRINT *, "Sección 9 a 12 (1, 1, 0, 0):", VECTOR(9:12)
+
+END PROGRAM Ejercicio44
+</pre><a href="#ejercicio_44" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_45">Respuesta 45</h2>
+<pre>
+! Propósito: Aplicar operaciones aritméticas a arrays completos (vectorización).
+PROGRAM Ejercicio45
+    IMPLICIT NONE
+    ! 1. Declarar dos arrays reales A y B de 5 elementos.
+    REAL, DIMENSION(5) :: A
+    REAL, DIMENSION(5) :: B
+    
+    ! 2. Inicializar A.
+    A = (/ 1.0, 2.0, 3.0, 4.0, 5.0 /)
+    
+    ! 3. Asignar a B el resultado de multiplicar cada elemento de A por 2.5 (vectorización).
+    B = A * 2.5
+    
+    ! 4. Imprimir el array resultante B.
+    PRINT *, "Array A:", A
+    PRINT *, "Array B (A * 2.5):", B
+
+END PROGRAM Ejercicio45
+</pre><a href="#ejercicio_45" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_46">Respuesta 46</h2>
+<pre>
+! Propósito: Seleccionar elementos con un stride (paso) específico usando el Triplet.
+PROGRAM Ejercicio46
+    IMPLICIT NONE
+    ! 1. Declarar NUMEROS (1 a 20).
+    INTEGER, DIMENSION(20) :: NUMEROS
+    INTEGER :: I
+    
+    ! Llenar NUMEROS de 1 a 20.
+    DO I = 1, 20
+        NUMEROS(I) = I
+    END DO
+    
+    ! 2. Declarar SUBSECCION (5 elementos).
+    INTEGER, DIMENSION(5) :: SUBSECCION
+    
+    ! 3. Asignar a SUBSECCION las posiciones impares (1, 3, 5, 7, 9) usando el Triplet (1:9:2).
+    SUBSECCION = NUMEROS(1:9:2)
+    
+    ! 4. Imprimir SUBSECCION.
+    PRINT *, "Subsección de impares:", SUBSECCION ! 1, 3, 5, 7, 9
+
+END PROGRAM Ejercicio46
+</pre><a href="#ejercicio_46" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_47">Respuesta 47</h2>
+<pre>
+! Propósito: Aplicar las funciones intrínsecas de reducción SUM() y PRODUCT().
+PROGRAM Ejercicio47
+    IMPLICIT NONE
+    ! 1. Declarar DATOS.
+    INTEGER, DIMENSION(5) :: DATOS = (/ 1, 2, 3, 4, 5 /)
+    INTEGER :: SUMA, PRODUCTO
+    
+    ! 3. Usar SUM() para la suma.
+    SUMA = SUM(DATOS)
+    
+    ! 4. Usar PRODUCT() para el producto.
+    PRODUCTO = PRODUCT(DATOS)
+    
+    ! 5. Mostrar ambos resultados.
+    PRINT *, "Suma de elementos:", SUMA       ! 1+2+3+4+5 = 15
+    PRINT *, "Producto de elementos:", PRODUCTO ! 1*2*3*4*5 = 120
+
+END PROGRAM Ejercicio47
+</pre><a href="#ejercicio_47" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_48">Respuesta 48</h2>
+<pre>
+! Propósito: Encontrar el valor extremo en un array usando MAXVAL() y MINVAL().
+PROGRAM Ejercicio48
+    IMPLICIT NONE
+    ! 1. Declarar TEMPERATURAS.
+    REAL, DIMENSION(5) :: TEMPERATURAS = (/ 25.5, 30.1, 19.8, 35.0, 28.7 /)
+    REAL :: MAX_T, MIN_T
+    
+    ! 3. Encontrar el máximo y el mínimo.
+    MAX_T = MAXVAL(TEMPERATURAS)
+    MIN_T = MINVAL(TEMPERATURAS)
+    
+    ! 4. Mostrar ambos valores.
+    PRINT *, "Temperatura Máxima:", MAX_T
+    PRINT *, "Temperatura Mínima:", MIN_T
+
+END PROGRAM Ejercicio48
+</pre><a href="#ejercicio_48" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_49">Respuesta 49</h2>
+<pre>
+! Propósito: Calcular el producto escalar (producto punto) entre dos vectores con DOT_PRODUCT().
+PROGRAM Ejercicio49
+    IMPLICIT NONE
+    ! 1. Declarar e inicializar V1 y V2.
+    REAL, DIMENSION(3) :: V1 = (/ 1.0, 2.0, 3.0 /)
+    REAL, DIMENSION(3) :: V2 = (/ 4.0, 5.0, 6.0 /)
+    REAL :: PRODUCTO_ESCALAR
+    
+    ! 3. Usar DOT_PRODUCT(V1, V2). (1*4 + 2*5 + 3*6) = 4 + 10 + 18 = 32.0
+    PRODUCTO_ESCALAR = DOT_PRODUCT(V1, V2)
+    
+    ! 4. Mostrar el resultado.
+    PRINT *, "Producto Escalar (V1 . V2):", PRODUCTO_ESCALAR
+
+END PROGRAM Ejercicio49
+</pre><a href="#ejercicio_49" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_50">Respuesta 50</h2>
+<pre>
+! Propósito: Realizar la multiplicación de matrices con la función MATMUL().
+PROGRAM Ejercicio50
+    IMPLICIT NONE
+    ! 1. Declarar A (2x3) y B (3x2).
+    INTEGER, DIMENSION(2, 3) :: A = RESHAPE((/ 1, 2, 3, 4, 5, 6 /), SHAPE=(/ 2, 3 /))
+    INTEGER, DIMENSION(3, 2) :: B = RESHAPE((/ 7, 8, 9, 10, 11, 12 /), SHAPE=(/ 3, 2 /))
+    
+    ! 2. Declarar C para el resultado A * B (dimensión 2x2).
+    INTEGER, DIMENSION(2, 2) :: C
+    INTEGER :: I
+    
+    ! 3. Usar MATMUL(A, B).
+    C = MATMUL(A, B)
+    
+    ! 4. Imprimir la matriz resultante C.
+    PRINT *, "Matriz A * Matriz B (Resultado C - 2x2):"
+    DO I = 1, 2
+        WRITE(*, '(2I5)') (C(I, J), J = 1, 2)
+    END DO
+
+END PROGRAM Ejercicio50
+</pre><a href="#ejercicio_50" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_51">Respuesta 51</h2>
+<pre>
+! Propósito: Usar la sentencia WHERE-END WHERE para asignaciones condicionales.
+PROGRAM Ejercicio51
+    IMPLICIT NONE
+    INTEGER, DIMENSION(10) :: PUNTOS
+    INTEGER :: I
+
+    ! 1. Inicializar PUNTOS (valores aleatorios simplificados para demostración).
+    PUNTOS = (/ 10, 65, 40, 80, 25, 90, 50, 5, 75, 45 /)
+    
+    PRINT *, "Array Original:", PUNTOS
+
+    ! 2. Asignar 0 a todos los elementos menores que 50.
+    WHERE (PUNTOS < 50)
+        PUNTOS = 0
+    END WHERE
+    
+    ! 3. Imprimir el array modificado.
+    PRINT *, "Array Modificado:", PUNTOS ! (0, 65, 0, 80, 0, 90, 50, 0, 75, 0)
+
+END PROGRAM Ejercicio51
+</pre><a href="#ejercicio_51" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_52">Respuesta 52</h2>
+<pre>
+! Propósito: Usar WHERE-ELSEWHERE-END WHERE para una condición doble.
+PROGRAM Ejercicio52
+    IMPLICIT NONE
+    INTEGER, DIMENSION(5) :: A = (/ 1, 2, 3, 4, 5 /)
+    INTEGER :: MASK_PAR
+    
+    PRINT *, "Array Original:", A
+
+    ! 2. Si es par, asignar 1. Si es impar (ELSEWHERE), asignar -1.
+    WHERE (MODULO(A, 2) == 0) ! Máscara: (.F., .T., .F., .T., .F.)
+        A = 1
+    ELSEWHERE
+        A = -1
+    END WHERE
+    
+    ! 3. Imprimir el array resultante.
+    PRINT *, "Array Modificado:", A ! (-1, 1, -1, 1, -1)
+
+END PROGRAM Ejercicio52
+</pre><a href="#ejercicio_52" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_53">Respuesta 53</h2>
+<pre>
+! Propósito: Usar las funciones de reducción lógica ALL() y ANY().
+PROGRAM Ejercicio53
+    IMPLICIT NONE
+    ! 1. Declarar BANDERA.
+    LOGICAL, DIMENSION(4) :: BANDERA = (/ .TRUE., .TRUE., .FALSE., .TRUE. /)
+    LOGICAL :: SON_TODOS, HAY_ALGUNO
+    
+    ! 2. ALL(): Comprueba si todos los elementos son .TRUE. (Falso).
+    SON_TODOS = ALL(BANDERA)
+    
+    ! 3. ANY(): Comprueba si al menos uno es .TRUE. (Verdadero).
+    HAY_ALGUNO = ANY(BANDERA)
+    
+    PRINT *, "Resultado de ALL(BANDERA):", SON_TODOS
+    PRINT *, "Resultado de ANY(BANDERA):", HAY_ALGUNO
+
+END PROGRAM Ejercicio53
+</pre><a href="#ejercicio_53" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_54">Respuesta 54</h2>
+<pre>
+! Propósito: Usar la función intrínseca COUNT() para contar elementos que cumplen una condición.
+PROGRAM Ejercicio54
+    IMPLICIT NONE
+    ! 1. Declarar EDADES.
+    INTEGER, DIMENSION(8) :: EDADES = (/ 15, 22, 30, 17, 45, 10, 18, 50 /)
+    INTEGER :: CONTEO_MAYORES
+    
+    ! 2. COUNT() con máscara: determina cuántos son >= 18.
+    ! Máscara: (.F., .T., .T., .F., .T., .F., .T., .T.) -> 5 verdaderos.
+    CONTEO_MAYORES = COUNT(EDADES >= 18)
+    
+    ! 3. Mostrar el número de elementos.
+    PRINT *, "Total de edades:", SIZE(EDADES)
+    PRINT *, "Número de personas mayores o iguales a 18:", CONTEO_MAYORES
+
+END PROGRAM Ejercicio54
+</pre><a href="#ejercicio_54" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_55">Respuesta 55</h2>
+<pre>
+! Propósito: Usar RESHAPE() para cambiar la forma (dimensiones) de un array.
+PROGRAM Ejercicio55
+    IMPLICIT NONE
+    ! 1. Vector 1D (6 elementos).
+    INTEGER, DIMENSION(6) :: VEC_1D = (/ 1, 2, 3, 4, 5, 6 /)
+    ! 2. Matriz 2D (2x3).
+    INTEGER, DIMENSION(2, 3) :: MAT_2D
+    INTEGER :: I
+    
+    ! 3. Usar RESHAPE: llena la matriz columna por columna (por defecto).
+    ! Fila 1: 1, 3, 5 | Fila 2: 2, 4, 6
+    MAT_2D = RESHAPE(VEC_1D, SHAPE=(/ 2, 3 /))
+    
+    ! 4. Imprimir MAT_2D para verificar.
+    PRINT *, "Matriz 2x3 (RESHAPE):"
+    DO I = 1, 2
+        WRITE(*, '(3I5)') (MAT_2D(I, J), J = 1, 3)
+    END DO
+
+END PROGRAM Ejercicio55
+</pre><a href="#ejercicio_55" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_56">Respuesta 56</h2>
+<pre>
+! Propósito: Obtener el tamaño total (SIZE) y el límite superior (UBOUND) de un array.
+PROGRAM Ejercicio56
+    IMPLICIT NONE
+    ! 1. Matriz cúbica 4x5x2.
+    INTEGER, DIMENSION(4, 5, 2) :: CUBICA
+    INTEGER :: TAMANO_TOTAL, LIMITE_DIM2
+    
+    ! 2. SIZE(): Obtener el número total de elementos (4 * 5 * 2 = 40).
+    TAMANO_TOTAL = SIZE(CUBICA)
+    
+    ! 3. UBOUND(): Obtener el límite superior de la segunda dimensión (debe ser 5).
+    LIMITE_DIM2 = UBOUND(CUBICA, DIM=2)
+    
+    ! 4. Mostrar ambos resultados.
+    PRINT *, "Tamaño total del array (SIZE):", TAMANO_TOTAL
+    PRINT *, "Límite superior de la Dimensión 2 (UBOUND):", LIMITE_DIM2
+
+END PROGRAM Ejercicio56
+</pre><a href="#ejercicio_56" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_57">Respuesta 57</h2>
+<pre>
+! Propósito: Declarar, asignar (ALLOCATE) y liberar (DEALLOCATE) un array dinámico.
+PROGRAM Ejercicio57
+    IMPLICIT NONE
+    ! 1. Array entero con el atributo ALLOCATABLE.
+    INTEGER, DIMENSION(:), ALLOCATABLE :: DATOS
+    INTEGER :: I, TAMANO = 25
+    
+    ! 2. Asignar memoria para 25 elementos.
+    ALLOCATE(DATOS(TAMANO))
+    
+    ! 3. Llenar el array con valores.
+    DO I = 1, TAMANO
+        DATOS(I) = I * 10 
+    END DO
+    
+    PRINT *, "Elementos del array asignado (DATOS(1) a DATOS(5)):", DATOS(1:5)
+    
+    ! 4. Liberar la memoria.
+    DEALLOCATE(DATOS)
+
+END PROGRAM Ejercicio57
+</pre><a href="#ejercicio_57" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_58">Respuesta 58</h2>
+<pre>
+! Propósito: Usar ALLOCATED() para verificar el estado de asignación de memoria.
+PROGRAM Ejercicio58
+    IMPLICIT NONE
+    ! 1. Array real con ALLOCATABLE.
+    REAL, DIMENSION(:), ALLOCATABLE :: BUFFER
+    
+    ! 2. Comprobar el estado inicial (debe ser FALSO).
+    IF (ALLOCATED(BUFFER)) THEN
+        PRINT *, "Estado Inicial: ASIGNADO (Error: no debería estarlo)."
+    ELSE
+        PRINT *, "Estado Inicial: NO ASIGNADO (Correcto)."
+    END IF
+    
+    ! 3. Asignar memoria.
+    ALLOCATE(BUFFER(5))
+    
+    ! 4. Comprobar el estado final (debe ser VERDADERO).
+    IF (ALLOCATED(BUFFER)) THEN
+        PRINT *, "Estado Final: ASIGNADO (Correcto)."
+    ELSE
+        PRINT *, "Estado Final: NO ASIGNADO (Error: debería estarlo)."
+    END IF
+    
+    DEALLOCATE(BUFFER)
+
+END PROGRAM Ejercicio58
+</pre><a href="#ejercicio_58" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_59">Respuesta 59</h2>
+<pre>
+! Propósito: Usar bucles implícitos de DO en sentencias de E/S.
+PROGRAM Ejercicio59
+    IMPLICIT NONE
+    ! 1. Array entero A de 10 elementos.
+    INTEGER, DIMENSION(10) :: A
+    
+    PRINT *, "Ingrese 10 números separados por espacios:"
+    
+    ! 2. Bucle implícito para leer los 10 elementos de la consola.
+    READ (*, *) (A(I), I = 1, 10)
+    
+    PRINT *, "Valores leídos:"
+    
+    ! 3. Bucle implícito para imprimir los 10 elementos en una línea.
+    WRITE (*, '(10I5)') (A(I), I = 1, 10)
+
+END PROGRAM Ejercicio59
+</pre><a href="#ejercicio_59" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_60">Respuesta 60</h2>
+<pre>
+! Propósito: Usar MAXLOC() y MINLOC() para encontrar la posición (índice) de valores extremos.
+PROGRAM Ejercicio60
+    IMPLICIT NONE
+    ! 1. Array DATOS.
+    INTEGER, DIMENSION(5) :: DATOS = (/ 10, 50, 5, 80, 25 /)
+    ! 2. Las funciones devuelven arrays de dimensión 1 (o más para arrays multidimensionales).
+    INTEGER, DIMENSION(1) :: POS_MAX, POS_MIN 
+    
+    ! 3. MAXLOC(DATOS): El máximo es 80, que está en la posición 4.
+    POS_MAX = MAXLOC(DATOS)
+    
+    ! 3. MINLOC(DATOS): El mínimo es 5, que está en la posición 3.
+    POS_MIN = MINLOC(DATOS)
+    
+    ! 4. Mostrar las posiciones.
+    PRINT *, "Posición del Valor Máximo:", POS_MAX(1) 
+    PRINT *, "Posición del Valor Mínimo:", POS_MIN(1)
+
+END PROGRAM Ejercicio60
+</pre><a href="#ejercicio_60" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_61">Respuesta 61</h2>
+<pre>
+! Propósito: Implementar y llamar a una SUBROUTINE simple.
+PROGRAM Ejercicio61
+    IMPLICIT NONE
+    
+    ! 2. Llamada a la subrutina.
+    CALL SALUDAR()
+    
+CONTAINS
+    ! 1. Definición de la subrutina SALUDAR.
+    SUBROUTINE SALUDAR()
+        IMPLICIT NONE
+        PRINT *, "Hola desde la Subrutina."
+    END SUBROUTINE SALUDAR
+    
+END PROGRAM Ejercicio61
+</pre><a href="#ejercicio_61" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_62">Respuesta 62</h2>
+<pre>
+! Propósito: Implementar una SUBROUTINE con argumentos de entrada (IN).
+PROGRAM Ejercicio62
+    IMPLICIT NONE
+    INTEGER :: NUMERO = 5
+    
+    ! 2. Llamada a la subrutina, pasando NUMERO.
+    CALL DUPLICAR_NUMERO(NUMERO)
+    
+CONTAINS
+    ! 1. Definición de la subrutina DUPLICAR_NUMERO.
+    ! El argumento NUM se declara con INTENT(IN) para que no pueda ser modificado.
+    SUBROUTINE DUPLICAR_NUMERO(NUM)
+        IMPLICIT NONE
+        INTEGER, INTENT(IN) :: NUM
+        INTEGER :: RESULTADO
+        
+        RESULTADO = NUM * 2
+        PRINT *, "El doble de", NUM, "es:", RESULTADO
+    END SUBROUTINE DUPLICAR_NUMERO
+    
+END PROGRAM Ejercicio62
+</pre><a href="#ejercicio_62" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_63">Respuesta 63</h2>
+<pre>
+! Propósito: Implementar una SUBROUTINE con argumentos de entrada y salida (IN y OUT).
+PROGRAM Ejercicio63
+    IMPLICIT NONE
+    REAL :: BASE = 10.0
+    REAL :: ALTURA = 5.0
+    REAL :: AREA_TRIANGULO
+    
+    ! 2. Llamada a la subrutina.
+    CALL CALCULAR_AREA(BASE, ALTURA, AREA_TRIANGULO)
+    
+    PRINT *, "El área del triángulo es:", AREA_TRIANGULO
+    
+CONTAINS
+    ! 1. Definición de la subrutina CALCULAR_AREA.
+    SUBROUTINE CALCULAR_AREA(B, H, AREA)
+        IMPLICIT NONE
+        REAL, INTENT(IN) :: B, H          ! Base y Altura son IN.
+        REAL, INTENT(OUT) :: AREA         ! Area es OUT (se calcula y devuelve).
+        
+        AREA = 0.5 * B * H
+    END SUBROUTINE CALCULAR_AREA
+    
+END PROGRAM Ejercicio63
+</pre><a href="#ejercicio_63" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_64">Respuesta 64</h2>
+<pre>
+! Propósito: Implementar una FUNCIÓN que devuelve un solo resultado.
+PROGRAM Ejercicio64
+    IMPLICIT NONE
+    INTEGER :: A = 12, B = 4
+    INTEGER :: MAXIMO
+    
+    ! 2. Llamada a la función (la función se usa en una expresión).
+    MAXIMO = ENCONTRAR_MAX(A, B)
+    
+    PRINT *, "El valor máximo entre", A, "y", B, "es:", MAXIMO
+    
+CONTAINS
+    ! 1. Definición de la función ENCONTRAR_MAX.
+    FUNCTION ENCONTRAR_MAX(X, Y) RESULT(RES)
+        IMPLICIT NONE
+        INTEGER, INTENT(IN) :: X, Y       ! Argumentos de entrada.
+        INTEGER :: RES                     ! Nombre del resultado de la función.
+        
+        IF (X >= Y) THEN
+            RES = X
+        ELSE
+            RES = Y
+        END IF
+    END FUNCTION ENCONTRAR_MAX
+    
+END PROGRAM Ejercicio64
+</pre><a href="#ejercicio_64" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_65">Respuesta 65</h2>
+<pre>
+! Propósito: Usar INTENT(INOUT) para modificar un argumento.
+PROGRAM Ejercicio65
+    IMPLICIT NONE
+    INTEGER :: CONTADOR = 5
+    
+    PRINT *, "Contador antes:", CONTADOR
+    
+    ! 2. Llamada a la subrutina.
+    CALL INCREMENTAR(CONTADOR)
+    
+    PRINT *, "Contador después:", CONTADOR ! Debe ser 6
+    
+CONTAINS
+    ! 1. Definición de la subrutina INCREMENTAR.
+    SUBROUTINE INCREMENTAR(VALOR)
+        IMPLICIT NONE
+        ! VALOR se usa tanto para entrada como para salida.
+        INTEGER, INTENT(INOUT) :: VALOR
+        
+        VALOR = VALOR + 1
+    END SUBROUTINE INCREMENTAR
+    
+END PROGRAM Ejercicio65
+</pre><a href="#ejercicio_65" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_66">Respuesta 66</h2>
+<pre>
+! Propósito: Implementar una función que opera sobre arrays completos (vectorización).
+PROGRAM Ejercicio66
+    IMPLICIT NONE
+    INTEGER, DIMENSION(3) :: A = (/ 1, 2, 3 /)
+    INTEGER, DIMENSION(3) :: B
+    
+    ! 2. Llamada a la función: la función opera sobre todo el array.
+    B = CUADRADO_ARRAY(A)
+    
+    PRINT *, "Array Original A:", A
+    PRINT *, "Array Cuadrado B:", B ! (1, 4, 9)
+    
+CONTAINS
+    ! 1. La función devuelve un array con la misma dimensión que el input.
+    FUNCTION CUADRADO_ARRAY(X) RESULT(Y)
+        IMPLICIT NONE
+        ! X es un array de dimensión desconocida (:) con INTENT(IN).
+        INTEGER, DIMENSION(:), INTENT(IN) :: X
+        ! Y se define con la misma forma que X (implícitamente por el resultado).
+        INTEGER, DIMENSION(SIZE(X)) :: Y 
+        
+        ! 3. Operación vectorizada: el elemento Y(i) = X(i) * X(i).
+        Y = X * X
+    END FUNCTION CUADRADO_ARRAY
+    
+END PROGRAM Ejercicio66
+</pre><a href="#ejercicio_66" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_67">Respuesta 67</h2>
+<pre>
+! Propósito: Usar la sentencia RECURSIVE para una función factorial.
+PROGRAM Ejercicio67
+    IMPLICIT NONE
+    INTEGER :: N = 5
+    INTEGER :: FACTORIAL_N
+    
+    ! 2. Llamada a la función.
+    FACTORIAL_N = FACTORIAL(N)
+    
+    PRINT *, "El factorial de", N, "es:", FACTORIAL_N ! 120
+    
+CONTAINS
+    ! 1. Definición de la función FACTORIAL como RECURSIVE.
+    RECURSIVE FUNCTION FACTORIAL(K) RESULT(RES)
+        IMPLICIT NONE
+        INTEGER, INTENT(IN) :: K
+        INTEGER :: RES
+        
+        IF (K <= 1) THEN
+            RES = 1
+        ELSE
+            ! 3. Llamada recursiva.
+            RES = K * FACTORIAL(K - 1)
+        END IF
+    END FUNCTION FACTORIAL
+    
+END PROGRAM Ejercicio67
+</pre><a href="#ejercicio_67" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_68">Respuesta 68</h2>
+<pre>
+! Propósito: Usar la función intrínseca ADJUSTL() para justificar a la izquierda.
+PROGRAM Ejercicio68
+    IMPLICIT NONE
+    CHARACTER(LEN=20) :: CADENA = "    JUSTIFICADO DERECHA"
+    CHARACTER(LEN=20) :: CADENA_IZQUIERDA
+    
+    PRINT *, "Original: '", TRIM(CADENA), "'"
+    
+    ! 2. Aplicar ADJUSTL() para mover la cadena a la izquierda.
+    CADENA_IZQUIERDA = ADJUSTL(CADENA)
+    
+    PRINT *, "Ajustado: '", TRIM(CADENA_IZQUIERDA), "'"
+
+END PROGRAM Ejercicio68
+</pre><a href="#ejercicio_68" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_69">Respuesta 69</h2>
+<pre>
+! Propósito: Usar la función intrínseca ADJUSTR() para justificar a la derecha.
+PROGRAM Ejercicio69
+    IMPLICIT NONE
+    CHARACTER(LEN=20) :: CADENA = "JUSTIFICADO IZQUIERDA    "
+    CHARACTER(LEN=20) :: CADENA_DERECHA
+    
+    PRINT *, "Original: '", TRIM(CADENA), "'"
+    
+    ! 2. Aplicar ADJUSTR() para mover la cadena a la derecha.
+    CADENA_DERECHA = ADJUSTR(CADENA)
+    
+    PRINT *, "Ajustado: '", TRIM(CADENA_DERECHA), "'"
+
+END PROGRAM Ejercicio69
+</pre><a href="#ejercicio_69" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_70">Respuesta 70</h2>
+<pre>
+! Propósito: Aplicar el atributo SAVE a una variable local para preservar su valor entre llamadas sucesivas.
+PROGRAM Ejercicio70
+    IMPLICIT NONE
+    
+    ! 2. Llamar a la subrutina varias veces para demostrar el efecto de SAVE.
+    CALL CONTAR_LLAMADAS() 
+    CALL CONTAR_LLAMADAS() 
+    CALL CONTAR_LLAMADAS() 
+    
+CONTAINS
+    ! 1. Definición de la subrutina CONTAR_LLAMADAS.
+    SUBROUTINE CONTAR_LLAMADAS()
+        IMPLICIT NONE
+        
+        ! 3. Declarar CONTADOR con el atributo SAVE e inicializarlo.
+        ! SAVE impide que CONTADOR se reinicie a 0 en cada entrada.
+        INTEGER, SAVE :: CONTADOR = 0 
+        
+        CONTADOR = CONTADOR + 1
+        PRINT *, "La subrutina ha sido llamada", CONTADOR, "veces."
+    END SUBROUTINE CONTAR_LLAMADAS
+    
+END PROGRAM Ejercicio70
+</pre><a href="#ejercicio_70" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_61">Respuesta 61</h2>
+<pre>
+PROGRAM EJERCICIO_61
+  IMPLICIT NONE
+  ! Llama a la subrutina para ejecutar la tarea.
+  CALL SALUDAR() 
+  
+CONTAINS
+
+  SUBROUTINE SALUDAR()
+    ! Objetivo: Mostrar un mensaje de bienvenida.
+    IMPLICIT NONE
+    PRINT *, "Iniciando proceso..."
+  END SUBROUTINE SALUDAR
+
+END PROGRAM EJERCICIO_61
+</pre><a href="#ejercicio_61" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_62">Respuesta 62</h2>
+<pre>
+PROGRAM EJERCICIO_62
+  IMPLICIT NONE
+
+  ! Llama a la subrutina con los valores de entrada.
+  CALL SUMAR_Y_MOSTRAR(15, 7)
+
+CONTAINS
+
+  SUBROUTINE SUMAR_Y_MOSTRAR(A, B)
+    ! Objetivo: Sumar dos argumentos enteros y mostrar el resultado.
+    IMPLICIT NONE
+    INTEGER :: A, B
+    INTEGER :: SUMA
+
+    SUMA = A + B
+    PRINT *, "El resultado de la suma es:", SUMA
+  END SUBROUTINE SUMAR_Y_MOSTRAR
+
+END PROGRAM EJERCICIO_62
+</pre><a href="#ejercicio_62" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_63">Respuesta 63</h2>
+<pre>
+PROGRAM EJERCICIO_63
+  IMPLICIT NONE
+  REAL :: PRECIO = 100.0
+
+  CALL CALCULAR_IVA(PRECIO)
+
+CONTAINS
+
+  SUBROUTINE CALCULAR_IVA(PRECIO_BASE)
+    ! Objetivo: Calcular el precio con IVA. INTENT(IN) protege PRECIO_BASE
+    ! de modificaciones dentro de la subrutina.
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: PRECIO_BASE
+    REAL :: IVA, PRECIO_FINAL
+    REAL, PARAMETER :: TASA_IVA = 0.21
+
+    ! PRECIO_BASE = 50.0  ! Esta línea causaría un error de compilación
+                        ! debido a INTENT(IN). Se mantiene comentada.
+
+    IVA = PRECIO_BASE * TASA_IVA
+    PRECIO_FINAL = PRECIO_BASE + IVA
+
+    PRINT *, "Precio base (INTENT IN):", PRECIO_BASE
+    PRINT *, "Precio con IVA (21%):", PRECIO_FINAL
+  END SUBROUTINE CALCULAR_IVA
+
+END PROGRAM EJERCICIO_63
+</pre><a href="#ejercicio_63" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_64">Respuesta 64</h2>
+<pre>
+PROGRAM EJERCICIO_64
+  IMPLICIT NONE
+  REAL :: RADIO = 5.0
+  REAL :: AREA  ! Variable que recibirá el resultado de la subrutina.
+
+  ! Llama a la subrutina. AREA se pasa por referencia para recibir la salida.
+  CALL OBTENER_AREA(RADIO, AREA)
+
+  ! Muestra el valor modificado por el procedimiento.
+  PRINT *, "El radio utilizado fue:", RADIO
+  PRINT *, "El área calculada es:", AREA
+
+CONTAINS
+
+  SUBROUTINE OBTENER_AREA(RADIO_IN, AREA_OUT)
+    ! Objetivo: Calcular el área de un círculo. AREA_OUT utiliza INTENT(OUT).
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: RADIO_IN
+    REAL, INTENT(OUT) :: AREA_OUT
+    REAL, PARAMETER :: PI = 3.1415926535
+
+    AREA_OUT = PI * (RADIO_IN ** 2)
+  END SUBROUTINE OBTENER_AREA
+
+END PROGRAM EJERCICIO_64
+</pre><a href="#ejercicio_64" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_65">Respuesta 65</h2>
+<pre>
+PROGRAM EJERCICIO_65
+  IMPLICIT NONE
+  INTEGER :: CONTADOR = 5
+
+  PRINT *, "Contador inicial:", CONTADOR
+
+  ! Llama a la subrutina. CONTADOR se modificará dentro del procedimiento.
+  CALL INCREMENTAR_CONTADOR(CONTADOR)
+
+  ! Muestra el valor modificado.
+  PRINT *, "Contador final:", CONTADOR
+
+CONTAINS
+
+  SUBROUTINE INCREMENTAR_CONTADOR(CONTADOR_IO)
+    ! Objetivo: Incrementar un contador. INTENT(INOUT) permite la lectura
+    ! y escritura de la variable dentro del procedimiento.
+    IMPLICIT NONE
+    INTEGER, INTENT(INOUT) :: CONTADOR_IO
+
+    CONTADOR_IO = CONTADOR_IO + 10
+  END SUBROUTINE INCREMENTAR_CONTADOR
+
+END PROGRAM EJERCICIO_65
+</pre><a href="#ejercicio_65" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_66">Respuesta 66</h2>
+<pre>
+PROGRAM EJERCICIO_66
+  IMPLICIT NONE
+  INTEGER :: RESULTADO
+  INTEGER, PARAMETER :: VALOR = 8
+
+  ! La función se llama directamente dentro de una expresión de asignación.
+  RESULTADO = CUADRADO(VALOR)
+
+  PRINT *, "El cuadrado de", VALOR, "es:", RESULTADO
+
+CONTAINS
+
+  INTEGER FUNCTION CUADRADO(X)
+    ! Objetivo: Devolver el cuadrado de un número entero.
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: X
+
+    ! El nombre de la función (CUADRADO) actúa como la variable de retorno.
+    CUADRADO = X * X
+  END FUNCTION CUADRADO
+
+END PROGRAM EJERCICIO_66
+</pre><a href="#ejercicio_66" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_67">Respuesta 67</h2>
+<pre>
+PROGRAM EJERCICIO_67
+  IMPLICIT NONE
+  REAL :: V1 = 0.0
+  REAL :: V2 = 1.0e-5
+
+  ! Llama a la función booleana en una sentencia IF.
+  IF (ES_CERO(V1)) THEN
+    PRINT *, "El valor 1 es cero."
+  ELSE
+    PRINT *, "El valor 1 no es cero."
+  END IF
+
+  IF (ES_CERO(V2)) THEN
+    PRINT *, "El valor 2 es cero."
+  ELSE
+    PRINT *, "El valor 2 no es cero."
+  END IF
+
+CONTAINS
+
+  LOGICAL FUNCTION ES_CERO(VALOR)
+    ! Objetivo: Devolver .TRUE. si el valor real es 0.0, .FALSE. en caso contrario.
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: VALOR
+
+    ! Asignación del resultado lógico.
+    ES_CERO = (VALOR == 0.0)
+  END FUNCTION ES_CERO
+
+END PROGRAM EJERCICIO_67
+</pre><a href="#ejercicio_67" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_68">Respuesta 68</h2>
+<pre>
+PROGRAM EJERCICIO_68
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: N = 5
+  REAL, ALLOCATABLE :: VECTOR_RECIBIDO(:) ! Array asignable en el programa principal.
+
+  ! Llama a la subrutina para asignar y llenar la memoria.
+  CALL GENERAR_VECTOR(N, VECTOR_RECIBIDO)
+
+  ! Imprime el array después de que la subrutina le ha asignado memoria y valores.
+  IF (ALLOCATED(VECTOR_RECIBIDO)) THEN
+    PRINT *, "Vector generado de tamaño", SIZE(VECTOR_RECIBIDO), ":"
+    PRINT *, VECTOR_RECIBIDO
+    DEALLOCATE(VECTOR_RECIBIDO)
+  END IF
+
+CONTAINS
+
+  SUBROUTINE GENERAR_VECTOR(TAMANO, VECTOR_OUT)
+    ! Objetivo: Asignar memoria y llenar un array de salida.
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: TAMANO
+    REAL, ALLOCATABLE, INTENT(OUT) :: VECTOR_OUT(:)
+    INTEGER :: I
+
+    ! Asigna la memoria al array de salida.
+    ALLOCATE(VECTOR_OUT(TAMANO))
+
+    ! Llena el array.
+    DO I = 1, TAMANO
+      VECTOR_OUT(I) = REAL(I) * 10.0
+    END DO
+  END SUBROUTINE GENERAR_VECTOR
+
+END PROGRAM EJERCICIO_68
+</pre><a href="#ejercicio_68" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_69">Respuesta 69</h2>
+<pre>
+PROGRAM EJERCICIO_69
+  IMPLICIT NONE
+
+  ! Cadenas de diferente longitud.
+  CHARACTER(LEN=15) :: CORTA = "Corto"
+  CHARACTER(LEN=50) :: LARGA = "Esta es una cadena muy larga para el ejemplo."
+
+  ! Llama a la subrutina con longitud asumida.
+  CALL IMPRIMIR_LONGITUD(CORTA)
+  CALL IMPRIMIR_LONGITUD(LARGA)
+
+CONTAINS
+
+  SUBROUTINE IMPRIMIR_LONGITUD(TEXTO)
+    ! Objetivo: Usar LEN(*) para aceptar una cadena de cualquier longitud
+    ! y determinar su tamaño real con LEN().
+    IMPLICIT NONE
+    CHARACTER(LEN=*), INTENT(IN) :: TEXTO
+
+    PRINT *, "La cadena recibida es:", TEXTO
+    PRINT *, "Longitud real (LEN()):", LEN(TEXTO)
+  END SUBROUTINE IMPRIMIR_LONGITUD
+
+END PROGRAM EJERCICIO_69
+</pre><a href="#ejercicio_69" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_70">Respuesta 70</h2>
+<pre>
+PROGRAM EJERCICIO_70
+  IMPLICIT NONE
+  INTEGER :: I
+
+  ! Llama a la subrutina 5 veces. La variable CONTEO mantendrá su estado.
+  DO I = 1, 5
+    CALL CONTAR_LLAMADAS()
+  END DO
+
+CONTAINS
+
+  SUBROUTINE CONTAR_LLAMADAS()
+    ! Objetivo: Preservar el valor de CONTEO entre llamadas usando SAVE.
+    IMPLICIT NONE
+    ! SAVE hace que CONTEO mantenga su valor (y su inicialización estática)
+    ! a lo largo de las diferentes llamadas.
+    INTEGER, SAVE :: CONTEO = 0
+
+    CONTEO = CONTEO + 1
+    PRINT *, "La subrutina ha sido llamada", CONTEO, "veces."
+  END SUBROUTINE CONTAR_LLAMADAS
+
+END PROGRAM EJERCICIO_70
+</pre><a href="#ejercicio_70" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_71">Respuesta 71</h2>
+<pre>
+PROGRAM EJERCICIO_71
+  IMPLICIT NONE
+  REAL :: DATOS1(5) = (/ 1.0, 2.0, 3.0, 4.0, 5.0 /)
+  REAL :: DATOS2(8) = (/ 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0 /)
+  REAL :: PROMEDIO1, PROMEDIO2
+
+  ! Llama a la función con arrays de diferente tamaño.
+  PROMEDIO1 = CALCULAR_PROMEDIO(DATOS1)
+  PROMEDIO2 = CALCULAR_PROMEDIO(DATOS2)
+
+  PRINT *, "Promedio del array 1 (tamaño 5):", PROMEDIO1
+  PRINT *, "Promedio del array 2 (tamaño 8):", PROMEDIO2
+
+CONTAINS
+
+  REAL FUNCTION CALCULAR_PROMEDIO(VECTOR)
+    ! Objetivo: Aceptar un array 1D de cualquier tamaño usando DIMENSION(*).
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: VECTOR(*) ! Dimensión asumida
+    INTEGER :: N
+
+    N = SIZE(VECTOR) ! Obtiene el tamaño real en tiempo de ejecución.
+    
+    ! Calcula la suma de todos los elementos y divide por el tamaño.
+    CALCULAR_PROMEDIO = SUM(VECTOR) / REAL(N)
+  END FUNCTION CALCULAR_PROMEDIO
+
+END PROGRAM EJERCICIO_71
+</pre><a href="#ejercicio_71" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_72">Respuesta 72</h2>
+<pre>
+PROGRAM EJERCICIO_72
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: N = 6
+  INTEGER :: RES_FACTORIAL
+
+  RES_FACTORIAL = FACTORIAL(N)
+  PRINT *, "El factorial de", N, "es:", RES_FACTORIAL
+
+CONTAINS
+
+  RECURSIVE FUNCTION FACTORIAL(N_IN) RESULT(R)
+    ! Objetivo: Calcular el factorial de forma recursiva.
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: N_IN
+    INTEGER :: R ! Variable de resultado
+
+    IF (N_IN <= 1) THEN
+      ! Caso base: 0! = 1 y 1! = 1
+      R = 1
+    ELSE
+      ! Paso recursivo: N! = N * (N-1)!
+      R = N_IN * FACTORIAL(N_IN - 1)
+    END IF
+  END FUNCTION FACTORIAL
+
+END PROGRAM EJERCICIO_72
+</pre><a href="#ejercicio_72" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_73">Respuesta 73</h2>
+<pre>
+PROGRAM EJERCICIO_73
+  IMPLICIT NONE
+
+  CALL PROCESO_DATOS()
+  ! CALL PROCESO_AUXILIAR() ! Error: PROCESO_AUXILIAR es interno a PROCESO_DATOS
+                            ! y no es visible en el programa principal.
+
+CONTAINS
+
+  SUBROUTINE PROCESO_DATOS()
+    ! Objetivo: Procedimiento anfitrión que contiene un procedimiento interno.
+    IMPLICIT NONE
+    PRINT *, "--- Iniciando PROCESO_DATOS (Anfitrión) ---"
+    CALL PROCESO_AUXILIAR()
+    PRINT *, "--- Finalizando PROCESO_DATOS ---"
+
+  CONTAINS ! Delimita los procedimientos internos
+
+    SUBROUTINE PROCESO_AUXILIAR()
+      ! Procedimiento interno, solo accesible desde PROCESO_DATOS.
+      IMPLICIT NONE
+      PRINT *, "  [+] Ejecutando PROCESO_AUXILIAR (Interno)"
+    END SUBROUTINE PROCESO_AUXILIAR
+
+  END SUBROUTINE PROCESO_DATOS
+
+END PROGRAM EJERCICIO_73
+</pre><a href="#ejercicio_73" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_74">Respuesta 74</h2>
+<pre>
+PROGRAM EJERCICIO_74
+  IMPLICIT NONE
+
+  ! Llamada 1: Solo con argumento obligatorio (NOMBRE).
+  PRINT *, "Llamada 1 (Solo Nombre):"
+  CALL REGISTRAR_USUARIO("Ana", )
+
+  PRINT *
+
+  ! Llamada 2: Con argumento obligatorio y opcional (NOMBRE y EMAIL).
+  PRINT *, "Llamada 2 (Nombre y Email):"
+  CALL REGISTRAR_USUARIO("Juan", EMAIL="juan@empresa.com")
+
+CONTAINS
+
+  SUBROUTINE REGISTRAR_USUARIO(NOMBRE, EMAIL)
+    ! Objetivo: Usar OPTIONAL y PRESENT() para argumentos variables.
+    IMPLICIT NONE
+    CHARACTER(LEN=*), INTENT(IN) :: NOMBRE
+    CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: EMAIL ! Argumento opcional
+
+    PRINT *, "Usuario registrado:", NOMBRE
+
+    ! Comprueba si el argumento opcional fue proporcionado.
+    IF (PRESENT(EMAIL)) THEN
+      PRINT *, "  Correo electrónico:", EMAIL
+    ELSE
+      PRINT *, "  Correo electrónico: No proporcionado."
+    END IF
+  END SUBROUTINE REGISTRAR_USUARIO
+
+END PROGRAM EJERCICIO_74
+</pre><a href="#ejercicio_74" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_75">Respuesta 75</h2>
+<pre>
+PROGRAM EJERCICIO_75
+  IMPLICIT NONE
+
+  ! Llama a la subrutina pasando argumentos por palabra clave
+  ! en orden NO secuencial.
+  CALL CONFIGURAR(MODO_SEGURIDAD=5, VELOCIDAD=12.5, TEMPERATURA=90.0)
+  
+  PRINT *
+  
+  ! Llama en orden secuencial (por posición) para comparación.
+  CALL CONFIGURAR(90.0, 12.5, 5)
+
+CONTAINS
+
+  SUBROUTINE CONFIGURAR(TEMPERATURA, VELOCIDAD, MODO_SEGURIDAD)
+    ! Objetivo: Demostrar el paso de argumentos por palabra clave.
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: TEMPERATURA
+    REAL, INTENT(IN) :: VELOCIDAD
+    INTEGER, INTENT(IN) :: MODO_SEGURIDAD
+
+    PRINT *, "--- Configuración Aplicada ---"
+    PRINT *, "Temperatura:", TEMPERATURA
+    PRINT *, "Velocidad:", VELOCIDAD
+    PRINT *, "Modo de seguridad:", MODO_SEGURIDAD
+  END SUBROUTINE CONFIGURAR
+
+END PROGRAM EJERCICIO_75
+</pre><a href="#ejercicio_75" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_76">Respuesta 76</h2>
+<pre>
+PROGRAM EJERCICIO_76
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: N = 4
+  REAL, ALLOCATABLE :: VEC_RESULTADO(:)
+
+  ! Llama a la función que devuelve un array asignable.
+  VEC_RESULTADO = VECTOR_UNITARIO(N)
+
+  IF (ALLOCATED(VEC_RESULTADO)) THEN
+    PRINT *, "Vector unitario de tamaño", N, "generado:"
+    PRINT *, VEC_RESULTADO
+    DEALLOCATE(VEC_RESULTADO)
+  END IF
+
+CONTAINS
+
+  FUNCTION VECTOR_UNITARIO(TAMANO) RESULT(VECTOR_OUT)
+    ! Objetivo: Función que devuelve un array (vector) asignable.
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: TAMANO
+    REAL, ALLOCATABLE :: VECTOR_OUT(:) ! Declaración del tipo de retorno
+
+    ! Asignar el tamaño al array de resultado.
+    ALLOCATE(VECTOR_OUT(TAMANO))
+    
+    ! Asignar el valor unitario a todos los elementos (vectorización).
+    VECTOR_OUT = 1.0
+  END FUNCTION VECTOR_UNITARIO
+
+END PROGRAM EJERCICIO_76
+</pre><a href="#ejercicio_76" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_77">Respuesta 77</h2>
+<pre>
+PROGRAM EJERCICIO_77
+  IMPLICIT NONE
+  REAL :: A = 10.0
+  REAL :: B = 20.0
+  REAL :: MEDIA
+
+  MEDIA = MEDIA_ARITMETICA(A, B)
+  PRINT *, "La media aritmética de", A, "y", B, "es:", MEDIA
+
+CONTAINS
+
+  PURE FUNCTION MEDIA_ARITMETICA(X, Y)
+    ! Objetivo: Usar PURE para indicar que la función no tiene efectos secundarios
+    ! (ej. I/O o modificación de globales).
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: X, Y
+    REAL :: MEDIA_ARITMETICA
+
+    ! MEDIA_ARITMETICA se calcula sin modificar variables externas.
+    MEDIA_ARITMETICA = (X + Y) / 2.0
+    
+    ! PRINT *, "Intento de I/O." ! Esto causaría un error de compilación.
+  END FUNCTION MEDIA_ARITMETICA
+
+END PROGRAM EJERCICIO_77
+</pre><a href="#ejercicio_77" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_78">Respuesta 78</h2>
+<pre>
+PROGRAM EJERCICIO_78
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: DP = SELECTED_REAL_KIND(P=15) ! Precisión doble (al menos 15 dígitos)
+
+  ! Declara la variable con la precisión DP.
+  REAL(KIND=DP) :: CONSTANTE_FISICA = 9.80665_DP
+  
+  PRINT *, "Tipo de precisión usado:", KIND(CONSTANTE_FISICA)
+  CALL IMPRIMIR_VALOR(CONSTANTE_FISICA)
+
+CONTAINS
+
+  SUBROUTINE IMPRIMIR_VALOR(VALOR)
+    ! Objetivo: Recibir un argumento con la precisión requerida (KIND=DP).
+    IMPLICIT NONE
+    REAL(KIND=DP), INTENT(IN) :: VALOR
+
+    PRINT *, "Valor recibido (DP):", VALOR
+  END SUBROUTINE IMPRIMIR_VALOR
+
+END PROGRAM EJERCICIO_78
+</pre><a href="#ejercicio_78" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_79">Respuesta 79</h2>
+<pre>
+PROGRAM EJERCICIO_79
+  IMPLICIT NONE
+  REAL :: VEC_IN(3) = (/ 2.0, 3.0, 4.0 /)
+  REAL :: VEC_OUT(3) ! Array para el resultado
+
+  ! Llama a la función elemental con un array completo; 
+  ! la función se aplica elemento por elemento.
+  VEC_OUT = CUBICO(VEC_IN)
+
+  PRINT *, "Vector de entrada:", VEC_IN
+  PRINT *, "Vector al cubo (VEC_OUT):", VEC_OUT
+
+CONTAINS
+
+  ELEMENTAL FUNCTION CUBICO(X)
+    ! Objetivo: Usar ELEMENTAL para operar sobre arrays elemento por elemento.
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: X
+    REAL :: CUBICO
+
+    ! La función aplica X * X * X a cada elemento del array.
+    CUBICO = X ** 3
+  END FUNCTION CUBICO
+
+END PROGRAM EJERCICIO_79
+</pre><a href="#ejercicio_79" class="boton">Regresar al Ejercicio</a>
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_80">Respuesta 80</h2>
+<pre>
+PROGRAM EJERCICIO_80
+  IMPLICIT NONE
+  REAL :: MATRIZ(4, 2) = RESHAPE( (/ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 /), SHAPE=(/4, 2/) )
+
+  CALL TRANSFORMAR_MATRIZ(MATRIZ)
+
+CONTAINS
+
+  SUBROUTINE TRANSFORMAR_MATRIZ(M)
+    ! Objetivo: Recibir un array de forma asumida (matriz) y usar funciones
+    ! intrínsecas de arrays.
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: M(:,:) ! Dimensión de forma asumida (matriz de cualquier tamaño)
+    INTEGER :: FILAS, COLUMNAS
+
+    FILAS = SIZE(M, DIM=1)
+    COLUMNAS = SIZE(M, DIM=2)
+
+    PRINT *, "Dimensiones recibidas:", FILAS, "filas x", COLUMNAS, "columnas."
+    PRINT *, "Matriz original:"
+    
+    ! Imprime la matriz original
+    WRITE(*,*) ((M(I, J), J=1, COLUMNAS), I=1, FILAS)
+    
+    PRINT *
+    PRINT *, "Transpuesta (usando TRANSPOSE()):"
+    
+    ! Usa la función intrínseca TRANSPOSE()
+    WRITE(*,*) TRANSPOSE(M)
+  END SUBROUTINE TRANSFORMAR_MATRIZ
+
+END PROGRAM EJERCICIO_80
+</pre><a href="#ejercicio_80" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_81">Respuesta 81</h2>
+<pre>
+! Ejercicio 81: Módulo para constantes y uso con USE
+
+MODULE CONSTANTES_FISICAS
+  IMPLICIT NONE
+  ! Definición de la constante GRAVEDAD (m/s^2)
+  REAL, PARAMETER :: GRAVEDAD = 9.81
+END MODULE CONSTANTES_FISICAS
+
+PROGRAM EJERCICIO_81
+  IMPLICIT NONE
+  ! Uso de la sentencia USE para acceder a los componentes del módulo
+  USE CONSTANTES_FISICAS
+  REAL :: MASA = 10.0
+  REAL :: FUERZA
+
+  ! Cálculo usando la constante importada del módulo
+  FUERZA = MASA * GRAVEDAD
+
+  PRINT *, "Constante de Gravedad (m/s^2): ", GRAVEDAD
+  PRINT *, "Fuerza para una masa de ", MASA, " kg: ", FUERZA, " N"
+
+END PROGRAM EJERCICIO_81
+</pre><a href="#ejercicio_81" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_82">Respuesta 82</h2>
+<pre>
+! Ejercicio 82: Módulo para procedimientos y reutilización
+
+MODULE UTILIDADES_MATH
+  IMPLICIT NONE
+CONTAINS
+  ! Subrutina definida en el módulo para la operación de resta
+  SUBROUTINE RESTAR(A, B, RESULTADO)
+    IMPLICIT NONE
+    REAL, INTENT(IN) :: A, B
+    REAL, INTENT(OUT) :: RESULTADO
+
+    ! Implementación de la resta
+    RESULTADO = A - B
+
+  END SUBROUTINE RESTAR
+END MODULE UTILIDADES_MATH
+
+PROGRAM EJERCICIO_82
+  IMPLICIT NONE
+  ! Uso del módulo para importar la subrutina
+  USE UTILIDADES_MATH
+  REAL :: NUM_A = 100.0
+  REAL :: NUM_B = 45.0
+  REAL :: RESTA_RESULTADO
+
+  ! Llamada a la subrutina del módulo
+  CALL RESTAR(NUM_A, NUM_B, RESTA_RESULTADO)
+
+  PRINT *, "El resultado de la resta (", NUM_A, " - ", NUM_B, ") es: ", &
+    RESTA_RESULTADO
+
+END PROGRAM EJERCICIO_82
+</pre><a href="#ejercicio_82" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_83">Respuesta 83</h2>
+<pre>
+! Ejercicio 83: Uso selectivo de componentes con USE ... ONLY
+
+MODULE BIBLIOTECA
+  IMPLICIT NONE
+CONTAINS
+  ! Función pública
+  FUNCTION SUMAR(A, B) RESULT(RES)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: A, B
+    INTEGER :: RES
+    RES = A + B
+  END FUNCTION SUMAR
+
+  ! Función pública (pero no importada selectivamente)
+  FUNCTION RESTAR(A, B) RESULT(RES)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: A, B
+    INTEGER :: RES
+    RES = A - B
+  END FUNCTION RESTAR
+END MODULE BIBLIOTECA
+
+PROGRAM EJERCICIO_83
+  IMPLICIT NONE
+  ! Importación selectiva: solo se accede a SUMAR
+  USE BIBLIOTECA, ONLY: SUMAR
+  INTEGER :: A = 5, B = 3
+  INTEGER :: RESULTADO
+
+  ! Uso de la función SUMAR (accesible)
+  RESULTADO = SUMAR(A, B)
+  PRINT *, "Resultado de SUMAR(5, 3): ", RESULTADO
+
+  ! ! El intento de llamar a RESTAR fallaría en tiempo de compilación:
+  ! ! RESULTADO = RESTAR(A, B)
+  ! ! PRINT *, "Resultado de RESTAR(5, 3): ", RESULTADO
+
+END PROGRAM EJERCICIO_83
+</pre><a href="#ejercicio_83" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_84">Respuesta 84</h2>
+<pre>
+! Ejercicio 84: E/S secuencial de archivos (escritura)
+
+PROGRAM EJERCICIO_84
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: ARCHIVO_UNIT = 10
+  INTEGER :: VALOR
+
+  ! 1. Abrir el archivo de salida. STATUS='REPLACE' sobreescribe si existe.
+  OPEN(UNIT=ARCHIVO_UNIT, FILE='datos.txt', STATUS='REPLACE')
+
+  ! 2. Escribir datos en el archivo (E/S secuencial, una línea por WRITE)
+  VALOR = 10
+  WRITE(UNIT=ARCHIVO_UNIT, FMT='(I0)') VALOR ! I0: formato entero mínimo
+  VALOR = 20
+  WRITE(ARCHIVO_UNIT, *) VALOR
+  VALOR = 30
+  WRITE(ARCHIVO_UNIT, *) VALOR
+
+  ! 3. Cerrar el archivo
+  CLOSE(UNIT=ARCHIVO_UNIT)
+
+  PRINT *, "Datos escritos en 'datos.txt'. Verifique el contenido del archivo."
+
+END PROGRAM EJERCICIO_84
+</pre><a href="#ejercicio_84" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_85">Respuesta 85</h2>
+<pre>
+! Ejercicio 85: Lectura secuencial de archivos con IOSTAT para EOF
+
+PROGRAM EJERCICIO_85
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: ARCHIVO_UNIT = 10
+  INTEGER :: DATO_LEIDO
+  INTEGER :: IOERR ! Variable para el estado de E/S. <0 = EOF
+
+  ! 1. Abrir el archivo. STATUS='OLD' asume que el archivo ya existe.
+  OPEN(UNIT=ARCHIVO_UNIT, FILE='datos.txt', STATUS='OLD', ACTION='READ')
+
+  PRINT *, "Datos leídos desde 'datos.txt':"
+
+  ! 2. Bucle infinito para lectura hasta encontrar el EOF
+  DO
+    ! Leer el dato. IOSTAT guardará el estado de la operación.
+    READ(UNIT=ARCHIVO_UNIT, FMT=*, IOSTAT=IOERR) DATO_LEIDO
+
+    ! 3. Comprobar si se alcanzó el final del archivo (IOSTAT < 0) o un error (> 0)
+    IF (IOERR /= 0) THEN
+      IF (IOERR < 0) THEN
+        ! Final de archivo (EOF)
+        PRINT *, "Fin de archivo alcanzado."
+        EXIT
+      ELSE
+        ! Error de E/S
+        PRINT *, "Error de lectura de archivo (IOSTAT=", IOERR, ")"
+        EXIT
+      END IF
+    END IF
+
+    ! Imprimir el dato leído
+    PRINT *, "Dato: ", DATO_LEIDO
+
+  END DO
+
+  ! 4. Cerrar el archivo
+  CLOSE(UNIT=ARCHIVO_UNIT)
+
+END PROGRAM EJERCICIO_85
+</pre><a href="#ejercicio_85" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_86">Respuesta 86</h2>
+<pre>
+! Ejercicio 86: Definición y uso de Tipo Derivado (TYPE)
+
+PROGRAM EJERCICIO_86
+  IMPLICIT NONE
+
+  ! 1. Definición del Tipo Derivado
+  TYPE PUNTO
+    REAL :: X
+    REAL :: Y
+  END TYPE PUNTO
+
+  ! 2. Declaración de una variable del nuevo tipo
+  TYPE(PUNTO) :: P1
+
+  ! 3. Asignación de valores a los componentes usando notación de porcentaje (%)
+  P1%X = 5.5
+  P1%Y = -2.0
+
+  ! Mostrar los valores
+  PRINT *, "Coordenada X de P1: ", P1%X
+  PRINT *, "Coordenada Y de P1: ", P1%Y
+
+END PROGRAM EJERCICIO_86
+</pre><a href="#ejercicio_86" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_87">Respuesta 87</h2>
+<pre>
+! Ejercicio 87: Exportación de Tipo Derivado y Procedimiento en un Módulo
+
+MODULE UTILIDADES_PUNTOS
+  IMPLICIT NONE
+  ! 1. Definición del Tipo Derivado para exportación
+  TYPE PUNTO
+    REAL :: X
+    REAL :: Y
+  END TYPE PUNTO
+CONTAINS
+  ! 2. Función que opera sobre el tipo derivado
+  FUNCTION DISTANCIA_EUCLIDIANA(PuntoA, PuntoB) RESULT(DIST)
+    IMPLICIT NONE
+    TYPE(PUNTO), INTENT(IN) :: PuntoA, PuntoB
+    REAL :: DIST
+    REAL :: DX, DY
+
+    DX = PuntoA%X - PuntoB%X
+    DY = PuntoA%Y - PuntoB%Y
+
+    ! Cálculo de la distancia euclidiana: sqrt(dx^2 + dy^2)
+    DIST = SQRT(DX**2 + DY**2)
+  END FUNCTION DISTANCIA_EUCLIDIANA
+END MODULE UTILIDADES_PUNTOS
+
+PROGRAM EJERCICIO_87
+  IMPLICIT NONE
+  ! 3. Uso del módulo
+  USE UTILIDADES_PUNTOS
+  TYPE(PUNTO) :: P_ORIGEN
+  TYPE(PUNTO) :: P_DESTINO
+  REAL :: DISTANCIA
+
+  ! Inicializar puntos
+  P_ORIGEN%X = 0.0
+  P_ORIGEN%Y = 0.0
+  P_DESTINO%X = 3.0
+  P_DESTINO%Y = 4.0
+
+  ! Calcular la distancia usando la función del módulo
+  DISTANCIA = DISTANCIA_EUCLIDIANA(P_ORIGEN, P_DESTINO)
+
+  PRINT *, "Distancia entre (0,0) y (3,4): ", DISTANCIA ! Esperado: 5.0
+END PROGRAM EJERCICIO_87
+</pre><a href="#ejercicio_87" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_88">Respuesta 88</h2>
+<pre>
+! Ejercicio 88: Control de visibilidad con PUBLIC y PRIVATE
+
+MODULE CONFIG_SEGURA
+  IMPLICIT NONE
+  ! Por defecto, si no se especifica, todo es PUBLIC.
+  ! Se puede usar PRIVATE para cambiar la visibilidad predeterminada del módulo.
+  PRIVATE 
+  
+  ! 1. Constante (no accesible fuera del módulo)
+  INTEGER, PARAMETER :: CLAVE_INTERNA = 42, PRIVATE
+  
+  ! 2. Variable (accesible fuera del módulo)
+  REAL :: VALOR_PUBLICO = 3.14159, PUBLIC
+
+  ! También se pueden hacer públicas subrutinas, funciones y tipos derivados.
+  PUBLIC :: MI_SUBRUTINA
+CONTAINS
+  SUBROUTINE MI_SUBRUTINA
+    IMPLICIT NONE
+    ! Dentro del módulo, sí se puede acceder a CLAVE_INTERNA
+    PRINT *, "Valor interno de la clave: ", CLAVE_INTERNA
+  END SUBROUTINE MI_SUBRUTINA
+END MODULE CONFIG_SEGURA
+
+PROGRAM EJERCICIO_88
+  IMPLICIT NONE
+  USE CONFIG_SEGURA
+
+  ! 3. Mostrar VALOR_PUBLICO (accesible)
+  PRINT *, "Valor público: ", VALOR_PUBLICO
+
+  ! Acceder a la subrutina pública
+  CALL MI_SUBRUTINA
+
+  ! ! 4. El intento de acceder a CLAVE_INTERNA falla en tiempo de compilación:
+  ! ! PRINT *, CLAVE_INTERNA 
+
+END PROGRAM EJERCICIO_88
+</pre><a href="#ejercicio_88" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_89">Respuesta 89</h2>
+<pre>
+! Ejercicio 89: E/S de archivos de acceso directo (DIRECT)
+
+PROGRAM EJERCICIO_89
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: ARCHIVO_UNIT = 12
+  INTEGER :: DATO_A_ESCRIBIR = 99
+  INTEGER :: DATO_LEIDO
+  ! RECL: Fortran usa unidades (generalmente bytes o palabras). 
+  ! En este caso, un INTEGER de 4 bytes es común. Usaremos 4 para el RECL.
+  INTEGER, PARAMETER :: LONGITUD_REGISTRO = 4 ! 4 bytes, típico para INTEGER
+
+  ! 1. Determinar y declarar RECL (Longitud de registro)
+
+  ! 2. Abrir el archivo con ACCESS='DIRECT' y RECL
+  OPEN(UNIT=ARCHIVO_UNIT, FILE='datos_directo.dat', STATUS='REPLACE', &
+    FORM='UNFORMATTED', ACCESS='DIRECT', RECL=LONGITUD_REGISTRO)
+
+  ! 3. Escribir en el registro número 3
+  WRITE(UNIT=ARCHIVO_UNIT, REC=3) DATO_A_ESCRIBIR
+
+  PRINT *, "Valor ", DATO_A_ESCRIBIR, " escrito en el registro 3."
+
+  ! 4. Leer el valor del registro número 3
+  READ(UNIT=ARCHIVO_UNIT, REC=3) DATO_LEIDO
+
+  PRINT *, "Valor leído del registro 3: ", DATO_LEIDO
+
+  CLOSE(UNIT=ARCHIVO_UNIT)
+
+END PROGRAM EJERCICIO_89
+</pre><a href="#ejercicio_89" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_90">Respuesta 90</h2>
+<pre>
+! Ejercicio 90: Gestión de estado de archivo con INQUIRE
+
+PROGRAM EJERCICIO_90
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: ARCHIVO_UNIT = 15
+  LOGICAL :: EXISTE, ABIERTO
+
+  ! 1. Verificar si un archivo *inexistente* existe
+  INQUIRE(FILE='archivo_inexistente.dat', EXIST=EXISTE)
+  PRINT *, "Estado de 'archivo_inexistente.dat': Existe = ", EXISTE
+
+  ! 2. Abrir un archivo
+  OPEN(UNIT=ARCHIVO_UNIT, FILE='archivo_temporal.tmp', STATUS='REPLACE')
+
+  ! 3. Verificar si la unidad 15 está abierta
+  INQUIRE(UNIT=ARCHIVO_UNIT, OPENED=ABIERTO)
+  PRINT *, "Estado de la Unidad 15: Abierto = ", ABIERTO
+
+  ! 4. Cerrar la unidad
+  CLOSE(UNIT=ARCHIVO_UNIT)
+
+  ! Opcional: Volver a verificar el estado
+  INQUIRE(UNIT=ARCHIVO_UNIT, OPENED=ABIERTO)
+  PRINT *, "Estado de la Unidad 15 después de CLOSE: Abierto = ", ABIERTO
+
+END PROGRAM EJERCICIO_90
+</pre><a href="#ejercicio_90" class="boton">Regresar al Ejercicio</a>
+
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_91">Respuesta 91</h2>
+<pre>
+! Ejercicio 91: Uso de SELECTED_INT_KIND()
+PROGRAM EJERCICIO_91
+  IMPLICIT NONE
+  ! 1. Defina un parámetro KIND que requiera al menos 10 dígitos (SELECTED_INT_KIND(10)).
+  INTEGER, PARAMETER :: KIND_GRANDE = SELECTED_INT_KIND(10)
+  ! 2. Declare una variable entera con este KIND.
+  ! El valor de 2 * 10^9 es 2000000000. Un valor mayor es 2500000000.
+  INTEGER(KIND=KIND_GRANDE) :: NUMERO_MAXIMO
+
+  ! 3. Asigne un valor que exceda la capacidad de un INTEGER estándar (típicamente 4 bytes o ~2x10^9).
+  NUMERO_MAXIMO = 2500000000_KIND_GRANDE 
+
+  ! Mostrar el valor. El sufijo _KIND_GRANDE es la notación literal para el KIND.
+  PRINT *, "El Kind solicitado para 10 dígitos es: ", KIND_GRANDE
+  PRINT *, "Número máximo (precisión ampliada): ", NUMERO_MAXIMO
+
+END PROGRAM EJERCICIO_91
+</pre><a href="#ejercicio_91" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_92">Respuesta 92</h2>
+<pre>
+! Ejercicio 92: Declaración y uso de Doble Precisión
+PROGRAM EJERCICIO_92
+  IMPLICIT NONE
+  ! 1. Defina un parámetro DP para doble precisión (al menos 15 dígitos de precisión).
+  INTEGER, PARAMETER :: DP = SELECTED_REAL_KIND(15) 
+  ! Opcional: INTEGER, PARAMETER :: DP = KIND(1.0D0)
+
+  ! 2. Declare dos variables reales con doble precisión.
+  REAL(KIND=DP) :: A, B, RESULTADO
+
+  ! Constantes conocidas con alta precisión (se usa el literal de Kind _DP)
+  ! Valor de Pi con doble precisión
+  A = 3.14159265358979323846_DP
+  ! Valor de e con doble precisión
+  B = 2.71828182845904523536_DP
+
+  ! 3. Realice una operación para observar la precisión.
+  RESULTADO = A - B
+
+  PRINT *, "Pi (DP):   ", A
+  PRINT *, "e (DP):    ", B
+  PRINT *, "Diferencia: ", RESULTADO ! Mostrará más dígitos significativos
+
+END PROGRAM EJERCICIO_92
+</pre><a href="#ejercicio_92" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_93">Respuesta 93</h2>
+<pre>
+! Ejercicio 93: Manipulación del tipo de dato COMPLEX
+PROGRAM EJERCICIO_93
+  IMPLICIT NONE
+  ! 1. Declare dos variables complejas.
+  COMPLEX :: Z1, Z2, SUMA, PRODUCTO
+
+  ! 2. Inicializar Z1 = 3 + 4i y Z2 = 1 - 1i.
+  Z1 = (3.0, 4.0)
+  Z2 = (1.0, -1.0)
+
+  ! 3. Calcule y muestre la suma y el producto.
+  SUMA = Z1 + Z2    ! (3+1) + (4-1)i = 4 + 3i
+  PRODUCTO = Z1 * Z2 ! (3*1 - 4*(-1)) + (3*(-1) + 4*1)i = (3+4) + (-3+4)i = 7 + 1i
+
+  PRINT *, "Z1 + Z2 = ", SUMA
+  PRINT *, "Z1 * Z2 = ", PRODUCTO
+
+END PROGRAM EJERCICIO_93
+</pre><a href="#ejercicio_93" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_94">Respuesta 94</h2>
+<pre>
+! Ejercicio 94: Uso de AIMAG() y CONJG()
+PROGRAM EJERCICIO_94
+  IMPLICIT NONE
+  COMPLEX :: Z
+  REAL :: PARTE_IMAGINARIA
+  COMPLEX :: CONJUGADO
+
+  ! 1. Declare e inicialice Z = 5.0 - 12.0i
+  Z = (5.0, -12.0)
+
+  ! 2. Extraer la parte imaginaria usando AIMAG().
+  PARTE_IMAGINARIA = AIMAG(Z)
+
+  ! 3. Calcular el complejo conjugado usando CONJG().
+  CONJUGADO = CONJG(Z) ! Conjugado de a+bi es a-bi. Aquí es 5.0 + 12.0i
+
+  PRINT *, "Número complejo Z:          ", Z
+  PRINT *, "Parte imaginaria (AIMAG):   ", PARTE_IMAGINARIA
+  PRINT *, "Conjugado (CONJG):          ", CONJUGADO
+
+END PROGRAM EJERCICIO_94
+</pre><a href="#ejercicio_94" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_95">Respuesta 95</h2>
+<pre>
+! Ejercicio 95: Uso de la sentencia NAMELIST
+PROGRAM EJERCICIO_95
+  IMPLICIT NONE
+  INTEGER, PARAMETER :: CONFIG_UNIT = 20
+  
+  ! 1. Declarar variables
+  INTEGER :: MAX_ITER = 1000
+  INTEGER :: PASO = 10
+  REAL :: TOLERANCIA = 1.0E-6
+  
+  ! 2. Agrupar estas variables en un NAMELIST llamado &CONFIG
+  NAMELIST /CONFIG/ MAX_ITER, PASO, TOLERANCIA
+
+  ! 3. Escribir el NAMELIST en un archivo
+  OPEN(UNIT=CONFIG_UNIT, FILE='config.dat', STATUS='REPLACE')
+
+  ! Se usa la etiqueta de NAMELIST en lugar de FMT.
+  WRITE(UNIT=CONFIG_UNIT, NML=CONFIG) 
+
+  CLOSE(UNIT=CONFIG_UNIT)
+
+  PRINT *, "Valores de NAMELIST escritos en 'config.dat'."
+  PRINT *, "Contenido: &CONFIG MAX_ITER=1000, PASO=10, TOLERANCIA=1.0000000E-06 /"
+
+END PROGRAM EJERCICIO_95
+</pre><a href="#ejercicio_95" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_96">Respuesta 96</h2>
+<pre>
+! Ejercicio 96: Array de Tipo Derivado
+PROGRAM EJERCICIO_96
+  IMPLICIT NONE
+  
+  ! 1. Definir un TYPE llamado MEDICION
+  TYPE MEDICION
+    REAL :: TIEMPO
+    REAL :: LECTURA_SENSOR
+  END TYPE MEDICION
+
+  ! 2. Declarar un array SERIE de 10 elementos de tipo MEDICION.
+  TYPE(MEDICION), DIMENSION(10) :: SERIE
+  INTEGER :: I
+
+  ! 3. Asignar datos de ejemplo
+  DO I = 1, 10
+    ! Asignación a los componentes del elemento I del array
+    SERIE(I)%TIEMPO = REAL(I) * 0.5
+    SERIE(I)%LECTURA_SENSOR = REAL(I)**2 + 10.0
+  END DO
+
+  ! Mostrar los dos primeros y el último elemento
+  PRINT *, "--- Registros de la serie ---"
+  PRINT *, "Tiempo 1: ", SERIE(1)%TIEMPO, " Lectura 1: ", SERIE(1)%LECTURA_SENSOR
+  PRINT *, "Tiempo 2: ", SERIE(2)%TIEMPO, " Lectura 2: ", SERIE(2)%LECTURA_SENSOR
+  PRINT *, "Tiempo 10: ", SERIE(10)%TIEMPO, " Lectura 10: ", SERIE(10)%LECTURA_SENSOR
+
+END PROGRAM EJERCICIO_96
+</pre><a href="#ejercicio_96" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_97">Respuesta 97</h2>
+<pre>
+! Ejercicio 97: Uso de funciones intrínsecas EXP(), LOG() y LOG10()
+PROGRAM EJERCICIO_97
+  IMPLICIT NONE
+  REAL :: X = 2.0
+  REAL :: EXPONENCIAL, LOGARITMO_NATURAL, LOGARITMO_BASE10
+
+  ! 1. Calcule e^X usando EXP(X).
+  EXPONENCIAL = EXP(X)
+
+  ! 2. Calcule ln(X) usando LOG(X).
+  LOGARITMO_NATURAL = LOG(X)
+
+  ! 3. Calcule log10(X) usando LOG10(X).
+  LOGARITMO_BASE10 = LOG10(X)
+
+  PRINT *, "X = ", X
+  PRINT *, "e^X (EXP):     ", EXPONENCIAL
+  PRINT *, "ln(X) (LOG):   ", LOGARITMO_NATURAL
+  PRINT *, "log10(X) (LOG10):", LOGARITMO_BASE10
+
+END PROGRAM EJERCICIO_97
+</pre><a href="#ejercicio_97" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_98">Respuesta 98</h2>
+<pre>
+! Ejercicio 98: Uso de funciones intrínsecas CEILING() y FLOOR()
+PROGRAM EJERCICIO_98
+  IMPLICIT NONE
+  REAL :: CAPACIDAD = 5.3
+  INTEGER :: ENTERO_SUPERIOR, ENTERO_INFERIOR
+
+  ! 1. CEILING(): Devuelve el entero más pequeño no menor que CAPACIDAD.
+  ENTERO_SUPERIOR = CEILING(CAPACIDAD) ! Resultado: 6
+
+  ! 2. FLOOR(): Devuelve el entero más grande no mayor que CAPACIDAD.
+  ENTERO_INFERIOR = FLOOR(CAPACIDAD)   ! Resultado: 5
+
+  PRINT *, "CAPACIDAD Real: ", CAPACIDAD
+  PRINT *, "CEILING (necesarios): ", ENTERO_SUPERIOR
+  PRINT *, "FLOOR (completos): ", ENTERO_INFERIOR
+
+END PROGRAM EJERCICIO_98
+</pre><a href="#ejercicio_98" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_99">Respuesta 99</h2>
+<pre>
+! Ejercicio 99: Uso de la sentencia INTERFACE para interfaz explícita
+
+PROGRAM EJERCICIO_99
+  IMPLICIT NONE
+  REAL :: TEMP_C = 25.0
+  REAL :: TEMP_F
+
+  ! 1. Definir el bloque INTERFACE para la función externa.
+  INTERFACE
+    FUNCTION CONVERTER_TEMP(CELSIUS) RESULT(FAHRENHEIT)
+      IMPLICIT NONE
+      REAL, INTENT(IN) :: CELSIUS
+      REAL :: FAHRENHEIT
+    END FUNCTION CONVERTER_TEMP
+  END INTERFACE
+
+  ! 3. Llamar a la función desde el programa principal.
+  TEMP_F = CONVERTER_TEMP(TEMP_C)
+
+  PRINT *, "Temperatura en Celsius: ", TEMP_C
+  PRINT *, "Temperatura en Fahrenheit: ", TEMP_F
+
+END PROGRAM EJERCICIO_99
+
+! 2. Definición del cuerpo de la función CONVERTER_TEMP (separado o en un módulo).
+FUNCTION CONVERTER_TEMP(CELSIUS) RESULT(FAHRENHEIT)
+  IMPLICIT NONE
+  REAL, INTENT(IN) :: CELSIUS
+  REAL :: FAHRENHEIT
+  ! Fórmula de conversión: F = C * (9/5) + 32
+  FAHRENHEIT = CELSIUS * 1.8 + 32.0 
+END FUNCTION CONVERTER_TEMP
+</pre><a href="#ejercicio_99" class="boton">Regresar al Ejercicio</a>
+
+<!-- ######## RESPUESTA ####### -->
+
+<h2 id="respuesta_100">Respuesta 100</h2>
+<pre>
+! Ejercicio 100: Integración de Modularidad, Precisión y Arrays Asignables
+
+! Módulo para la función de término de serie
+MODULE CALCULO_SERIE
+  IMPLICIT NONE
+  ! 1. Definir DP (doble precisión)
+  INTEGER, PARAMETER :: DP = SELECTED_REAL_KIND(15) 
+CONTAINS
+  ! PURE FUNCTION para el n-ésimo término (ej. 1/n^2)
+  PURE FUNCTION TERMINO_SERIE(N) RESULT(TERMINO)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: N
+    REAL(KIND=DP) :: TERMINO
+    
+    ! Cálculo del término (si N=0, se asigna 0 para evitar división por cero)
+    IF (N == 0) THEN
+      TERMINO = 0.0_DP
+    ELSE
+      TERMINO = 1.0_DP / REAL(N, KIND=DP)**2
+    END IF
+  END FUNCTION TERMINO_SERIE
+END MODULE CALCULO_SERIE
+
+PROGRAM EJERCICIO_100
+  IMPLICIT NONE
+  USE CALCULO_SERIE
+  
+  INTEGER, PARAMETER :: N_TERMINOS = 1000
+  ! 2. Declarar un array asignable (con precisión DP)
+  REAL(KIND=DP), DIMENSION(:), ALLOCATABLE :: TERMINOS
+  REAL(KIND=DP) :: SUMA_SERIE
+  INTEGER :: I
+
+  ! Asignar memoria al array
+  ALLOCATE(TERMINOS(N_TERMINOS))
+
+  ! 3. Llenar el array usando un bucle y la función del módulo
+  DO I = 1, N_TERMINOS
+    TERMINOS(I) = TERMINO_SERIE(I)
+  END DO
+
+  ! 4. Usar SUM() para obtener la suma de la serie (suma(1/n^2) converge a pi^2/6)
+  SUMA_SERIE = SUM(TERMINOS)
+
+  PRINT *, "Número de términos: ", N_TERMINOS
+  PRINT *, "Suma de la Serie (alta precisión): ", SUMA_SERIE
+
+  DEALLOCATE(TERMINOS)
+
+END PROGRAM EJERCICIO_100
+</pre><a href="#ejercicio_100" class="boton">Regresar al Ejercicio</a>
+
+
+  <div class="footer-text">
+	<center>
+    <h4>&#169; 2024, 2025 Dr. Octavio Juárez</h4>
+    <h5>octavio.juarez@unison.mx</h5>
+    </center>
+</div>
+
+</body>
+  
+</html>
+
+
+

@@ -1,0 +1,4643 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <title>Python 101</title>	  
+    <style>
+
+body {
+    /* Diseño Limpio: Fondo sutilmente gris para diferenciar del contenido */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: #2c3e50;
+    background-color: #f9f9f9; 
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal con sombra para efecto de "tarjeta" flotante */
+.theme-light {
+    max-width: 850px;
+    margin: 40px auto; /* Mayor margen superior e inferior */
+    padding: 30px 40px;
+    background-color: #ffffff; /* El contenido se ve blanco sobre el fondo gris */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Encabezado principal centrado y destacado */
+h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Fuente sans-serif para contraste */
+    text-align: center; /* Solicitud: H1 centrado */
+    font-size: 2.5em;
+    color: #00a8a8; /* Color de acento */
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #00a8a8; /* Línea de acento gruesa */
+}
+
+/* Otros Encabezados */
+h2 {
+    color: #34495e;
+    font-size: 1.8em;
+    border-left: 5px solid #00a8a8; /* Barra lateral de acento */
+    padding-left: 10px;
+    margin-top: 2em;
+    margin-bottom: 0.8em;
+}
+
+/* Enlaces */
+a:not(.boton) {
+    color: #00a8a8;
+    text-decoration: none;
+    border-bottom: 1px dashed #00a8a8; /* Subrayado punteado moderno */
+}
+
+a:not(.boton):hover {
+    color: #008888;
+    border-bottom: 1px solid #008888;
+}
+
+/* Botones (Clase .boton) */
+.boton {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 8px 5px 8px 0;
+    background-color: #00a8a8;
+    color: #ffffff;
+    text-decoration: none;
+    border: none;
+    border-radius: 50px; /* Bordes muy redondeados (píldora) */
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85em;
+}
+
+.boton:hover {
+    background-color: #008888;
+    transform: translateY(-1px); /* Efecto 3D sutil */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Código y Bloques de Código */
+code {
+    background-color: #ecf0f1;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'Inconsolata', 'Fira Code', monospace;
+    font-size: 0.9em;
+    color: #c0392b; /* Rojo sutil para código en línea */
+}
+
+pre {
+    background-color: #36495b; /* Azul oscuro para bloques */
+    color: #e8eaf6; /* Texto blanco en el bloque */
+    padding: 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Inconsolata', 'Fira Code', monospace;
+    font-size: 0.95em;
+    margin-bottom: 25px;
+}
+        
+    </style>
+    
+  
+    
+  </head>
+<body class="theme-light">
+	
+	
+    <h1>Phyton 101</h1>
+    
+<h2 id="intro">INTRODUCCIÓN</h2>
+
+<p>Este documento compila 100 ejercicios prácticos de Python, estructurados para proporcionar una inmersión completa desde los conceptos elementales hasta la Programación Orientada a Objetos (POO) y las características más avanzadas e idiomáticas del lenguaje.</p>
+
+<p>El objetivo pedagógico es claro: construir una base robusta que no solo enseñe a escribir código funcional, sino a escribir código Pythonic (limpio, eficiente y estándar de la comunidad).</p>
+
+<p>El contenido se divide en seis módulos con una progresión cuidadosamente justificada para optimizar el aprendizaje y la comprensión técnica:</p>
+
+<ol>
+<li><p>Fundamentos y Tipos de Datos (1-20): Este módulo establece la sintaxis, el tipado dinámico y la interacción básica (I/O) de Python. Es la base necesaria para cualquier código futuro, presentando print(), input() y las conversiones de tipo.</p></li>
+<li><p>Estructuras de Control y Funciones (21-40): Aquí se domina el flujo lógico del programa con if/elif/else, for y while. Crucialmente, se introduce la creación de funciones (def, return), el control del alcance (global, nonlocal) y el manejo de argumentos variables (*args, kwargs), pilares de la organización del código.</p></li>
+<li><p>Estructuras de Datos Secuenciales (41-60): La eficiencia en Python depende del manejo de sus colecciones. Se cubre a fondo list, tuple y str, centrándose en el manejo de la mutabilidad versus inmutabilidad, la indexación, el slicing avanzado y métodos de manipulación (append, pop, join).</p></li>
+<li><p>Estructuras de Datos Avanzadas (61-80): Este módulo transiciona a estructuras no secuenciales (dict, set), esenciales para la búsqueda y el rendimiento. Se incluye el manejo de archivos y, vitalmente, el manejo de errores (try/except), enseñando a escribir código robusto que gestione fallos de manera elegante.</p></li>
+<li><p>Funciones Avanzadas de Python (81-90): Este es el corazón del código idiomático. Se cubre la Comprensión de Listas/Diccionarios/Conjuntos como el método preferido de Python para las transformaciones. Se complementa con las funciones de programación funcional map(), filter() y las funciones anónimas lambda, esenciales para la eficiencia y la concisión.</p></li>
+<li><p>Programación Orientada a Objetos (POO) (91-100): El módulo final se enfoca en la ingeniería de software a escala. Se introduce la definición de clases, constructores (<strong>init</strong>), herencia (super()) y los métodos especiales (<strong>str</strong>). Se incluye el uso de decoradores @classmethod y @property para un diseño de clases profesional y una encapsulación adecuada.</p></li>
+</ol>    
+
+<h2 id="contenido">CONTENIDO</h2>
+
+<a href="#ejercicio_1" class="boton">Fundamentos</a><br>
+<a href="#ejercicio_21" class="boton">Control de Flujo</a><br>
+<a href="#ejercicio_41" class="boton">Estructuras de Datos</a><br>
+<a href="#ejercicio_61" class="boton">Estructuras de Datos Avanzadas</a><br>
+<a href="#ejercicio_81" class="boton">Funciones Avanzadas</a><br>
+<a href="#ejercicio_91" class="boton">Programación Orientada a Objetos</a><br>
+
+
+
+
+
+
+
+
+
+<h2 id="ejercicio_1">Ejercicio 1</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá la estructura básica de un programa Python y utilizará la función <strong><code>print()</code></strong> para la salida de texto en consola.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba la sentencia más simple posible en Python que muestre el texto &ldquo;Hello, World!&rdquo;.</li>
+<li>Ejecute el archivo para verificar la salida.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <em>built-in</em> <code>print()</code>, Sintaxis básica.</p>
+
+<a href="#respuesta_1" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_2">Ejercicio 2</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y asignará valores a los tipos de datos básicos <strong><code>int</code></strong> y <strong><code>float</code></strong> y observará el tipado dinámico.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable <code>edad</code> y asígnele un valor entero.</li>
+<li>Declare una variable <code>temperatura</code> y asígnele un valor real (decimal).</li>
+<li>Utilice la función <code>print()</code> para mostrar el valor y el tipo (<code>type()</code>) de ambas variables.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipos <code>int</code>, <code>float</code>, Asignación, Función <code>type()</code>.</p>
+
+<a href="#respuesta_2" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+
+<h2 id="ejercicio_3">Ejercicio 3</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará las <strong>cadenas de texto</strong> (<code>str</code>) y las distintas formas de delimitarlas (comillas simples vs. dobles) para imprimir mensajes.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable <code>nombre</code> usando comillas dobles.</li>
+<li>Declare una variable <code>mensaje</code> que contenga una comilla simple (ej. &ldquo;¡Python es genial!&rdquo;).</li>
+<li>Imprima <code>mensaje</code> y luego imprima la longitud (<code>len()</code>) de la cadena.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipo <code>str</code>, Comillas simples/dobles, Función <code>len()</code>.</p>
+
+<a href="#respuesta_3" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_4">Ejercicio 4</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los operadores aritméticos básicos (<strong><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code>, <code>%</code>, <code>//</code></strong>) y comprenderá la diferencia entre la división flotante y la división entera.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>A = 10</code> y <code>B = 3</code>.</li>
+<li>Calcule y muestre: la división flotante (<code>A / B</code>), la división entera (<code>A // B</code>), y el módulo (<code>A % B</code>).</li>
+<li>Calcule y muestre el resultado de 2<sup>5</sup> usando el operador de exponenciación.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores aritméticos, División entera (<code>//</code>), Módulo (<code>%</code>), Exponenciación (<code>**</code>).</p>
+
+<a href="#respuesta_4" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_5">Ejercicio 5</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>input()</code></strong> para la entrada de datos por consola y convertirá la cadena de entrada al tipo de dato numérico adecuado.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Pida al usuario que introduzca su año de nacimiento y almacene el resultado en una variable.</li>
+<li>Convierta la cadena de entrada a un entero (<code>int()</code>).</li>
+<li>Calcule y muestre la edad aproximada del usuario (asumiendo el año actual, use 2025).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>input()</code>, Conversión de tipos (<code>int()</code>), I/O interactiva.</p>
+
+<a href="#respuesta_5" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_6">Ejercicio 6</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los <strong>operadores relacionales</strong> (<code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code>) y obtendrá un resultado de tipo booleano (<code>bool</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>X = 50</code> y <code>Y = 75</code>.</li>
+<li>Imprima el resultado de las siguientes comparaciones: ¿<code>X</code> es mayor que <code>Y</code>?, ¿<code>X</code> es diferente de <code>Y</code>?, ¿<code>X</code> por dos es igual a <code>Y</code>?</li>
+<li>Imprima el tipo de dato del resultado de las comparaciones.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores relacionales, Tipo <code>bool</code>, Valores <code>True</code> y <code>False</code>.</p>
+
+<a href="#respuesta_6" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_7">Ejercicio 7</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la <strong>concatenación de cadenas</strong> utilizando el operador <code>+</code> y el formateo de cadenas con <strong>f-strings</strong> (cadenas literales con formato).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>nombre = "Ana"</code> y <code>apellido = "García"</code>.</li>
+<li>Imprima el nombre completo utilizando la concatenación con <code>+</code>.</li>
+<li>Imprima el nombre completo y la longitud total utilizando una f-string, incluyendo el cálculo <code>len(nombre) + len(apellido)</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Concatenación (<code>+</code>), F-strings (Formato), Inserción de expresiones.</p>
+
+<a href="#respuesta_7" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_8">Ejercicio 8</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el módulo <strong><code>math</code></strong> para acceder a constantes (ej. π) y funciones matemáticas (ej. raíz cuadrada).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe el módulo <code>math</code>.</li>
+<li>Utilice <code>math.pi</code> para calcular el área de un círculo con radio 5.</li>
+<li>Calcule y muestre la raíz cuadrada de 144 utilizando <code>math.sqrt()</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>import</code>, Módulo <code>math</code>, Constante <code>pi</code>, Función <code>sqrt()</code>.</p>
+
+<a href="#respuesta_8" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_9">Ejercicio 9</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá la <strong>promoción implícita de tipos</strong> al operar entre enteros y flotantes, resultando en un flotante.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera <code>cuenta = 100</code> y una variable flotante <code>tasa = 0.15</code>.</li>
+<li>Calcule el impuesto (<code>cuenta * tasa</code>).</li>
+<li>Imprima el resultado y su tipo (<code>type()</code>). Explique por qué el resultado es flotante.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Promoción de tipos, Coerción implícita, Operaciones mixtas.</p>
+
+<a href="#respuesta_9" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_10">Ejercicio 10</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>round()</code></strong> para redondear valores flotantes y controlará el número de decimales.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable <code>numero_largo = 3.14159265</code>.</li>
+<li>Redondee <code>numero_largo</code> al entero más cercano y muestre el resultado.</li>
+<li>Redondee <code>numero_largo</code> a 4 decimales y muestre el resultado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>round()</code>, Redondeo a entero, Control de precisión.</p>
+
+<a href="#respuesta_10" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_11">Ejercicio 11</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los <strong>operadores lógicos</strong> (<code>and</code>, <code>or</code>, <code>not</code>) para construir condiciones compuestas en una sola línea de código.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>es_dia = True</code> y <code>es_findesemana = False</code>.</li>
+<li>Imprima el resultado de la expresión: <code>es_dia</code> <strong>AND</strong> <code>NOT es_findesemana</code> (¿Es día de la semana laboral?).</li>
+<li>Imprima el resultado de la expresión: <code>NOT es_dia</code> <strong>OR</strong> <code>es_findesemana</code> (¿Es de noche o fin de semana?).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores lógicos <code>and</code>, <code>or</code>, <code>not</code>, Precedencia de operadores.</p>
+
+<a href="#respuesta_11" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_12">Ejercicio 12</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función intrínseca <strong><code>id()</code></strong> para comprender que las variables en Python son etiquetas que apuntan a objetos en memoria.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable <code>A = 10</code>.</li>
+<li>Declare otra variable <code>B = A</code>.</li>
+<li>Imprima el ID de memoria de <code>A</code> y <code>B</code> usando la función <code>id()</code>. ¿Son iguales?</li>
+<li>Modifique <code>B = 20</code>. Vuelva a imprimir el ID de <code>A</code> y <code>B</code>. ¿Por qué han cambiado?</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>id()</code>, Referencia a objetos, Inmutabilidad de enteros.</p>
+
+<a href="#respuesta_12" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_13">Ejercicio 13</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará los <strong>operadores de pertenencia</strong> (<code>in</code>, <code>not in</code>) para verificar si un elemento existe dentro de una cadena de texto.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una cadena <code>frase = "Python es un lenguaje potente"</code>.</li>
+<li>Verifique e imprima el resultado de la condición: ¿Está la subcadena &ldquo;lenguaje&rdquo; en <code>frase</code>?</li>
+<li>Verifique e imprima el resultado de la condición: ¿Está el carácter &ldquo;z&rdquo; <strong>NO</strong> en <code>frase</code>?</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operador <code>in</code>, Operador <code>not in</code>, Pertenencia a secuencia.</p>
+
+<a href="#respuesta_13" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_14">Ejercicio 14</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los <strong>operadores de identidad</strong> (<code>is</code>, <code>is not</code>) para verificar si dos variables apuntan al mismo objeto en memoria (comparación de identidad).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>lista1 = [1, 2, 3]</code> y <code>lista2 = [1, 2, 3]</code>.</li>
+<li>Declare <code>lista3 = lista1</code>.</li>
+<li>Imprima el resultado de: <code>lista1 == lista2</code> (comparación de valor).</li>
+<li>Imprima el resultado de: <code>lista1 is lista2</code> (comparación de identidad).</li>
+<li>Imprima el resultado de: <code>lista1 is lista3</code>. Comente la diferencia.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operador <code>is</code>, Operador <code>is not</code>, Comparación de valor vs. identidad.</p>
+
+<a href="#respuesta_14" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_15">Ejercicio 15</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>pow()</code></strong> y el módulo <code>math</code> para calcular la potencia y comprender la función intrínseca de potencia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Calcule y muestre 4<sup>3</sup> usando el operador <code>**</code>.</li>
+<li>Calcule y muestre 4<sup>3</sup> usando la función <em>built-in</em> <code>pow()</code>.</li>
+<li>Importe <code>math</code> y calcule 4<sup>3</sup> usando <code>math.pow()</code>. Compare los tipos de retorno (int vs float).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>pow()</code>, Operador <code>**</code>, <code>math.pow()</code>, Tipos de retorno.</p>
+
+<a href="#respuesta_15" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_16">Ejercicio 16</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>abs()</code></strong> para obtener el valor absoluto de un número y <strong><code>divmod()</code></strong> para obtener la división y el resto simultáneamente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un número negativo <code>temp = -15.5</code>.</li>
+<li>Imprima el valor absoluto de <code>temp</code>.</li>
+<li>Utilice <code>divmod(25, 4)</code> para calcular y mostrar el cociente y el resto. Desempaquete los dos valores en variables separadas.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>abs()</code>, Función <code>divmod()</code>, Desempaquetamiento de tuplas.</p>
+
+<a href="#respuesta_16" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_17">Ejercicio 17</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la importación selectiva (<code>from ... import</code>) para acceder a componentes específicos de un módulo sin prefijo.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice <code>from math import sin, cos, pi</code>.</li>
+<li>Calcule el seno de π/2 y el coseno de 0 utilizando directamente las funciones <code>sin()</code> y <code>cos()</code>.</li>
+<li>Muestre la constante <code>pi</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Importación selectiva (<code>from ... import</code>), Acceso directo a funciones.</p>
+
+<a href="#respuesta_17" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_18">Ejercicio 18</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante convertirá tipos de datos entre <code>str</code>, <code>int</code> y <code>float</code> y manejará una posible <strong>excepción de conversión</strong>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>num_str = "123"</code> y <code>num_float = 45.67</code>.</li>
+<li>Convierta <code>num_str</code> a entero y súmele <code>num_float</code>. Muestre el resultado.</li>
+<li>Intente (y comente) convertir la cadena &ldquo;abc&rdquo; a entero, explicando la excepción que ocurriría (<code>ValueError</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Conversión de tipos (<code>str()</code>, <code>int()</code>, <code>float()</code>), Excepciones de <code>ValueError</code>.</p>
+
+<a href="#respuesta_18" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_19">Ejercicio 19</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el formateo de cadenas utilizando el método <strong><code>.format()</code></strong> (estilo antiguo/medio) para insertar variables y controlar el formato.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>producto = "Laptop"</code> y <code>precio = 999.50</code>.</li>
+<li>Use el método <code>.format()</code> para imprimir el mensaje: &ldquo;El {0} cuesta {1:.2f} euros.&rdquo; donde <code>{0}</code> y <code>{1:.2f}</code> son reemplazados por las variables.</li>
+<li>Utilice nombres de campo para la sustitución: &ldquo;El {p} cuesta {pr:.2f} euros.&rdquo;</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.format()</code>, Placeholders, Formato de precisión de flotantes (<code>:.2f</code>).</p>
+
+<a href="#respuesta_19" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_20">Ejercicio 20</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará los <strong>operadores de asignación compuestos</strong> (<code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>) para simplificar la sintaxis de las operaciones.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>puntuacion = 50</code>.</li>
+<li>Aumente <code>puntuacion</code> en 10 utilizando <code>+=</code>.</li>
+<li>Reduzca <code>puntuacion</code> a la mitad utilizando <code>/=</code>.</li>
+<li>Muestre el valor final de <code>puntuacion</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Operadores de asignación compuestos (<code>+=</code>, <code>-=</code>), Simplificación de la sintaxis.</p>
+
+<a href="#respuesta_20" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_21">Ejercicio 21</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia de control de flujo <strong><code>if</code></strong> para ejecutar un bloque de código basado en una condición booleana.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Pida al usuario que ingrese un número entero.</li>
+<li>Utilice una sentencia <code>if</code> para comprobar si el número es positivo.</li>
+<li>Si es positivo, imprima un mensaje indicando que el número es mayor que cero.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>if</code>, Indentación (Sangría), Condición booleana.</p>
+
+<a href="#respuesta_21" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_22">Ejercicio 22</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la estructura de control <strong><code>if-else</code></strong> para manejar dos resultados mutuamente excluyentes.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable <code>contraseña_correcta = "clave123"</code>.</li>
+<li>Pida al usuario que ingrese una contraseña.</li>
+<li>Utilice la estructura <code>if-else</code> para comparar la entrada del usuario con la contraseña correcta.</li>
+<li>Si coinciden, imprima &ldquo;Acceso concedido&rdquo;; de lo contrario, imprima &ldquo;Acceso denegado&rdquo;.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Estructura <code>if-else</code>, Comparación de cadenas, Bloques de código.</p>
+
+<a href="#respuesta_22" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_23">Ejercicio 23</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la estructura de control <strong><code>if-elif-else</code></strong> para gestionar múltiples condiciones anidadas o secuenciales.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable entera <code>puntuacion</code> y asígnele un valor.</li>
+<li>Utilice <code>if-elif-else</code> para clasificar la puntuación:
+
+<ul>
+<li>Si es <code>&gt;= 90</code>, imprima &ldquo;A&rdquo;.</li>
+<li>Si es <code>&gt;= 80</code> y <code>&lt; 90</code>, imprima &ldquo;B&rdquo;.</li>
+<li>En cualquier otro caso, imprima &ldquo;C&rdquo;.</li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Estructura <code>if-elif-else</code>, Múltiples condiciones.</p>
+
+<a href="#respuesta_23" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_24">Ejercicio 24</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará un bucle de recuento utilizando la sentencia <strong><code>for</code></strong> y la función <strong><code>range()</code></strong> simple.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>for</code> que itere 5 veces (de 0 a 4).</li>
+<li>Dentro del bucle, imprima el mensaje: &ldquo;Iteración número X&rdquo;, donde X es el número de la iteración actual.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle <code>for</code>, Función <code>range()</code>, Iteración.</p>
+
+<a href="#respuesta_24" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_25">Ejercicio 25</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante controlará el inicio, fin y el <strong>paso</strong> (incremento) de la secuencia generada por la función <strong><code>range()</code></strong>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>for</code> que imprima solo los números pares del 0 al 10 (incluido el 10).</li>
+<li>Utilice los tres argumentos de <code>range()</code>: <code>range(inicio, fin, paso)</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>range(start, stop, step)</code>, Control del incremento.</p>
+
+<a href="#respuesta_25" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_26">Ejercicio 26</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará un bucle condicional utilizando la sentencia <strong><code>while</code></strong> para repetir un bloque de código mientras una condición sea verdadera.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Inicialice una variable <code>contador = 0</code>.</li>
+<li>Escriba un bucle <code>while</code> que se ejecute mientras <code>contador</code> sea menor que 5.</li>
+<li>Dentro del bucle, imprima el valor actual de <code>contador</code> e increméntelo en 1.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucle <code>while</code>, Condición de parada, Variable de control.</p>
+
+<a href="#respuesta_26" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_27">Ejercicio 27</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>break</code></strong> para salir prematuramente de un bucle <code>for</code> o <code>while</code> basándose en una condición interna.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>for</code> que itere a través de números del 1 al 10.</li>
+<li>Dentro del bucle, use <code>if</code> para comprobar si el número actual es igual a 7.</li>
+<li>Si es 7, use <code>break</code> para detener el bucle.</li>
+<li>Muestre solo los números impresos antes de la interrupción.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>break</code>, Terminación de bucle.</p>
+
+<a href="#respuesta_27" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_28">Ejercicio 28</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>continue</code></strong> para saltar la iteración actual de un bucle y pasar a la siguiente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>for</code> que recorra números del 1 al 10.</li>
+<li>Utilice <code>if</code> y <code>continue</code> para saltar la impresión de los números que son divisibles por 3 (3, 6, 9).</li>
+<li>Imprima el resto de los números.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>continue</code>, Salto de iteración, Operador Módulo.</p>
+
+<a href="#respuesta_28" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_29">Ejercicio 29</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá una <strong>función simple</strong> sin argumentos utilizando la palabra clave <strong><code>def</code></strong> y la llamará desde el código principal.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función llamada <code>mostrar_bienvenida</code> que imprima un mensaje de saludo.</li>
+<li>Llame a la función dos veces en el programa principal.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>def</code> (Definición de función), Llamada a función.</p>
+
+<a href="#respuesta_29" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_30">Ejercicio 30</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá una función que acepte <strong>argumentos de posición</strong> y utilizará la sentencia <strong><code>return</code></strong> para devolver un valor escalar.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función llamada <code>calcular_impuesto</code> que acepte dos argumentos: <code>precio</code> y <code>tasa_iva</code>.</li>
+<li>La función debe calcular y devolver el precio final con el IVA incluido.</li>
+<li>Llame a la función con un precio de 100 y una tasa de 0.21. Muestre el valor devuelto.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Argumentos posicionales, Sentencia <code>return</code>, Devolución de valor.</p>
+
+<a href="#respuesta_30" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_31">Ejercicio 31</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá una función que acepte <strong>argumentos por palabra clave</strong> (<em>keyword arguments</em>) y establecerá <strong>valores por defecto</strong> para argumentos opcionales.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función llamada <code>configurar_usuario</code> que acepte <code>nombre</code> (obligatorio), <code>activo</code> (por defecto <code>True</code>) y <code>rol</code> (por defecto &ldquo;Invitado&rdquo;).</li>
+<li>Llame a la función pasando solo el <code>nombre</code>.</li>
+<li>Llame a la función pasando el <code>nombre</code> y sobrescribiendo <code>rol</code> a &ldquo;Administrador&rdquo; usando la palabra clave.</li>
+<li>La función debe imprimir los tres valores recibidos.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Argumentos por palabra clave, Valores por defecto, Argumentos opcionales.</p>
+
+<a href="#respuesta_31" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_32">Ejercicio 32</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el <strong>alcance de las variables</strong> (<em>scope</em>) en Python, distinguiendo entre variables locales y globales.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable global <code>contador_global = 0</code>.</li>
+<li>Defina una función <code>incrementar_local</code>. Dentro de ella, declare una variable local <code>contador_local = 1</code>. Imprima ambas variables.</li>
+<li>Desde el código principal, intente (y comente) imprimir <code>contador_local</code> fuera de la función, observando el error.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Alcance local, Alcance global, <em>NameError</em>.</p>
+
+<a href="#respuesta_32" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_33">Ejercicio 33</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la palabra clave <strong><code>global</code></strong> dentro de una función para modificar una variable declarada en el alcance global.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una variable global <code>puntos = 100</code>.</li>
+<li>Defina una función <code>sumar_puntos</code>. Dentro de ella, use la palabra clave <code>global puntos</code> y sume 50 a la variable.</li>
+<li>Llame a la función y luego imprima el valor de <code>puntos</code> para verificar que el cambio se aplicó globalmente.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Palabra clave <code>global</code>, Modificación de variables globales.</p>
+
+<a href="#respuesta_33" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_34">Ejercicio 34</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante anidará funciones dentro de otra y utilizará la palabra clave <strong><code>nonlocal</code></strong> para modificar una variable en un alcance intermedio (<em>enclosing scope</em>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función externa <code>generar_contador</code>. Inicialice <code>contador = 0</code>.</li>
+<li>Defina una función interna <code>incrementar</code>.</li>
+<li>Dentro de <code>incrementar</code>, use <code>nonlocal contador</code> y auméntelo en 1.</li>
+<li>La función externa debe devolver la función interna. Llame a la función externa y luego llame al resultado 3 veces.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Alcance intermedio (<em>Enclosing Scope</em>), Palabra clave <code>nonlocal</code>, Closures (Introducción).</p>
+
+<a href="#respuesta_34" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_35">Ejercicio 35</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante creará una secuencia numérica compleja utilizando bucles <strong><code>for</code> anidados</strong> y la función <code>print()</code> con el argumento <code>end</code>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice un bucle <code>for</code> externo que vaya de 1 a 3 (filas).</li>
+<li>Utilice un bucle <code>for</code> interno que vaya de 1 a 5 (columnas).</li>
+<li>Dentro del bucle interno, imprima el valor del contador interno, seguido de un espacio, utilizando <code>print(j, end=" ")</code>.</li>
+<li>Después del bucle interno, use un <code>print()</code> vacío para saltar a una nueva línea.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bucles anidados, Argumento <code>end</code> en <code>print()</code>, Control de salida.</p>
+
+<a href="#respuesta_35" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_36">Ejercicio 36</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el argumento especial <strong><code>*args</code></strong> en la definición de una función para aceptar un número variable de argumentos posicionales.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función llamada <code>sumar_todos</code> que acepte <code>*numeros</code> como argumento.</li>
+<li>Dentro de la función, itere sobre <code>numeros</code> para calcular la suma total.</li>
+<li>Llame a la función con 2 argumentos, luego con 5 argumentos, y muestre la suma en cada caso.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Argumento <code>*args</code>, Tupla de argumentos, Argumentos de longitud variable.</p>
+
+<a href="#respuesta_36" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_37">Ejercicio 37</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el argumento especial <strong><code>**kwargs</code></strong> para aceptar un número variable de argumentos con nombre (palabra clave).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función llamada <code>mostrar_perfil</code> que acepte <code>nombre</code> (obligatorio) y <code>**datos_extra</code>.</li>
+<li>La función debe imprimir el <code>nombre</code> y luego iterar sobre <code>datos_extra</code> para mostrar todas las claves y valores adicionales.</li>
+<li>Llame a la función pasando <code>nombre="Carlos"</code> y argumentos de palabra clave como <code>edad=30</code>, <code>ciudad="Madrid"</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Argumento <code>**kwargs</code>, Diccionario de argumentos, Argumentos con nombre de longitud variable.</p>
+
+<a href="#respuesta_37" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_38">Ejercicio 38</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la sentencia <strong><code>pass</code></strong> como un marcador de posición para un bloque de código que aún no está implementado.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función <code>tarea_pendiente</code> sin implementar ninguna lógica dentro del cuerpo.</li>
+<li>Utilice la sentencia <code>pass</code> para evitar un error de sintaxis.</li>
+<li>Defina una clase <code>ModeloTemporal</code> y use <code>pass</code> para definirla sin atributos ni métodos iniciales.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Sentencia <code>pass</code>, Placeholders, Desarrollo incremental.</p>
+
+<a href="#respuesta_38" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_39">Ejercicio 39</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la cláusula <strong><code>else</code></strong> en un bucle <strong><code>for</code></strong> para ejecutar un bloque de código solo si el bucle termina sin ser interrumpido por un <code>break</code>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Escriba un bucle <code>for</code> que busque el número 10 en una lista de números.</li>
+<li>Si el número 10 es encontrado, imprima &ldquo;Encontrado&rdquo; y use <code>break</code>.</li>
+<li>Si el bucle finaliza sin encontrar el número, la cláusula <code>else</code> debe imprimir &ldquo;No encontrado&rdquo;.</li>
+<li>Pruebe con una lista que contenga el 10 y con una que no lo contenga.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Cláusula <code>else</code> en bucles <code>for</code>, Flujo de control.</p>
+
+<a href="#respuesta_39" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_40">Ejercicio 40</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la cláusula <strong><code>else</code></strong> en un bucle <strong><code>while</code></strong> para ejecutar un bloque de código solo si la condición del bucle se vuelve falsa.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Inicialice <code>i = 0</code> y <code>limite = 5</code>.</li>
+<li>Escriba un bucle <code>while</code> que se ejecute mientras <code>i &lt; limite</code>. Dentro del bucle, incremente <code>i</code>.</li>
+<li>Use la cláusula <code>else</code> del <code>while</code> para imprimir &ldquo;Bucle terminado limpiamente.&rdquo;</li>
+<li>Pruebe el mismo bucle con un <code>break</code> interno para ver cuándo la cláusula <code>else</code> es omitida.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Cláusula <code>else</code> en bucles <code>while</code>, Finalización normal vs. interrupción.</p>
+
+<a href="#respuesta_40" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_41">Ejercicio 41</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y manipulará una <strong>Lista</strong> (<code>list</code>) en Python, la estructura de datos secuencial más fundamental y mutable.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>frutas</code> con al menos 4 elementos de tipo <code>str</code>.</li>
+<li>Imprima el primer elemento y el último elemento de la lista.</li>
+<li>Utilice la función <code>len()</code> para mostrar el número total de elementos.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipo <code>list</code>, Mutabilidad, Indexación básica (positiva y negativa).</p>
+
+<a href="#respuesta_41" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_42">Ejercicio 42</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el método <strong><code>.append()</code></strong> para añadir un elemento al final de una lista y el método <strong><code>.insert()</code></strong> para añadir un elemento en una posición específica.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree una lista <code>tareas = ["Comprar", "Estudiar"]</code>.</li>
+<li>Agregue &ldquo;Cocinar&rdquo; al final usando <code>.append()</code>.</li>
+<li>Inserte &ldquo;Llamar&rdquo; en la posición del índice 1 usando <code>.insert()</code>.</li>
+<li>Muestre la lista final.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.append()</code>, Método <code>.insert()</code>, Modificación de listas.</p>
+
+<a href="#respuesta_42" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_43">Ejercicio 43</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la <strong>indexación negativa</strong> para acceder a elementos desde el final de una secuencia de datos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>puntuaciones = [90, 85, 92, 78, 95]</code>.</li>
+<li>Acceda y muestre el segundo elemento contando desde el final (índice -2).</li>
+<li>Acceda y muestre el último elemento (índice -1).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Indexación negativa, Acceso desde el final de la secuencia.</p>
+
+<a href="#respuesta_43" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_44">Ejercicio 44</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la técnica de <strong>Slicing</strong> (rebanado) para extraer una sub-secuencia de una lista y comprender los límites (<code>[inicio:fin)</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]</code>.</li>
+<li>Extraiga y muestre los días laborables (índices 0 al 4).</li>
+<li>Extraiga y muestre los elementos desde el índice 4 hasta el final.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Slicing (<code>[start:stop]</code>), Límites exclusivos (<code>stop</code>), Extracción de sub-listas.</p>
+
+<a href="#respuesta_44" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_45">Ejercicio 45</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el <strong>Slicing con paso</strong> (<em>step</em>) para seleccionar elementos de una secuencia con un incremento específico.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>numeros = list(range(20))</code>.</li>
+<li>Extraiga y muestre solo los números pares utilizando un paso de 2 en el slicing.</li>
+<li>Extraiga y muestre los elementos desde el índice 1 hasta el 15, usando un paso de 3.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Slicing con paso (<code>[start:stop:step]</code>), Secuencias con incremento.</p>
+
+<a href="#respuesta_45" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_46">Ejercicio 46</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manipulará las listas utilizando los métodos <strong><code>.remove()</code></strong> (por valor) y <strong><code>.pop()</code></strong> (por índice o el último).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree una lista <code>participantes = ["Juan", "María", "Pedro", "Ana"]</code>.</li>
+<li>Elimine &ldquo;Pedro&rdquo; por valor utilizando <code>.remove()</code>.</li>
+<li>Elimine y almacene el último participante utilizando <code>.pop()</code>. Muestre el elemento eliminado.</li>
+<li>Muestre la lista final.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.remove()</code>, Método <code>.pop()</code>, Eliminación por valor y por índice.</p>
+
+<a href="#respuesta_46" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_47">Ejercicio 47</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá y manipulará una <strong>Tupla</strong> (<code>tuple</code>), comprendiendo que es una secuencia inmutable de datos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una tupla <code>coordenadas = (10.5, 25.3)</code>.</li>
+<li>Intente (y comente) cambiar el valor del primer elemento de la tupla para observar la inmutabilidad.</li>
+<li>Muestre el resultado de concatenar <code>coordenadas</code> con la tupla <code>(5.0,)</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipo <code>tuple</code>, Inmutabilidad, Concatenación de tuplas.</p>
+
+<a href="#respuesta_49" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_48">Ejercicio 48</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función <strong><code>enumerate()</code></strong> para iterar sobre una lista, obteniendo simultáneamente el índice y el valor de cada elemento.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>elementos = ["A", "B", "C", "D"]</code>.</li>
+<li>Utilice un bucle <code>for</code> con <code>enumerate()</code> para imprimir el índice y el valor en el formato: &ldquo;El elemento [valor] está en la posición [índice]&rdquo;.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>enumerate()</code>, Iteración con índice, Desempaquetamiento en bucles.</p>
+
+<a href="#respuesta_48" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_49">Ejercicio 49</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y manipulará una <strong>Cadena de Caracteres</strong> (<code>str</code>) y aplicará la inmutabilidad de este tipo de dato.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una cadena <code>lenguaje = "python"</code>.</li>
+<li>Intente (y comente) cambiar el primer carácter a mayúscula para observar la inmutabilidad.</li>
+<li>Cree una nueva cadena <code>lenguaje_modificado</code> utilizando el método <strong><code>.capitalize()</code></strong>. Muestre la nueva cadena.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipo <code>str</code>, Inmutabilidad de cadenas, Método <code>.capitalize()</code>.</p>
+
+<a href="#respuesta_49" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_50">Ejercicio 50</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará los métodos <strong><code>.split()</code></strong> y <strong><code>.join()</code></strong> para convertir cadenas a listas y viceversa, respectivamente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una cadena <code>csv_data = "Nombre,Edad,Ciudad"</code>.</li>
+<li>Utilice <code>.split(',')</code> para convertir la cadena en una lista de encabezados. Muestre la lista.</li>
+<li>Declare una lista <code>palabras = ["Python", "es", "poderoso"]</code>.</li>
+<li>Utilice <code>' '.join(palabras)</code> para unir la lista en una sola cadena separada por espacios.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.split()</code>, Método <code>.join()</code>, Conversión <code>str</code> a <code>list</code> y <code>list</code> a <code>str</code>.</p>
+
+<a href="#respuesta_50" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_51">Ejercicio 51</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función <strong><code>sorted()</code></strong> para obtener una nueva lista ordenada a partir de una lista o tupla, sin modificar la secuencia original.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>numeros = [5, 1, 4, 2, 8]</code>.</li>
+<li>Cree una nueva lista <code>numeros_ordenados</code> usando <code>sorted(numeros)</code>.</li>
+<li>Imprima ambas listas para confirmar que la original <code>numeros</code> no cambió.</li>
+<li>Aplique <code>sorted()</code> a una tupla de nombres y muestre el resultado (debe ser una lista).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>sorted()</code>, Ordenación no destructiva, Retorno de lista.</p>
+
+<a href="#respuesta_51" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_52">Ejercicio 52</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el método <strong><code>.sort()</code></strong> para ordenar una lista de forma destructiva y aplicará el argumento <strong><code>reverse=True</code></strong> para ordenarla de forma descendente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>precios = [15.5, 9.99, 45.0, 5.0]</code>.</li>
+<li>Aplique <code>precios.sort(reverse=True)</code>.</li>
+<li>Muestre la lista <code>precios</code> para verificar la ordenación descendente (destructiva).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.sort()</code>, Ordenación destructiva, Argumento <code>reverse</code>.</p>
+
+<a href="#respuesta_52" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_53">Ejercicio 53</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>zip()</code></strong> para combinar dos o más secuencias (listas o tuplas) en una secuencia de tuplas.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>nombres = ["Alice", "Bob"]</code> y una lista <code>edades = [25, 30]</code>.</li>
+<li>Utilice <code>zip(nombres, edades)</code> y convierta el resultado a una lista para mostrar la secuencia de tuplas combinadas.</li>
+<li>Utilice un bucle <code>for</code> para iterar sobre la salida de <code>zip()</code> y desempaquetar las tuplas.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>zip()</code>, Combinación de secuencias, Iteración sobre pares.</p>
+
+<a href="#respuesta_53" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_54">Ejercicio 54</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manipulará las listas anidadas (matrices) utilizando la doble indexación para acceder y modificar elementos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una matriz <code>matriz = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]</code>.</li>
+<li>Acceda y muestre el elemento en la segunda fila, tercera columna (debe ser 6).</li>
+<li>Modifique el elemento en la primera fila, primera columna (índice 0, 0) a 99.</li>
+<li>Muestre la matriz completa.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Listas anidadas, Doble indexación <code>list[i][j]</code>, Simulación de matrices.</p>
+
+<a href="#respuesta_54" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_55">Ejercicio 55</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el método <strong><code>.count()</code></strong> para contar las ocurrencias de un valor específico y <strong><code>.index()</code></strong> para encontrar la primera aparición.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>data = [1, 5, 2, 5, 8, 5]</code>.</li>
+<li>Utilice <code>.count(5)</code> para determinar cuántas veces aparece el número 5.</li>
+<li>Utilice <code>.index(5)</code> para encontrar el índice de la primera ocurrencia del número 5.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.count()</code>, Método <code>.index()</code>, Búsqueda de ocurrencias.</p>
+
+<a href="#respuesta_55" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_56">Ejercicio 56</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará el <strong>slicing extendido</strong> para revertir una lista o tupla de forma concisa.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>original = [10, 20, 30, 40]</code>.</li>
+<li>Cree una nueva lista <code>reversa</code> utilizando el slicing <code>original[::-1]</code>.</li>
+<li>Muestre <code>reversa</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Slicing extendido (<code>[::-1]</code>), Reversión de secuencia.</p>
+
+<a href="#respuesta_56" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_57">Ejercicio 57</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>all()</code></strong> y <strong><code>any()</code></strong> para evaluar expresiones booleanas sobre todos los elementos de una secuencia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>edades = [22, 18, 25, 30]</code>.</li>
+<li>Evalúe y muestre: ¿<code>all()</code> las edades son mayores o iguales a 18?</li>
+<li>Evalúe y muestre: ¿<code>any()</code> de las edades es menor que 20?</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>all()</code>, Función <code>any()</code>, Evaluación lógica de secuencias.</p>
+
+<a href="#respuesta_57" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_58">Ejercicio 58</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función intrínseca <strong><code>sum()</code></strong> para sumar los elementos de una secuencia, y la función <strong><code>min()</code>/<code>max()</code></strong> para encontrar los extremos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista de reales <code>ventas = [150.50, 200.00, 75.25]</code>.</li>
+<li>Utilice <code>sum()</code> para calcular y mostrar el total de las ventas.</li>
+<li>Utilice <code>min()</code> y <code>max()</code> para encontrar y mostrar la venta mínima y máxima.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>sum()</code>, Funciones <code>min()</code> y <code>max()</code>, Agregación.</p>
+
+<a href="#respuesta_58" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_59">Ejercicio 59</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá la diferencia entre <strong>copia por referencia</strong> (shallow copy) y <strong>copia por valor</strong> (deep copy o slicing) en listas.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>L1 = [1, 2, 3]</code>.</li>
+<li>Cree <code>L2 = L1</code> (copia por referencia).</li>
+<li>Cree <code>L3 = L1[:]</code> (copia por valor/slicing).</li>
+<li>Modifique <code>L1[0] = 99</code>.</li>
+<li>Imprima <code>L1</code>, <code>L2</code> y <code>L3</code>. Comente qué listas se modificaron.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Copia por referencia, Copia por valor, <code>L1[:]</code>, Mutabilidad.</p>
+
+<a href="#respuesta_59" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_60">Ejercicio 60</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>reversed()</code></strong> para obtener un iterador de una secuencia en orden inverso sin modificarla, y <strong><code>.reverse()</code></strong> para modificarla destructivamente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>items = [1, 2, 3]</code>.</li>
+<li>Aplique <code>items.reverse()</code> y muestre <code>items</code>.</li>
+<li>Declare una tupla <code>numeros = (4, 5, 6)</code>. Convierta <code>list(reversed(numeros))</code> a una lista y muestre el resultado.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>reversed()</code>, Método <code>.reverse()</code>, Iteradores.</p>
+
+<a href="#respuesta_60" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_61">Ejercicio 61</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y manipulará un <strong>Diccionario</strong> (<code>dict</code>), la estructura de datos clave-valor.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un diccionario <code>perfil</code> con las claves <code>"nombre"</code>, <code>"edad"</code> y <code>"ciudad"</code>.</li>
+<li>Acceda y muestre el valor asociado a la clave <code>"edad"</code>.</li>
+<li>Agregue un nuevo par clave-valor, <code>"email"</code>, al diccionario.</li>
+<li>Muestre el diccionario completo.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipo <code>dict</code>, Pares clave-valor, Acceso y adición por clave.</p>
+
+<a href="#respuesta_61" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_62">Ejercicio 62</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el método <strong><code>.get()</code></strong> para acceder a los valores de un diccionario de forma segura, proporcionando un valor por defecto en caso de que la clave no exista.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un diccionario <code>config = {"tema": "oscuro", "fuente": "Arial"}</code>.</li>
+<li>Acceda al valor de la clave <code>"tema"</code> de forma directa.</li>
+<li>Utilice <code>.get("idioma", "Español")</code> para acceder a la clave <code>"idioma"</code>. Si no existe, debe devolver el valor por defecto <code>"Español"</code>. Muestre el resultado.</li>
+<li>Intente (y comente) acceder a una clave inexistente de forma directa para observar la excepción.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>.get()</code>, Valor por defecto, Prevención de <code>KeyError</code>.</p>
+
+<a href="#respuesta_62" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_63">Ejercicio 63</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante iterará sobre un diccionario utilizando sus <strong>claves</strong> (<code>.keys()</code>), <strong>valores</strong> (<code>.values()</code>) y <strong>pares</strong> (<code>.items()</code>).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice el diccionario <code>perfil</code> del Ejercicio 61.</li>
+<li>Utilice un bucle <code>for</code> para imprimir solo las claves.</li>
+<li>Utilice un bucle <code>for</code> para imprimir solo los valores.</li>
+<li>Utilice un bucle <code>for</code> con <code>.items()</code> para imprimir las claves y los valores en el formato: &ldquo;Clave: [clave], Valor: [valor]&rdquo;.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Métodos <code>.keys()</code>, <code>.values()</code>, <code>.items()</code>, Iteración de diccionarios.</p>
+
+<a href="#respuesta_63" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_64">Ejercicio 64</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante declarará y manipulará un <strong>Conjunto</strong> (<code>set</code>), comprendiendo su propiedad de contener solo elementos únicos (no duplicados).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un conjunto <code>datos = {1, 2, 3, 2, 1}</code>. Muestre el conjunto y observe que los duplicados se eliminaron automáticamente.</li>
+<li>Agregue el número 5 utilizando el método <strong><code>.add()</code></strong>.</li>
+<li>Intente (y comente) agregar el número 2 de nuevo para observar que el conjunto permanece sin cambios.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Tipo <code>set</code>, Elementos únicos, Método <code>.add()</code>.</p>
+
+<a href="#respuesta_64" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_65">Ejercicio 65</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará las <strong>operaciones de conjuntos</strong> más comunes: unión, intersección y diferencia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>A = {1, 2, 3, 4}</code> y <code>B = {3, 4, 5, 6}</code>.</li>
+<li>Calcule y muestre la <strong>unión</strong> (<code>A | B</code> o <code>.union()</code>).</li>
+<li>Calcule y muestre la <strong>intersección</strong> (<code>A &amp; B</code> o <code>.intersection()</code>).</li>
+<li>Calcule y muestre la <strong>diferencia</strong> (<code>A - B</code> o <code>.difference()</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Unión de conjuntos, Intersección de conjuntos, Diferencia de conjuntos.</p>
+
+<a href="#respuesta_65" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_66">Ejercicio 66</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manejará la <strong>E/S de archivos</strong> (<code>open</code>, <code>read</code>, <code>close</code>) para leer el contenido completo de un archivo de texto.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree un archivo llamado <code>registro.txt</code> con algunas líneas de texto.</li>
+<li>Utilice la función <code>open()</code> y el método <strong><code>.read()</code></strong> para leer todo el contenido del archivo en una sola cadena.</li>
+<li>Muestre el contenido leído y asegúrese de cerrar el archivo con <strong><code>.close()</code></strong>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>open()</code>, Modo de lectura (<code>'r'</code>), Método <code>.read()</code>, Método <code>.close()</code>.</p>
+
+<a href="#respuesta_66" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_67">Ejercicio 67</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el bloque <strong><code>with open(...) as f:</code></strong> para la gestión automática de archivos, asegurando que el recurso se cierre correctamente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree o use un archivo de texto existente (<code>registro.txt</code>).</li>
+<li>Utilice la estructura <code>with open(...) as f:</code> para escribir tres líneas en el archivo (<code>modo='w'</code>).</li>
+<li>Inmediatamente después del bloque <code>with</code>, use un segundo bloque <code>with</code> y el método <strong><code>.readlines()</code></strong> para leer el contenido del archivo línea por línea y mostrar la lista de líneas.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>with open(...) as</code>, Gestión de contexto, Método <code>.readlines()</code>.</p>
+
+<a href="#respuesta_67" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_68">Ejercicio 68</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la gestión de errores utilizando el bloque <strong><code>try-except</code></strong> para capturar la excepción <code>ValueError</code> en una conversión de tipo.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Pida al usuario que ingrese un número.</li>
+<li>Utilice un bloque <code>try</code> para intentar convertir la entrada a un entero.</li>
+<li>Si la conversión falla (ej. el usuario ingresa una letra), el bloque <code>except ValueError</code> debe capturar el error e imprimir: &ldquo;Error: No se ha introducido un número válido.&rdquo;</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bloque <code>try</code>, Bloque <code>except</code>, Excepción <code>ValueError</code>, Manejo de errores.</p>
+
+<a href="#respuesta_68" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_69">Ejercicio 69</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el bloque <strong><code>try-except-else</code></strong> para ejecutar código solo si el bloque <code>try</code> se completa sin generar ninguna excepción.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una variable <code>divisor = 5</code>.</li>
+<li>Utilice <code>try</code> para calcular <code>resultado = 10 / divisor</code>.</li>
+<li>Si no hay excepción, el bloque <code>else</code> debe imprimir el <code>resultado</code>.</li>
+<li>Pruebe el ejercicio con <code>divisor = 0</code> para verificar que el bloque <code>else</code> se omite.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Cláusula <code>else</code> en <code>try-except</code>, Flujo de ejecución sin error.</p>
+
+<a href="#respuesta_69" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_70">Ejercicio 70</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el bloque <strong><code>finally</code></strong> para ejecutar código de limpieza o cierre de recursos, independientemente de si ocurrió o no una excepción.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice un bloque <code>try</code> para intentar dividir 10 entre un valor (pruebe con 2 y luego con 0).</li>
+<li>Utilice el bloque <code>finally</code> para imprimir siempre el mensaje: &ldquo;Finalizando intento de cálculo.&rdquo;</li>
+<li>Observe cómo el bloque <code>finally</code> se ejecuta tanto si ocurre la división por cero (<code>ZeroDivisionError</code>) como si no.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Bloque <code>finally</code>, Código de limpieza, Garantía de ejecución.</p>
+
+<a href="#respuesta_70" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_71">Ejercicio 71</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la librería <strong><code>csv</code></strong> para escribir datos estructurados en un archivo de texto con formato CSV.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe el módulo <code>csv</code>.</li>
+<li>Defina una lista de listas <code>datos = [['Nombre', 'Edad'], ['Alice', 30], ['Bob', 25]]</code>.</li>
+<li>Abra un archivo llamado <code>datos.csv</code> en modo escritura (<code>'w'</code>).</li>
+<li>Utilice <code>csv.writer()</code> y el método <strong><code>.writerows()</code></strong> para escribir toda la lista de datos en el archivo.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Módulo <code>csv</code>, Escritura estructurada, <code>csv.writer()</code>, <code>writerows()</code>.</p>
+
+<a href="#respuesta_71" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_72">Ejercicio 72</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la librería <strong><code>csv</code></strong> para leer datos estructurados y procesar cada fila como una lista.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe el módulo <code>csv</code>.</li>
+<li>Utilice el archivo <code>datos.csv</code> del ejercicio anterior.</li>
+<li>Abra el archivo en modo lectura y use <code>csv.reader()</code> para leerlo.</li>
+<li>Utilice un bucle <code>for</code> para iterar sobre el <code>reader</code> e imprimir cada fila leída.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Módulo <code>csv</code>, Lectura estructurada, <code>csv.reader()</code>, Iteración de filas.</p>
+
+<a href="#respuesta_72" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_73">Ejercicio 73</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la gestión de errores utilizando un solo bloque <strong><code>except</code></strong> para capturar múltiples tipos de excepciones.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función que intente realizar una operación de división (<code>10 / x</code>).</li>
+<li>Utilice un bloque <code>try</code> para llamar a esta función con <code>x = 0</code> (causa <code>ZeroDivisionError</code>).</li>
+<li>Capture tanto <code>ZeroDivisionError</code> como <code>TypeError</code> (en caso de que <code>x</code> fuera una cadena) en una sola cláusula <code>except</code>. Imprima un mensaje genérico.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Múltiples excepciones, <code>except (Error1, Error2)</code>, Manejo generalizado.</p>
+
+<a href="#respuesta_73" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_74">Ejercicio 74</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aprenderá a <strong>lanzar excepciones</strong> personalizadas o predefinidas utilizando la palabra clave <strong><code>raise</code></strong>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función llamada <code>verificar_edad</code> que acepte un argumento <code>edad</code>.</li>
+<li>Si <code>edad</code> es menor que 0, use la sentencia <code>raise ValueError("La edad no puede ser negativa.")</code>.</li>
+<li>Llame a la función con un valor negativo dentro de un bloque <code>try-except</code> para capturar la excepción lanzada y mostrar el mensaje de error.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Palabra clave <code>raise</code>, Lanzamiento de <code>ValueError</code>, Control de flujo con excepciones.</p>
+
+<a href="#respuesta_74" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_75">Ejercicio 75</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante creará un <strong>Diccionario anidado</strong> para simular una estructura de datos compleja (ej. datos de proyectos o inventario).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare un diccionario <code>proyectos</code> donde cada clave sea un nombre de proyecto y el valor sea otro diccionario que contenga las claves <code>estado</code> y <code>miembros</code>.</li>
+<li>Acceda y muestre el <code>estado</code> del primer proyecto.</li>
+<li>Acceda y muestre la lista de <code>miembros</code> del segundo proyecto.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Diccionarios anidados, Acceso por doble clave.</p>
+
+<a href="#respuesta_75" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_76">Ejercicio 76</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>defaultdict</code></strong> del módulo <code>collections</code> para crear diccionarios con valores predeterminados, simplificando la inicialización.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe <code>defaultdict</code> del módulo <code>collections</code>.</li>
+<li>Cree un <code>defaultdict</code> donde el valor por defecto sea un <code>int</code> (es decir, 0).</li>
+<li>Itere sobre una lista de palabras (ej. <code>["A", "B", "A"]</code>) y utilice el <em>defaultdict</em> para contar la frecuencia de cada palabra sin verificar si la clave existe.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>defaultdict</code>, Módulo <code>collections</code>, Valores por defecto para contadores.</p>
+
+<a href="#respuesta_76" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_77">Ejercicio 77</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>Counter</code></strong> del módulo <code>collections</code> para contar la frecuencia de elementos de una forma más eficiente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe <code>Counter</code> del módulo <code>collections</code>.</li>
+<li>Declare una lista <code>colores = ["rojo", "azul", "rojo", "verde", "azul", "rojo"]</code>.</li>
+<li>Cree un objeto <code>Counter</code> a partir de la lista.</li>
+<li>Muestre los 2 elementos más comunes utilizando el método <strong><code>.most_common(2)</code></strong>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>Counter</code>, Módulo <code>collections</code>, Frecuencia de elementos, Método <code>.most_common()</code>.</p>
+
+<a href="#respuesta_77" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_78">Ejercicio 78</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante manipulará el tipo de dato <strong><code>set</code></strong> para realizar una limpieza de datos (eliminación de duplicados) en una lista.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista con duplicados: <code>numeros_raw = [1, 5, 2, 8, 5, 1, 9]</code>.</li>
+<li>Convierta la lista a un <code>set</code> para eliminar los duplicados.</li>
+<li>Convierta el <code>set</code> resultante de nuevo a una lista <code>numeros_limpios</code> y muéstrela.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Conversión <code>list</code> a <code>set</code>, Eliminación de duplicados.</p>
+
+<a href="#respuesta_78" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_79">Ejercicio 79</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el módulo <strong><code>os</code></strong> para interactuar con el sistema de archivos, comprobando la existencia de un archivo o directorio.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe el módulo <code>os</code>.</li>
+<li>Utilice <code>os.path.exists('datos.csv')</code> para verificar si el archivo del Ejercicio 71 existe.</li>
+<li>Utilice <code>os.path.isdir('.')</code> para verificar si el directorio actual es un directorio. Muestre ambos resultados.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Módulo <code>os</code>, <code>os.path.exists()</code>, <code>os.path.isdir()</code>, Interacción con el sistema de archivos.</p>
+
+<a href="#respuesta_79" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_80">Ejercicio 80</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la gestión de errores con un bloque <strong><code>try-except</code></strong> genérico para capturar cualquier tipo de excepción no especificada.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina un bloque <code>try</code> que intente una operación que cause un error (ej. acceder al índice 10 de una lista de 5 elementos).</li>
+<li>Utilice una cláusula <code>except Exception as e:</code> para capturar cualquier tipo de error.</li>
+<li>Dentro del <code>except</code>, imprima el tipo de error y el mensaje de error utilizando la variable <code>e</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>except Exception</code>, Captura genérica de errores, Inspección del objeto error.</p>
+
+<a href="#respuesta_80" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_81">Ejercicio 81</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la <strong>Comprensión de Listas</strong> (<em>List Comprehension</em>) para crear una lista de cuadrados de forma concisa y eficiente.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice la Comprensión de Listas para crear una lista <code>cuadrados</code> que contenga los cuadrados de los números del 1 al 10.</li>
+<li>Muestre la lista resultante.</li>
+<li>Compare el código con la alternativa de usar un bucle <code>for</code> y <code>append()</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Comprensión de Listas (<code>[expresión for item in iterable]</code>), Sintaxis concisa, Eficiencia.</p>
+
+<a href="#respuesta_81" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_82">Ejercicio 82</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la Comprensión de Listas con una <strong>cláusula condicional <code>if</code></strong> para filtrar elementos mientras se construye la lista.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice la Comprensión de Listas para crear una lista <code>pares</code> que contenga solo los números pares del 0 al 20.</li>
+<li>La condición <code>if</code> debe estar al final de la expresión.</li>
+<li>Muestre la lista <code>pares</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Comprensión de Listas con <code>if</code>, Filtrado en línea.</p>
+
+<a href="#respuesta_82" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_83">Ejercicio 83</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá y utilizará una función <strong><code>lambda</code></strong> (función anónima) simple para operaciones en línea.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una función <code>lambda</code> llamada <code>duplicar</code> que tome un argumento <code>x</code> y devuelva <code>x * 2</code>.</li>
+<li>Utilice esta función <code>lambda</code> para duplicar el número 15 y muestre el resultado.</li>
+<li>Compare la sintaxis con la definición tradicional usando <code>def</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>lambda</code>, Funciones anónimas, Sintaxis <code>lambda argumentos: expresión</code>.</p>
+
+<a href="#respuesta_83" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_84">Ejercicio 84</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función <strong><code>map()</code></strong> junto con una función <code>lambda</code> para aplicar una transformación a cada elemento de una lista.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>precios = [100, 50, 200]</code>.</li>
+<li>Utilice <code>map()</code> y una función <code>lambda</code> para calcular el precio final de cada artículo sumándole un impuesto fijo de 10.</li>
+<li>Convierta el resultado de <code>map()</code> a una lista y muéstrela.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>map()</code>, Transformación de secuencia, Funciones <code>lambda</code> en <code>map()</code>.</p>
+
+<a href="#respuesta_84" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_85">Ejercicio 85</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función <strong><code>filter()</code></strong> junto con una función <code>lambda</code> para seleccionar elementos que cumplen una condición.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>temperaturas = [25, 15, 30, 8, 22]</code>.</li>
+<li>Utilice <code>filter()</code> y una función <code>lambda</code> para seleccionar solo las temperaturas que son mayores que 20.</li>
+<li>Convierta el resultado de <code>filter()</code> a una lista y muéstrela.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>filter()</code>, Filtrado de secuencia, Funciones <code>lambda</code> en <code>filter()</code>.</p>
+
+<a href="#respuesta_85" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_86">Ejercicio 86</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la Comprensión de <strong>Diccionarios</strong> (<em>Dictionary Comprehension</em>) para crear un diccionario de forma concisa.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree una lista de nombres <code>['A', 'B', 'C']</code>.</li>
+<li>Utilice la Comprensión de Diccionarios para crear un diccionario donde la clave sea el nombre y el valor sea la longitud del nombre.</li>
+<li>Muestre el diccionario resultante.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Comprensión de Diccionarios (<code>{clave: valor for item in iterable}</code>), Creación de <em>dicts</em> eficiente.</p>
+
+<a href="#respuesta_86" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_87">Ejercicio 87</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará una <strong>Comprensión de Conjuntos</strong> (<em>Set Comprehension</em>) para crear un conjunto de elementos únicos aplicando una transformación.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare una lista <code>colores = ["rojo", "azul", "Rojo", "verde", "azul"]</code>.</li>
+<li>Utilice la Comprensión de Conjuntos para convertir cada color a minúsculas y luego crear un conjunto de los colores únicos resultantes.</li>
+<li>Muestre el conjunto.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Comprensión de Conjuntos, Transformación y eliminación de duplicados.</p>
+
+<a href="#respuesta_87" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_88">Ejercicio 88</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>zip()</code></strong> junto con una Comprensión de Diccionarios para crear un diccionario a partir de dos listas.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Declare <code>claves = ['A', 'B', 'C']</code> y <code>valores = [1, 2, 3]</code>.</li>
+<li>Utilice <code>zip(claves, valores)</code> dentro de una Comprensión de Diccionarios para crear el diccionario resultante.</li>
+<li>Muestre el diccionario.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p><code>zip()</code> en Comprensión de Diccionarios, Emparejamiento de secuencias.</p>
+
+<a href="#respuesta_88" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_89">Ejercicio 89</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante comprenderá y creará una expresión <strong>Generadora</strong> (<em>Generator Expression</em>), una alternativa a la Comprensión de Listas que ahorra memoria.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Cree una expresión Generadora que devuelva el doble de los números del 1 al 5 (use paréntesis en lugar de corchetes).</li>
+<li>Utilice la función <code>next()</code> dos veces en la expresión generadora para obtener los dos primeros valores.</li>
+<li>Convierta el resto del generador a una lista y muéstrela.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Generadores, Expresión generadora (<code>(expresión for item in iterable)</code>), Ahorro de memoria, Función <code>next()</code>.</p>
+
+<a href="#respuesta_89" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_90">Ejercicio 90</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante aplicará la función <strong><code>reduce()</code></strong> del módulo <code>functools</code> para aplicar una función de forma acumulativa a los elementos de una secuencia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Importe <code>reduce</code> de <code>functools</code>.</li>
+<li>Defina una función <code>lambda</code> para la suma de dos números.</li>
+<li>Utilice <code>reduce()</code> con la función <code>lambda</code> para calcular el producto acumulativo (multiplicación) de los números de la lista <code>[1, 2, 3, 4]</code>.</li>
+<li>Muestre el resultado (debe ser 24).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>reduce()</code>, Módulo <code>functools</code>, Agregación acumulativa.</p>
+
+<a href="#respuesta_90" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_91">Ejercicio 91</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá su primera <strong>Clase</strong> en Python utilizando la palabra clave <code>class</code> y la sentencia <code>pass</code>.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase llamada <code>Vehiculo</code> sin ningún atributo o método.</li>
+<li>Utilice la sentencia <code>pass</code> dentro del cuerpo de la clase.</li>
+<li>Cree una instancia (objeto) de <code>Vehiculo</code> y muestre el tipo de la instancia.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Palabra clave <code>class</code>, Objeto, Instancia.</p>
+
+<a href="#respuesta_91" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_92">Ejercicio 92</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá el <strong>Constructor</strong> de una clase utilizando el método especial <strong><code>__init__</code></strong> para inicializar los atributos de instancia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase <code>Producto</code> con el método <code>__init__</code> que acepte <code>nombre</code> y <code>precio</code>.</li>
+<li>Dentro de <code>__init__</code>, asigne estos valores a los atributos de instancia (<code>self.nombre</code>, <code>self.precio</code>).</li>
+<li>Cree una instancia de <code>Producto</code> (ej. &ldquo;Laptop&rdquo;, 1200.00). Muestre sus atributos.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Constructor <code>__init__</code>, Atributos de instancia, Palabra clave <code>self</code>.</p>
+
+<a href="#respuesta_92" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_93">Ejercicio 93</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá un <strong>Método de Instancia</strong> para implementar un comportamiento asociado al objeto.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice la clase <code>Producto</code> del Ejercicio 92.</li>
+<li>Agregue un método llamado <code>calcular_iva</code> que devuelva el precio con IVA (asuma 21%).</li>
+<li>Llame al método desde la instancia creada para obtener y mostrar el precio final.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Métodos de instancia, Comportamiento del objeto.</p>
+
+<a href="#respuesta_93" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_94">Ejercicio 94</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el método mágico <strong><code>__str__</code></strong> (o <em>dunder</em> <code>str</code>) para definir una representación de cadena legible para el usuario.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Utilice la clase <code>Producto</code> del Ejercicio 93.</li>
+<li>Defina el método <code>__str__(self)</code> para que devuelva una cadena en el formato: &ldquo;Producto: [nombre], Precio base: [precio]&rdquo;.</li>
+<li>Imprima la instancia del objeto directamente (<code>print(mi_producto)</code>). Observe cómo se utiliza <code>__str__</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Método <code>__str__</code>, Representación legible, Impresión de objetos.</p>
+
+<a href="#respuesta_94" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_95">Ejercicio 95</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la <strong>Herencia</strong> simple, creando una clase hija que extiende o sobrescribe los métodos de una clase padre.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase padre <code>Animal</code> con un método <code>hablar</code> que imprima &ldquo;Sonido genérico&rdquo;.</li>
+<li>Defina una clase hija <code>Perro</code> que herede de <code>Animal</code>.</li>
+<li>Sobrescriba el método <code>hablar</code> en <code>Perro</code> para que imprima &ldquo;Guau!&rdquo;.</li>
+<li>Cree instancias de ambos y llame al método <code>hablar</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Herencia, Clase padre, Clase hija, Sobrescritura de métodos.</p>
+
+<a href="#respuesta_95" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_96">Ejercicio 96</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará la función <strong><code>super()</code></strong> en el constructor de la clase hija para asegurar que el constructor de la clase padre sea llamado y se inicialicen sus atributos.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina la clase padre <code>Persona</code> con <code>__init__</code> que acepte y asigne <code>nombre</code>.</li>
+<li>Defina la clase hija <code>Empleado</code> que acepte <code>nombre</code> y <code>salario</code>.</li>
+<li>En el <code>__init__</code> de <code>Empleado</code>, use <code>super().__init__(nombre)</code> para inicializar el nombre, y luego inicialice <code>salario</code>.</li>
+<li>Cree una instancia de <code>Empleado</code> y muestre ambos atributos.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Función <code>super()</code>, Inicialización de la clase padre.</p>
+
+<a href="#respuesta_96" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_97">Ejercicio 97</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá un <strong>Método de Clase</strong> utilizando el decorador <strong><code>@classmethod</code></strong> para operar sobre la clase en lugar de la instancia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase <code>Contador</code>. Declare un atributo de clase <code>cuenta_total = 0</code>.</li>
+<li>Defina un método de clase llamado <code>incrementar_total</code> usando <code>@classmethod</code> que incremente <code>cuenta_total</code> en 1.</li>
+<li>Llame al método a través de la clase (<code>Contador.incrementar_total()</code>) varias veces y muestre el valor de <code>Contador.cuenta_total</code>.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Decorador <code>@classmethod</code>, Métodos de clase, Atributos de clase (<code>cls</code>).</p>
+
+<a href="#respuesta_97" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_98">Ejercicio 98</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante definirá un <strong>Método Estático</strong> utilizando el decorador <strong><code>@staticmethod</code></strong> para funciones que pertenecen lógicamente a la clase pero no acceden a ella ni a la instancia.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase <code>Utilidades</code>.</li>
+<li>Defina un método estático <code>sumar_dos(a, b)</code> usando <code>@staticmethod</code> que simplemente devuelva <code>a + b</code>.</li>
+<li>Llame al método estático directamente desde la clase (<code>Utilidades.sumar_dos(5, 3)</code>).</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Decorador <code>@staticmethod</code>, Métodos estáticos, Funciones utilitarias.</p>
+
+<a href="#respuesta_98" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_99">Ejercicio 99</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante implementará la <strong>Encapsulación</strong> básica en Python utilizando el convenio de <strong>guion bajo único</strong> (<code>_atributo</code>) para indicar que un atributo es protegido (interno).</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase <code>Cuenta</code> con un constructor que acepte <code>_saldo</code>.</li>
+<li>Defina un método público <code>consultar_saldo</code> que devuelva <code>self._saldo</code>.</li>
+<li>Cree una instancia. Muestre el saldo a través del método público.</li>
+<li>Acceda y modifique el atributo <code>_saldo</code> directamente para demostrar que el convenio es una sugerencia, no un bloqueo.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Encapsulación (convención), Atributos protegidos (<code>_</code>), Acceso directo.</p>
+
+<a href="#respuesta_99" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+<h2 id="ejercicio_100">Ejercicio 100</h2>
+
+<h3>Objetivo</h3>
+
+<p>El estudiante utilizará el decorador <strong><code>@property</code></strong> para crear un <strong>getter</strong> (método de acceso) para un atributo, simulando la encapsulación a través de una interfaz de propiedad.</p>
+
+<h3>Instrucciones:</h3>
+
+<ol>
+<li>Defina una clase <code>Circulo</code> con <code>__init__</code> para <code>_radio</code>.</li>
+<li>Defina un método llamado <code>radio</code> decorado con <strong><code>@property</code></strong> que simplemente devuelva <code>self._radio</code>.</li>
+<li>Defina un método llamado <code>area</code> que calcule y devuelva el área (use <code>math.pi</code>).</li>
+<li>Cree una instancia. Acceda al radio como si fuera un atributo (<code>mi_circulo.radio</code>) y muestre el área.</li>
+</ol>
+
+
+<h3>Conceptos:</h3>
+
+<p>Decorador <code>@property</code>, Getters, Interfaz de propiedad, Encapsulamiento de acceso.</p>
+<a href="#respuesta_100" class="boton">Respuesta</a><a href="#contenido" class="boton">Regresar al Inicio</a>
+
+
+
+<h2 id="respuesta_1">Respuesta 1</h2>
+<pre>
+### Ejercicio 1: Hello, World!
+
+# Objetivo: Usar print() para salida de texto.
+
+# 1. Sentencia más simple para mostrar "Hello, World!".
+# La función built-in print() acepta la cadena de texto como argumento.
+print("Hello, World!") 
+
+# Conceptos: Función built-in `print()`, sintaxis básica.
+</pre>
+<a href="#ejercicio_1" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_2">Respuesta 2</h2>
+<pre>
+### Ejercicio 2: Tipos de Datos (int, float) y type()
+
+# Objetivo: Declarar int y float, observar tipado dinámico.
+
+# 1. Declarar variable entera.
+edad = 35 
+
+# 2. Declarar variable real (decimal).
+temperatura = 23.5 
+
+# 3. Mostrar valor y tipo de ambas variables.
+# Usamos f-strings para una salida clara y concisa.
+
+# Valor y tipo de la variable 'edad'
+print(f"Valor de edad: {edad}")
+print(f"Tipo de edad: {type(edad)}")
+
+# Valor y tipo de la variable 'temperatura'
+print(f"Valor de temperatura: {temperatura}")
+print(f"Tipo de temperatura: {type(temperatura)}")
+
+# Conceptos: Tipos `int`, `float`, Asignación, Función `type()`.
+</pre>
+<a href="#ejercicio_2" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_3">Respuesta 3</h2>
+<pre>
+### Ejercicio 3: Cadenas de Texto (str) y len()
+
+# Objetivo: Usar comillas dobles/simples y la función len().
+
+# 1. Declarar variable 'nombre' usando comillas dobles.
+nombre = "Carlos"
+
+# 2. Declarar 'mensaje' conteniendo una comilla simple.
+# Se usan comillas dobles para delimitar la cadena que contiene una comilla simple.
+mensaje = "¡Python es genial!" 
+
+# 3. Imprimir 'mensaje' y su longitud.
+print(f"Mensaje: {mensaje}")
+# La función built-in len() devuelve el número de caracteres.
+print(f"Longitud del mensaje: {len(mensaje)}")
+
+# Conceptos: Tipo `str`, Comillas simples/dobles, Función `len()`.
+</pre>
+<a href="#ejercicio_3" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_4">Respuesta 4</h2>
+<pre>
+### Ejercicio 4: Operadores Aritméticos
+
+# Objetivo: Aplicar y diferenciar operadores /, //, % y **.
+
+# 1. Declarar variables A y B.
+A = 10
+B = 3
+
+# 2. Calcular y mostrar división flotante, división entera y módulo.
+# División flotante (resultado con decimales)
+print(f"División flotante (A / B): {A / B}") 
+# División entera (cociente sin decimales, truncado)
+print(f"División entera (A // B): {A // B}")
+# Módulo (resto de la división entera)
+print(f"Módulo (A % B): {A % B}") 
+
+# 3. Calcular y mostrar exponenciación (2^5).
+print(f"Exponenciación (2**5): {2 ** 5}")
+
+# Conceptos: Operadores aritméticos, División entera (`//`), Módulo (`%`), Exponenciación (`**`).
+</pre>
+<a href="#ejercicio_4" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_5">Respuesta 5</h2>
+<pre>
+### Ejercicio 5: input() y Conversión de Tipos
+
+# Objetivo: Capturar entrada del usuario y convertir a int().
+
+# Año actual para el cálculo de la edad.
+AÑO_ACTUAL = 2025 
+
+# 1. Pida al usuario que introduzca su año de nacimiento.
+# La función input() siempre devuelve una cadena (str).
+año_nacimiento_str = input("Introduzca su año de nacimiento: ")
+
+# 2. Convertir la cadena de entrada a un entero (int).
+# Se utiliza int() para permitir la resta.
+año_nacimiento = int(año_nacimiento_str) 
+
+# 3. Calcular y mostrar la edad aproximada.
+edad_aproximada = AÑO_ACTUAL - año_nacimiento
+print(f"Su edad aproximada es: {edad_aproximada} años.")
+
+# Conceptos: Función `input()`, Conversión de tipos (`int()`), I/O interactiva.
+</pre>
+<a href="#ejercicio_5" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_6">Respuesta 6</h2>
+<pre>
+### Ejercicio 6: Operadores Relacionales
+
+# Objetivo: Aplicar operadores relacionales y obtener resultados booleanos.
+
+# 1. Declarar variables.
+X = 50
+Y = 75
+
+# 2. Imprimir el resultado de las comparaciones (el resultado es un booleano).
+
+# ¿X es mayor que Y? (50 > 75)
+es_mayor = X > Y
+print(f"¿X > Y? Resultado: {es_mayor}")
+
+# ¿X es diferente de Y? (50 != 75)
+es_diferente = X != Y
+print(f"¿X != Y? Resultado: {es_diferente}")
+
+# ¿X por dos es igual a Y? (50 * 2 == 75)
+es_igual_doble = (X * 2) == Y
+print(f"¿X * 2 == Y? Resultado: {es_igual_doble}")
+
+# 3. Imprimir el tipo de dato del resultado de las comparaciones (debe ser bool).
+print(f"Tipo de dato del resultado: {type(es_mayor)}")
+
+# Conceptos: Operadores relacionales, Tipo `bool`, Valores `True` y `False`.
+</pre>
+<a href="#ejercicio_6" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_7">Respuesta 7</h2>
+<pre>
+### Ejercicio 7: Concatenación y F-strings
+
+# Objetivo: Usar el operador + para concatenar y f-strings para formatear.
+
+# 1. Declarar variables.
+nombre = "Ana"
+apellido = "García"
+
+# 2. Imprimir el nombre completo utilizando la concatenación (+).
+nombre_completo_concat = nombre + " " + apellido
+print(f"Concatenación con +: {nombre_completo_concat}")
+
+# 3. Imprimir el nombre completo y la longitud total usando una f-string.
+# Se inserta la expresión directamente dentro de las llaves {} de la f-string.
+longitud_total = len(nombre) + len(apellido)
+print(f"F-string: {nombre} {apellido}. Longitud total: {longitud_total}")
+
+# Conceptos: Concatenación (`+`), F-strings (Formato), Inserción de expresiones.
+</pre>
+<a href="#ejercicio_7" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_8">Respuesta 8</h2>
+<pre>
+### Ejercicio 8: Módulo math
+
+# Objetivo: Importar el módulo math y usar sus constantes y funciones.
+
+# 1. Importar el módulo `math`.
+import math
+
+# 2. Calcular el área de un círculo con radio 5. Área = π * r^2
+radio = 5
+area_circulo = math.pi * (radio ** 2)
+print(f"Área del círculo (radio 5): {area_circulo}")
+
+# 3. Calcular y mostrar la raíz cuadrada de 144.
+raiz_cuadrada = math.sqrt(144)
+print(f"Raíz cuadrada de 144: {raiz_cuadrada}")
+
+# Conceptos: Sentencia `import`, Módulo `math`, Constante `pi`, Función `sqrt()`.
+</pre>
+<a href="#ejercicio_8" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_9">Respuesta 9</h2>
+<pre>
+### Ejercicio 9: Promoción Implícita de Tipos
+
+# Objetivo: Comprender la coerción implícita en operaciones mixtas (int y float).
+
+# 1. Declarar variables.
+cuenta = 100    # int
+tasa = 0.15     # float
+
+# 2. Calcular el impuesto.
+impuesto = cuenta * tasa
+
+# 3. Imprimir el resultado y su tipo.
+print(f"El impuesto calculado es: {impuesto}")
+print(f"El tipo del resultado es: {type(impuesto)}")
+
+# Explicación:
+# Python promueve implícitamente el entero (100) a un flotante (100.0) 
+# antes de realizar la multiplicación con la tasa (0.15). 
+# Esto se hace para evitar la pérdida de precisión, asegurando que el 
+# resultado de la operación mixta sea siempre el tipo de dato más amplio (float).
+
+# Conceptos: Promoción de tipos, Coerción implícita, Operaciones mixtas.
+</pre>
+<a href="#ejercicio_9" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_10">Respuesta 10</h2>
+<pre>
+### Ejercicio 10: Función round()
+
+# Objetivo: Usar round() para redondear a entero y controlar decimales.
+
+# 1. Declarar variable.
+numero_largo = 3.14159265
+
+# 2. Redondear al entero más cercano.
+# round() sin el segundo argumento redondea al entero más cercano (4 en este caso).
+redondeo_entero = round(numero_largo)
+print(f"Redondeo a entero: {redondeo_entero}")
+
+# 3. Redondear a 4 decimales.
+# El segundo argumento especifica el número de decimales a mantener.
+redondeo_preciso = round(numero_largo, 4)
+print(f"Redondeo a 4 decimales: {redondeo_preciso}")
+
+# Conceptos: Función `round()`, Redondeo a entero, Control de precisión.
+</pre>
+<a href="#ejercicio_10" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_11">Respuesta 11</h2>
+<pre>
+### Ejercicio 11: Operadores Lógicos (and, or, not)
+
+# Objetivo: Construir condiciones compuestas con operadores lógicos.
+
+# 1. Declarar variables booleanas.
+es_dia = True
+es_findesemana = False
+
+# 2. Es día de la semana laboral: es_dia AND NOT es_findesemana
+# La expresión evalúa: True AND NOT False -> True AND True -> True
+laboral = es_dia and not es_findesemana
+print(f"¿Es día de la semana laboral? Resultado: {laboral}")
+
+# 3. Es de noche o fin de semana: NOT es_dia OR es_findesemana
+# La expresión evalúa: NOT True OR False -> False OR False -> False
+descanso = not es_dia or es_findesemana
+print(f"¿Es de noche o fin de semana? Resultado: {descanso}")
+
+# Conceptos: Operadores lógicos `and`, `or`, `not`, Precedencia de operadores.
+</pre>
+<a href="#ejercicio_11" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_12">Respuesta 12</h2>
+<pre>
+### Ejercicio 12: Función id() y Referencia a Objetos
+
+# Objetivo: Comprender la función id() para identificar el objeto en memoria.
+
+# 1. Declarar A.
+A = 10
+
+# 2. Declarar B = A. Ambas variables apuntan inicialmente al mismo objeto (10).
+B = A
+
+# 3. Imprimir IDs. Deben ser iguales.
+print(f"ID de A: {id(A)}")
+print(f"ID de B: {id(B)}")
+print(f"¿Son los IDs de A y B iguales? {id(A) == id(B)}")
+
+# 4. Modificar B.
+# Como los enteros son inmutables, al cambiar B, Python crea un NUEVO objeto 20
+# y reasigna la etiqueta B a ese nuevo objeto. A sigue apuntando a 10.
+B = 20
+
+# Imprimir IDs de nuevo. Deben ser diferentes.
+print("\nDespués de B = 20:")
+print(f"Nuevo ID de A: {id(A)}")
+print(f"Nuevo ID de B: {id(B)}")
+print(f"¿Son los nuevos IDs de A y B iguales? {id(A) == id(B)}")
+
+# Conceptos: Función `id()`, Referencia a objetos, Inmutabilidad de enteros.
+</pre>
+<a href="#ejercicio_12" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_13">Respuesta 13</h2>
+<pre>
+### Ejercicio 13: Operadores de Pertenencia (in, not in)
+
+# Objetivo: Usar 'in' y 'not in' para verificar la presencia de una subcadena.
+
+# 1. Declarar la cadena.
+frase = "Python es un lenguaje potente"
+
+# 2. Verificar si "lenguaje" está en 'frase'.
+esta_lenguaje = "lenguaje" in frase
+print(f'¿"lenguaje" está en la frase? Resultado: {esta_lenguaje}')
+
+# 3. Verificar si "z" NO está en 'frase'.
+no_esta_z = "z" not in frase
+print(f'¿"z" NO está en la frase? Resultado: {no_esta_z}')
+
+# Conceptos: Operador `in`, Operador `not in`, Pertenencia a secuencia.
+</pre>
+<a href="#ejercicio_13" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_14">Respuesta 14</h2>
+<pre>
+### Ejercicio 14: Operadores de Identidad (is, is not)
+
+# Objetivo: Distinguir entre comparación de valor (==) y de identidad (is).
+
+# 1. Declarar listas.
+lista1 = [1, 2, 3] # Nuevo objeto
+lista2 = [1, 2, 3] # Nuevo objeto, aunque con el mismo contenido
+lista3 = lista1    # Copia por referencia: ambas etiquetas apuntan al MISMO objeto
+
+# 3. Comparación de valor (==).
+# Comprueba si el CONTENIDO de las listas es idéntico.
+comparacion_valor = lista1 == lista2
+print(f"lista1 == lista2 (valor): {comparacion_valor}")
+
+# 4. Comparación de identidad (is).
+# Comprueba si las variables apuntan al MISMO objeto en memoria.
+comparacion_identidad_diferente = lista1 is lista2
+print(f"lista1 is lista2 (identidad): {comparacion_identidad_diferente}") # False
+
+# 5. Comparación de identidad (is).
+# lista3 es una referencia directa a lista1.
+comparacion_identidad_igual = lista1 is lista3
+print(f"lista1 is lista3 (identidad): {comparacion_identidad_igual}") # True
+
+# Comentario:
+# '==' compara el valor (contenido). 'is' compara la identidad (ID de memoria).
+# lista1 y lista2 tienen el mismo valor pero son objetos distintos (False en 'is').
+# lista1 y lista3 apuntan al mismo objeto (True en 'is').
+
+# Conceptos: Operador `is`, Operador `is not`, Comparación de valor vs. identidad.
+</pre>
+<a href="#ejercicio_14" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_15">Respuesta 15</h2>
+<pre>
+### Ejercicio 15: Función pow() y math.pow()
+
+# Objetivo: Comparar el operador ** con las funciones built-in y de módulo para la potencia.
+import math
+
+# 1. Usando el operador **.
+potencia_op = 4 ** 3
+print(f"4 ** 3: {potencia_op} (Tipo: {type(potencia_op)})")
+
+# 2. Usando la función built-in pow().
+potencia_pow = pow(4, 3)
+print(f"pow(4, 3): {potencia_pow} (Tipo: {type(potencia_pow)})")
+
+# 3. Usando math.pow().
+potencia_math_pow = math.pow(4, 3)
+print(f"math.pow(4, 3): {potencia_math_pow} (Tipo: {type(potencia_math_pow)})")
+
+# Observación de Tipos de Retorno:
+# Tanto el operador ** como la función built-in pow() devuelven un INT (64)
+# si ambos argumentos son INT.
+# Sin embargo, math.pow() SIEMPRE devuelve un FLOAT (64.0), incluso si los
+# argumentos son enteros.
+
+# Conceptos: Función `pow()`, Operador `**`, `math.pow()`, Tipos de retorno.
+</pre>
+<a href="#ejercicio_15" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_16">Respuesta 16</h2>
+<pre>
+### Ejercicio 16: Funciones abs() y divmod()
+
+# Objetivo: Aplicar valor absoluto y división con resto simultánea.
+
+# 1. Valor absoluto con abs().
+temp = -15.5
+valor_absoluto = abs(temp)
+print(f"Valor absoluto de {temp}: {valor_absoluto}")
+
+# 3. Usar divmod(25, 4). Devuelve una tupla (cociente, resto).
+resultado_divmod = divmod(25, 4)
+print(f"Resultado de divmod(25, 4): {resultado_divmod}")
+
+# Desempaquetar los dos valores.
+cociente, resto = resultado_divmod 
+print(f"Cociente: {cociente}")
+print(f"Resto: {resto}")
+
+# Conceptos: Función `abs()`, Función `divmod()`, Desempaquetamiento de tuplas.
+</pre>
+<a href="#ejercicio_16" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_17">Respuesta 17</h2>
+<pre>
+### Ejercicio 17: Importación Selectiva (from ... import)
+
+# Objetivo: Acceder a funciones y constantes de un módulo sin prefijo.
+
+# 1. Importación selectiva de funciones y constante desde el módulo math.
+from math import sin, cos, pi
+
+# 2. Calcular seno y coseno directamente.
+# seno de π/2 = 1.0
+seno_resultado = sin(pi / 2) 
+# coseno de 0 = 1.0
+coseno_resultado = cos(0)     
+
+print(f"Seno de π/2: {seno_resultado}")
+print(f"Coseno de 0: {coseno_resultado}")
+
+# 3. Mostrar la constante pi directamente.
+print(f"Constante pi: {pi}")
+
+# Conceptos: Importación selectiva (`from ... import`), Acceso directo a funciones.
+</pre>
+<a href="#ejercicio_17" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_18">Respuesta 18</h2>
+<pre>
+### Ejercicio 18: Conversión de Tipos y ValueError
+
+# Objetivo: Conversión explícita de tipos y manejo conceptual de errores.
+
+# 1. Declarar variables.
+num_str = "123"
+num_float = 45.67
+
+# 2. Conversión y suma.
+# Se convierte la cadena a entero y luego se suma al flotante, resultando en float.
+suma_mixta = int(num_str) + num_float 
+print(f"Suma de int('123') + 45.67: {suma_mixta}")
+
+# 3. Intento de conversión fallida.
+cadena_invalida = "abc"
+
+# Comentario:
+# Intento de conversión de 'abc' a entero:
+# `int(cadena_invalida)` 
+# Desencadenaría un ValueError. 
+# El mensaje de error sería similar a: 
+# "invalid literal for int() with base 10: 'abc'"
+# Esto ocurre porque la cadena no contiene caracteres que representen un número.
+
+# Conceptos: Conversión de tipos (`str()`, `int()`, `float()`), Excepciones de `ValueError`.
+</pre>
+<a href="#ejercicio_18" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_19">Respuesta 19</h2>
+<pre>
+### Ejercicio 19: Formato de Cadenas (.format())
+
+# Objetivo: Usar el método .format() para inserción y control de formato.
+
+# 1. Declarar variables.
+producto = "Laptop"
+precio = 999.50
+
+# 2. Formato por posición ({0}, {1}). Control de precisión en el precio (:.2f).
+# El .2f asegura que el flotante se muestre con exactamente dos decimales.
+mensaje_posicional = "El {0} cuesta {1:.2f} euros.".format(producto, precio)
+print(f"Formato posicional: {mensaje_posicional}")
+
+# 3. Formato por nombre de campo ({p}, {pr}).
+mensaje_nombrado = "El {p} cuesta {pr:.2f} euros.".format(p=producto, pr=precio)
+print(f"Formato nombrado: {mensaje_nombrado}")
+
+# Conceptos: Método `.format()`, Placeholders, Formato de precisión de flotantes (`:.2f`).
+</pre>
+<a href="#ejercicio_19" class="boton">Regresar al Ejercicio</a>
+
+---
+
+<h2 id="respuesta_20">Respuesta 20</h2>
+<pre>
+### Ejercicio 20: Operadores de Asignación Compuestos
+
+# Objetivo: Aplicar operadores compuestos para simplificar operaciones.
+
+# 1. Declarar variable inicial.
+puntuacion = 50
+
+# 2. Aumentar puntuación en 10 (puntuacion = puntuacion + 10).
+puntuacion += 10
+print(f"Puntuación después de += 10: {puntuacion}") # Resultado: 60
+
+# 3. Reducir puntuación a la mitad (puntuacion = puntuacion / 2).
+puntuacion /= 2
+print(f"Puntuación después de /= 2: {puntuacion}") # Resultado: 30.0
+
+# 4. Mostrar el valor final de la puntuación (es un flotante debido a la división /).
+print(f"Valor final de puntuacion: {puntuacion}")
+
+# Conceptos: Operadores de asignación compuestos (`+=`, `-=`, etc.), Simplificación de la sintaxis.
+</pre>
+<a href="#ejercicio_20" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_21">Respuesta 21</h2>
+<pre>
+# Ejercicio 21: Sentencia if
+
+# 1. Solicitar un número entero al usuario y convertir a int
+# La entrada del usuario es siempre una cadena (str), se debe convertir a entero.
+numero = int(input("Introduce un número entero: "))
+
+# 2. y 3. Utilizar la sentencia 'if' para comprobar si el número es positivo.
+# La condición (numero > 0) resulta en True o False.
+if numero > 0:
+    # Este bloque de código solo se ejecuta si la condición es True.
+    print(f"El número introducido ({numero}) es positivo, es decir, es mayor que cero.")
+# Concepto clave: La indentación (sangría) define el bloque de código del 'if'.
+</pre>
+<a href="#ejercicio_21" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_22">Respuesta 22</h2>
+<pre>
+# Ejercicio 22: Estructura if-else
+
+# 1. Variable con la contraseña correcta
+contraseña_correcta = "clave123"
+
+# 2. Solicitar la contraseña al usuario
+contraseña_usuario = input("Introduce la contraseña: ")
+
+# 3. y 4. Utilizar 'if-else' para comparación
+# El operador '==' compara el valor de las cadenas.
+if contraseña_usuario == contraseña_correcta:
+    # Se ejecuta si la condición es True (contraseñas coinciden).
+    print("Acceso concedido")
+else:
+    # Se ejecuta si la condición es False (contraseñas no coinciden).
+    print("Acceso denegado")
+</pre>
+<a href="#ejercicio_22" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_23">Respuesta 23</h2>
+<pre>
+# Ejercicio 23: Estructura if-elif-else
+
+# 1. Declarar y asignar un valor de puntuación
+puntuacion = 85  # Se puede cambiar este valor para probar las diferentes ramas
+
+# 2. Clasificar la puntuación con if-elif-else
+# Se evalúan las condiciones en orden. Solo se ejecuta el primer bloque que sea True.
+if puntuacion >= 90:
+    print("A")
+elif puntuacion >= 80:  # Esta condición solo se evalúa si 'puntuacion < 90' es True.
+    print("B")
+else:
+    # Bloque por defecto si ninguna de las condiciones anteriores es True.
+    print("C")
+
+# Nota técnica: 'elif' permite encadenar condiciones sin anidación excesiva.
+</pre>
+<a href="#ejercicio_23" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_24">Respuesta 24</h2>
+<pre>
+# Ejercicio 24: Bucle for y range() simple
+
+# 1. Escribir un bucle 'for' que itere 5 veces (de 0 a 4)
+# range(5) genera una secuencia de 0, 1, 2, 3, 4 (el límite superior es exclusivo).
+for i in range(5):
+    # 2. Imprimir el mensaje con el número de la iteración
+    # Se utiliza una f-string para insertar el valor de 'i'.
+    print(f"Iteración número {i}")
+
+# Concepto clave: La variable 'i' (índice) se actualiza automáticamente en cada ciclo.
+</pre>
+<a href="#ejercicio_24" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_25">Respuesta 25</h2>
+<pre>
+# Ejercicio 25: range(inicio, fin, paso)
+
+# 1. y 2. Bucle 'for' para imprimir solo números pares del 0 al 10 (incluido)
+# Argumentos de range():
+# inicio (start): 0
+# fin (stop): 11 (para incluir el 10, el límite superior debe ser 11, ya que es exclusivo)
+# paso (step): 2 (incremento de 2 en 2)
+print("Números pares del 0 al 10:")
+for num in range(0, 11, 2):
+    print(num)
+
+# Resultado: 0, 2, 4, 6, 8, 10
+</pre>
+<a href="#ejercicio_25" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_26">Respuesta 26</h2>
+<pre>
+# Ejercicio 26: Bucle condicional while
+
+# 1. Inicializar la variable de control
+contador = 0
+
+# 2. Bucle 'while' que se ejecuta mientras la condición sea True
+while contador < 5:
+    # 3. Imprimir el valor actual
+    print(f"El contador actual es: {contador}")
+    
+    # 3. Incrementar la variable de control (paso crucial para evitar un bucle infinito)
+    # Se usa el operador de asignación compuesto '+= 1'
+    contador += 1
+
+# Nota: El bucle se detiene cuando 'contador' alcanza el valor de 5.
+</pre>
+<a href="#ejercicio_26" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_27">Respuesta 27</h2>
+<pre>
+# Ejercicio 27: Sentencia break
+
+print("Bucle que se interrumpe en 7:")
+# 1. Bucle 'for' que itera a través de números del 1 al 10
+for numero in range(1, 11):
+    
+    # 2. Comprobar la condición de interrupción
+    if numero == 7:
+        # 3. Sentencia 'break' para salir inmediatamente del bucle
+        print("¡El número 7 ha sido encontrado! Deteniendo el bucle.")
+        break  # Salida del bucle for
+    
+    # 4. Mostrar solo los números impresos antes de la interrupción
+    print(numero)
+
+# El código fuera del bucle se ejecuta después de la interrupción.
+</pre>
+<a href="#ejercicio_27" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_28">Respuesta 28</h2>
+<pre>
+# Ejercicio 28: Sentencia continue
+
+print("Bucle que salta los múltiplos de 3:")
+# 1. Bucle 'for' que recorre números del 1 al 10
+for numero in range(1, 11):
+    
+    # 2. Utilizar 'if' y 'continue' para saltar números divisibles por 3
+    # El operador módulo (%) devuelve el resto de la división. Si es 0, es divisible.
+    if numero % 3 == 0:
+        print(f"Saltando el número {numero}")
+        continue  # Omite el resto del bloque de código y pasa a la siguiente iteración
+    
+    # 3. Imprimir el resto de los números
+    print(numero)
+
+# Resultado impreso: 1, 2, 4, 5, 7, 8, 10
+</pre>
+<a href="#ejercicio_28" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_29">Respuesta 29</h2>
+<pre>
+# Ejercicio 29: Definición y llamada a función simple
+
+# 1. Definir la función sin argumentos
+# La palabra clave 'def' se utiliza para definir funciones.
+def mostrar_bienvenida():
+    # El cuerpo de la función se define por la indentación.
+    print("¡Bienvenido al mundo de Python!")
+
+# 2. Llamar a la función dos veces en el programa principal
+print("Primer saludo:")
+mostrar_bienvenida()
+
+print("\nSegundo saludo:")
+mostrar_bienvenida()
+
+# Concepto clave: Las funciones permiten la reutilización y organización del código.
+</pre>
+<a href="#ejercicio_29" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_30">Respuesta 30</h2>
+<pre>
+# Ejercicio 30: Función con argumentos y sentencia return
+
+# 1. Definir la función que acepta argumentos posicionales
+def calcular_impuesto(precio, tasa_iva):
+    # 2. La función calcula el precio final
+    iva = precio * tasa_iva
+    precio_final = precio + iva
+    
+    # 2. y 3. Devolver un valor escalar
+    return precio_final
+
+# 4. Llamar a la función y mostrar el valor devuelto
+precio_base = 100
+tasa = 0.21
+precio_con_iva = calcular_impuesto(precio_base, tasa)
+
+print(f"El precio base es: {precio_base}")
+print(f"La tasa de IVA es: {tasa * 100}%")
+print(f"El precio final con IVA incluido es: {precio_con_iva:.2f}")
+
+# Nota técnica: El código después de 'return' no se ejecuta.
+</pre>
+<a href="#ejercicio_30" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_31">Respuesta 31</h2>
+<pre>
+# Ejercicio 31: Argumentos por palabra clave y valores por defecto
+
+# 1. Definir la función con valores por defecto para 'activo' y 'rol'
+def configurar_usuario(nombre, activo=True, rol="Invitado"):
+    # La función simplemente imprime los valores
+    print("--- Configuración de Usuario ---")
+    print(f"Nombre: {nombre}")
+    print(f"Activo: {activo}")
+    print(f"Rol:    {rol}")
+    print("-" * 30)
+
+# 2. Llamar a la función pasando solo el argumento obligatorio 'nombre'
+# Se usan los valores por defecto (activo=True, rol="Invitado")
+configurar_usuario("Elena")
+
+# 3. Llamar a la función sobrescribiendo 'rol' usando la palabra clave (keyword argument)
+# La posición no importa si se usa la palabra clave.
+configurar_usuario("Administrador_1", rol="Administrador")
+
+# 3. Ejemplo con un argumento posicional y dos de palabra clave
+configurar_usuario("Técnico", activo=False, rol="Soporte")
+</pre>
+<a href="#ejercicio_31" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_32">Respuesta 32</h2>
+<pre>
+# Ejercicio 32: Alcance de las variables (Scope)
+
+# 1. Variable global
+contador_global = 0
+
+def incrementar_local():
+    # 2. Variable local (solo existe dentro de esta función)
+    contador_local = 1
+    
+    # Imprimir ambas variables
+    print(f"Dentro de la función:")
+    print(f"Global (accesible): {contador_global}")
+    print(f"Local: {contador_local}")
+    
+# Llamada a la función
+incrementar_local()
+
+# Impresión de la variable global (accesible desde el código principal)
+print(f"\nDesde el código principal:")
+print(f"Global: {contador_global}")
+
+# 3. Intento de imprimir contador_local fuera de la función
+# print(contador_local) 
+# Resultado (comentado): NameError: name 'contador_local' is not defined. 
+# La variable local fue destruida al finalizar la función.
+</pre>
+<a href="#ejercicio_32" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_33">Respuesta 33</h2>
+<pre>
+# Ejercicio 33: Palabra clave global
+
+# 1. Variable global
+puntos = 100
+
+print(f"Puntos iniciales (Global): {puntos}")
+
+# 2. Definir la función para modificar la variable global
+def sumar_puntos():
+    # Usar 'global' para indicar que 'puntos' se refiere a la variable del alcance global
+    global puntos 
+    print(f"Dentro de la función, antes de la suma: {puntos}")
+    
+    # Modificar la variable global
+    puntos += 50 
+    print(f"Dentro de la función, después de la suma: {puntos}")
+
+# 3. Llamar a la función y verificar el cambio global
+sumar_puntos()
+
+print(f"Puntos finales (Global, modificado): {puntos}")
+
+# Resultado: El valor de 'puntos' se modificó de 100 a 150 permanentemente.
+</pre>
+<a href="#ejercicio_33" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_34">Respuesta 34</h2>
+<pre>
+# Ejercicio 34: Palabra clave nonlocal y Alcance intermedio (Closures)
+
+# 1. Definición de la función externa
+def generar_contador():
+    # Variable en el alcance intermedio (enclosing scope)
+    contador = 0 
+
+    # 2. Definición de la función interna (Closure)
+    def incrementar():
+        # 3. Usar 'nonlocal' para modificar la variable 'contador' de la función externa
+        nonlocal contador 
+        contador += 1
+        print(f"Contador incrementado a: {contador}")
+        
+    # 4. La función externa devuelve la función interna
+    return incrementar 
+
+# Llamada a la función externa para obtener la función interna
+mi_contador = generar_contador()
+
+# Llamar al resultado 3 veces (la función interna recuerda el valor de 'contador')
+print("--- Primer uso ---")
+mi_contador() 
+print("--- Segundo uso ---")
+mi_contador() 
+print("--- Tercer uso ---")
+mi_contador() 
+
+# Resultado: El contador sube de 1 a 3 en llamadas sucesivas.
+</pre>
+<a href="#ejercicio_34" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_35">Respuesta 35</h2>
+<pre>
+# Ejercicio 35: Bucles for anidados y argumento end
+
+# 1. Bucle externo (Filas: 1, 2, 3)
+for i in range(1, 4):
+    print(f"Fila {i}: ", end="") # Imprime el número de fila sin salto de línea
+    
+    # 2. Bucle interno (Columnas: 1, 2, 3, 4, 5)
+    for j in range(1, 6):
+        # 3. Imprimir el valor del contador interno, seguido de un espacio
+        # 'end=" "' evita el salto de línea por defecto
+        print(j, end=" ")
+        
+    # 4. Usar un print() vacío para forzar un salto de línea después de cada fila
+    print() 
+
+# Resultado: 
+# Fila 1: 1 2 3 4 5 
+# Fila 2: 1 2 3 4 5 
+# Fila 3: 1 2 3 4 5 
+</pre>
+<a href="#ejercicio_35" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_36">Respuesta 36</h2>
+<pre>
+# Ejercicio 36: Argumento especial *args (Argumentos Posicionales Variables)
+
+# 1. Definir la función que acepta cualquier número de argumentos posicionales
+# Los argumentos se empaquetan en una tupla llamada 'numeros'.
+def sumar_todos(*numeros):
+    suma = 0
+    # 2. Iterar sobre la tupla para calcular la suma total
+    for num in numeros:
+        suma += num
+    
+    print(f"Argumentos recibidos: {numeros}")
+    return suma
+
+# 3. Llamar a la función con diferente número de argumentos
+# Llamada con 2 argumentos
+resultado1 = sumar_todos(10, 20)
+print(f"Suma de 2 argumentos: {resultado1}")
+
+# Llamada con 5 argumentos
+resultado2 = sumar_todos(1, 2, 3, 4, 5)
+print(f"Suma de 5 argumentos: {resultado2}")
+</pre>
+<a href="#ejercicio_36" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_37">Respuesta 37</h2>
+<pre>
+# Ejercicio 37: Argumento especial **kwargs (Argumentos de Palabra Clave Variables)
+
+# 1. Definir la función que acepta un argumento posicional obligatorio y argumentos de palabra clave variables
+# Los argumentos de palabra clave se empaquetan en un diccionario llamado 'datos_extra'.
+def mostrar_perfil(nombre, **datos_extra):
+    # 2. Imprimir el argumento obligatorio
+    print(f"Perfil de: {nombre}")
+    
+    print("Datos Adicionales:")
+    # 2. Iterar sobre el diccionario 'datos_extra'
+    for clave, valor in datos_extra.items():
+        print(f"- {clave}: {valor}")
+        
+    print("-" * 25)
+
+# 3. Llamar a la función con argumentos de palabra clave variables
+mostrar_perfil(nombre="Carlos", edad=30, ciudad="Madrid", profesion="Ingeniero")
+
+mostrar_perfil(nombre="Ana", estado_civil="Soltera")
+</pre>
+<a href="#ejercicio_37" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_38">Respuesta 38</h2>
+<pre>
+# Ejercicio 38: Sentencia pass
+
+# 1. y 2. Definir una función sin lógica (placeholder)
+def tarea_pendiente():
+    # 'pass' evita un error de sintaxis al dejar el cuerpo de la función vacío
+    pass 
+
+print("Se ha definido la función 'tarea_pendiente'.")
+tarea_pendiente() # La función se puede llamar sin hacer nada.
+
+# 3. Definir una clase sin atributos ni métodos iniciales
+class ModeloTemporal:
+    # 'pass' se usa como placeholder también en clases.
+    pass
+
+instancia = ModeloTemporal()
+print("Se ha definido la clase 'ModeloTemporal' y se ha creado una instancia.")
+
+# Concepto clave: 'pass' es útil para el desarrollo incremental o para mantener la estructura.
+</pre>
+<a href="#ejercicio_38" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_39">Respuesta 39</h2>
+<pre>
+# Ejercicio 39: Cláusula else en bucle for
+
+def buscar_elemento(lista, objetivo):
+    print(f"\nBuscando {objetivo} en {lista}")
+    # 1. Bucle 'for' que busca el elemento
+    for elemento in lista:
+        if elemento == objetivo:
+            # 2. Si es encontrado, se imprime el mensaje y se sale con 'break'
+            print("¡Encontrado!")
+            break  # Interrumpe el bucle, saltando la cláusula 'else'
+    # 3. Cláusula 'else' del bucle for. Solo se ejecuta si el 'for' termina normalmente (sin 'break').
+    else:
+        # 4. Mensaje si el bucle finaliza sin encontrar el número
+        print("No encontrado.")
+
+# Prueba 1: Contiene el 10
+lista_con_10 = [1, 5, 10, 8]
+buscar_elemento(lista_con_10, 10)
+
+# Prueba 2: No contiene el 10
+lista_sin_10 = [1, 5, 9, 8]
+buscar_elemento(lista_sin_10, 10)
+</pre>
+<a href="#ejercicio_39" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_40">Respuesta 40</h2>
+<pre>
+# Ejercicio 40: Cláusula else en bucle while
+
+# Prueba 1: Finalización normal
+print("--- Prueba 1: Finalización normal ---")
+i = 0
+limite = 5
+while i < limite:
+    print(f"i = {i}")
+    i += 1
+# 3. La cláusula 'else' se ejecuta cuando la condición 'i < limite' se vuelve False.
+else:
+    print("Bucle terminado limpiamente.")
+
+# Prueba 2: Finalización con interrupción
+print("\n--- Prueba 2: Finalización con break ---")
+j = 0
+while j < 5:
+    if j == 2:
+        print(f"j = {j}. Interrupción con break.")
+        break # El 'break' omite la cláusula 'else' del 'while'
+    print(f"j = {j}")
+    j += 1
+else:
+    # Esta línea se omite debido al 'break'
+    print("Bucle terminado limpiamente.")
+</pre>
+<a href="#ejercicio_40" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_41">Respuesta 41</h2>
+<pre>
+# Ejercicio 41: Manipulación de Listas (list)
+# Conceptos: list, Mutabilidad, Indexación
+
+# 1. Declarar una lista frutas
+frutas = ["Manzana", "Banana", "Cereza", "Durazno"]
+
+# 2. Imprimir el primer elemento (índice 0)
+print(f"Primer elemento: {frutas[0]}") # Salida: Primer elemento: Manzana
+
+# 2. Imprimir el último elemento (índice -1)
+print(f"Último elemento: {frutas[-1]}") # Salida: Último elemento: Durazno
+
+# 3. Mostrar el número total de elementos
+print(f"Número total de elementos: {len(frutas)}") # Salida: Número total de elementos: 4
+
+</pre>
+<a href="#ejercicio_41" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_42">Respuesta 42</h2>
+<pre>
+# Ejercicio 42: Métodos .append() y .insert()
+# Conceptos: Método .append(), Método .insert(), Modificación de listas
+
+# 1. Crear la lista tareas
+tareas = ["Comprar", "Estudiar"]
+
+# 2. Agregar "Cocinar" al final usando .append()
+tareas.append("Cocinar")
+print(f"Después de append(): {tareas}") # Salida: ['Comprar', 'Estudiar', 'Cocinar']
+
+# 3. Insertar "Llamar" en el índice 1 usando .insert()
+tareas.insert(1, "Llamar")
+
+# 4. Mostrar la lista final
+print(f"Lista final después de insert(): {tareas}") # Salida: ['Comprar', 'Llamar', 'Estudiar', 'Cocinar']
+
+</pre>
+<a href="#ejercicio_42" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_43">Respuesta 43</h2>
+<pre>
+# Ejercicio 43: Indexación Negativa
+# Conceptos: Indexación negativa, Acceso desde el final
+
+# 1. Declarar la lista puntuaciones
+puntuaciones = [90, 85, 92, 78, 95]
+
+# 2. Acceder y mostrar el segundo elemento contando desde el final (índice -2)
+segundo_desde_final = puntuaciones[-2]
+print(f"Segundo desde el final (índice -2): {segundo_desde_final}") # Salida: Segundo desde el final (índice -2): 78
+
+# 3. Acceder y mostrar el último elemento (índice -1)
+ultimo_elemento = puntuaciones[-1]
+print(f"Último elemento (índice -1): {ultimo_elemento}") # Salida: Último elemento (índice -1): 95
+
+</pre>
+<a href="#ejercicio_43" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_44">Respuesta 44</h2>
+<pre>
+# Ejercicio 44: Slicing (Rebanado)
+# Conceptos: Slicing ([start:stop]), Límites exclusivos, Extracción de sub-listas
+
+# 1. Declarar la lista dias
+dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+
+# 2. Extraer y mostrar los días laborables (índices 0 al 4. El fin es exclusivo, por lo que usamos 5)
+dias_laborables = dias[0:5]
+print(f"Días laborables (0:5): {dias_laborables}") # Salida: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie']
+
+# 3. Extraer y mostrar los elementos desde el índice 4 hasta el final (omitiendo el 'stop')
+desde_jueves = dias[3:]
+print(f"Desde el índice 3 hasta el final (3:): {desde_jueves}") # Salida: ['Jue', 'Vie', 'Sáb', 'Dom']
+
+</pre>
+<a href="#ejercicio_44" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_45">Respuesta 45</h2>
+<pre>
+# Ejercicio 45: Slicing con Paso (Step)
+# Conceptos: Slicing con paso ([start:stop:step]), Secuencias con incremento
+
+# 1. Declarar la lista numeros (0 a 19)
+numeros = list(range(20))
+
+# 2. Extraer y mostrar solo los números pares utilizando un paso de 2
+# [0::2] -> Empieza en 0, va hasta el final, con paso de 2
+pares = numeros[0::2]
+print(f"Números pares (paso 2): {pares}") # Salida: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+
+# 3. Extraer y mostrar los elementos desde el índice 1 hasta el 15, usando un paso de 3
+# [1:16:3] -> Empieza en índice 1, termina en índice 15 (exclusivo 16), con paso de 3
+secuencia_paso_3 = numeros[1:16:3]
+print(f"Sub-secuencia con paso 3 (1:16:3): {secuencia_paso_3}") # Salida: [1, 4, 7, 10, 13]
+
+</pre>
+<a href="#ejercicio_45" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_46">Respuesta 46</h2>
+<pre>
+# Ejercicio 46: Métodos .remove() y .pop()
+# Conceptos: Método .remove(), Método .pop(), Eliminación por valor y por índice
+
+# 1. Crear la lista participantes
+participantes = ["Juan", "María", "Pedro", "Ana"]
+
+# 2. Eliminar "Pedro" por valor utilizando .remove()
+participantes.remove("Pedro")
+print(f"Después de remove('Pedro'): {participantes}") # Salida: ['Juan', 'María', 'Ana']
+
+# 3. Eliminar y almacenar el último participante utilizando .pop() (sin índice)
+eliminado = participantes.pop()
+print(f"Elemento eliminado con pop(): {eliminado}") # Salida: Ana
+
+# 4. Mostrar la lista final
+print(f"Lista final: {participantes}") # Salida: ['Juan', 'María']
+
+</pre>
+<a href="#ejercicio_46" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_47">Respuesta 47</h2>
+<pre>
+# Ejercicio 47: Tuplas (tuple) e Inmutabilidad
+# Conceptos: Tipo tuple, Inmutabilidad, Concatenación de tuplas
+
+# 1. Declarar una tupla coordenadas
+coordenadas = (10.5, 25.3)
+
+# 2. Intentar (y comentar) cambiar el valor del primer elemento
+# coordenadas[0] = 12.0 # Esto generaría un TypeError: 'tuple' object does not support item assignment
+
+print("Intento de modificación (comentado): TypeError debido a la inmutabilidad de la tupla.")
+
+# 3. Mostrar el resultado de concatenar coordenadas con la tupla (5.0,)
+nueva_coordenada = coordenadas + (5.0,)
+print(f"Tupla concatenada: {nueva_coordenada}") # Salida: (10.5, 25.3, 5.0)
+
+</pre>
+<a href="#ejercicio_47" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_48">Respuesta 48</h2>
+<pre>
+# Ejercicio 48: Función enumerate()
+# Conceptos: Función enumerate(), Iteración con índice, Desempaquetamiento
+
+# 1. Declarar la lista elementos
+elementos = ["A", "B", "C", "D"]
+
+# 2. Utilizar un bucle for con enumerate() para imprimir índice y valor
+for indice, valor in enumerate(elementos):
+    print(f"El elemento {valor} está en la posición {indice}")
+
+# Salida:
+# El elemento A está en la posición 0
+# El elemento B está en la posición 1
+# El elemento C está en la posición 2
+# El elemento D está en la posición 3
+
+</pre>
+<a href="#ejercicio_48" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_49">Respuesta 49</h2>
+<pre>
+# Ejercicio 49: Cadenas de Caracteres (str) e Inmutabilidad
+# Conceptos: Tipo str, Inmutabilidad de cadenas, Método .capitalize()
+
+# 1. Declarar una cadena
+lenguaje = "python"
+
+# 2. Intentar (y comentar) cambiar el primer carácter a mayúscula
+# lenguaje[0] = "P" # Esto generaría un TypeError: 'str' object does not support item assignment
+
+print("Intento de modificación (comentado): TypeError debido a la inmutabilidad de la cadena.")
+
+# 3. Crear una nueva cadena utilizando el método .capitalize() y mostrarla
+lenguaje_modificado = lenguaje.capitalize()
+print(f"Cadena original: {lenguaje}") # Salida: python (no cambia)
+print(f"Cadena modificada con .capitalize(): {lenguaje_modificado}") # Salida: Python
+
+</pre>
+<a href="#ejercicio_49" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_50">Respuesta 50  </h2>
+<pre>
+# Ejercicio 50: Métodos .split() y .join()
+# Conceptos: Método .split(), Método .join(), Conversión str &lt;-> list
+
+# 1. Declarar una cadena CSV
+csv_data = "Nombre,Edad,Ciudad"
+
+# 2. Utilizar .split(',') para convertir la cadena en una lista de encabezados
+encabezados = csv_data.split(',')
+print(f"Lista de encabezados: {encabezados}") # Salida: ['Nombre', 'Edad', 'Ciudad']
+
+# 3. Declarar una lista de palabras
+palabras = ["Python", "es", "poderoso"]
+
+# 4. Utilizar ' '.join(palabras) para unir la lista en una sola cadena separada por espacios
+frase_unida = ' '.join(palabras)
+print(f"Cadena unida: {frase_unida}") # Salida: Python es poderoso
+
+</pre>
+<a href="#ejercicio_50" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_51">Respuesta 51</h2>
+<pre>
+# Ejercicio 51: Función sorted() (Ordenación No Destructiva)
+# Conceptos: Función sorted(), Ordenación no destructiva, Retorno de lista.
+
+# 1. Declarar la lista
+numeros = [5, 1, 4, 2, 8]
+
+# 2. Crear una nueva lista ordenada con sorted()
+numeros_ordenados = sorted(numeros)
+
+# 3. Imprimir ambas listas para verificar que la original no cambió
+print(f"Lista original: {numeros}") # Salida: [5, 1, 4, 2, 8]
+print(f"Lista ordenada (sorted): {numeros_ordenados}") # Salida: [1, 2, 4, 5, 8]
+
+# 4. Aplicar sorted() a una tupla
+nombres_tupla = ("Zoe", "Ana", "Carlos")
+nombres_ordenados = sorted(nombres_tupla)
+print(f"Tupla ordenada (resultado es lista): {nombres_ordenados}") # Salida: ['Ana', 'Carlos', 'Zoe']
+
+</pre>
+<a href="#ejercicio_51" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_52">Respuesta 52</h2>
+<pre>
+# Ejercicio 52: Método .sort() (Ordenación Destructiva)
+# Conceptos: Método .sort(), Ordenación destructiva, Argumento reverse.
+
+# 1. Declarar la lista de reales
+precios = [15.5, 9.99, 45.0, 5.0]
+
+# 2. Aplicar precios.sort(reverse=True) para ordenación descendente destructiva
+precios.sort(reverse=True)
+
+# 3. Mostrar la lista precios
+print(f"Lista ordenada descendentemente (destructiva): {precios}")
+# Salida: [45.0, 15.5, 9.99, 5.0]
+
+</pre>
+<a href="#ejercicio_52" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_53">Respuesta 53</h2>
+<pre>
+# Ejercicio 53: Función zip()
+# Conceptos: Función zip(), Combinación de secuencias, Iteración sobre pares.
+
+# 1. Declarar las listas
+nombres = ["Alice", "Bob"]
+edades = [25, 30]
+
+# 2. Utilizar zip() y convertir a una lista
+pares_combinados = list(zip(nombres, edades))
+print(f"Secuencia combinada (lista de tuplas): {pares_combinados}")
+# Salida: [('Alice', 25), ('Bob', 30)]
+
+# 3. Utilizar un bucle for para iterar y desempaquetar
+print("Iteración sobre zip():")
+for nombre, edad in zip(nombres, edades):
+    print(f"Nombre: {nombre}, Edad: {edad}")
+# Salida:
+# Nombre: Alice, Edad: 25
+# Nombre: Bob, Edad: 30
+
+</pre>
+<a href="#ejercicio_53" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_54">Respuesta 54</h2>
+<pre>
+# Ejercicio 54: Listas Anidadas (Matrices)
+# Conceptos: Listas anidadas, Doble indexación list[i][j], Simulación de matrices.
+
+# 1. Declarar la matriz
+matriz = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+# 2. Acceder y mostrar el elemento en la segunda fila (índice 1), tercera columna (índice 2)
+elemento = matriz[1][2]
+print(f"Elemento [1][2] (debe ser 6): {elemento}") # Salida: 6
+
+# 3. Modificar el elemento en la primera fila (índice 0), primera columna (índice 0) a 99
+matriz[0][0] = 99
+
+# 4. Mostrar la matriz completa
+print(f"Matriz completa modificada: {matriz}")
+# Salida: [[99, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+</pre>
+<a href="#ejercicio_54" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_55">Respuesta 55</h2>
+<pre>
+# Ejercicio 55: Métodos .count() y .index()
+# Conceptos: Método .count(), Método .index(), Búsqueda de ocurrencias.
+
+# 1. Declarar la lista
+data = [1, 5, 2, 5, 8, 5]
+
+# 2. Utilizar .count(5)
+conteo = data.count(5)
+print(f"El número 5 aparece {conteo} veces.") # Salida: 3
+
+# 3. Utilizar .index(5)
+indice = data.index(5)
+print(f"La primera aparición de 5 está en el índice: {indice}") # Salida: 1
+
+</pre>
+<a href="#ejercicio_55" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_56">Respuesta 56</h2>
+<pre>
+# Ejercicio 56: Slicing Extendido para Revertir
+# Conceptos: Slicing extendido ([::-1]), Reversión de secuencia.
+
+# 1. Declarar la lista original
+original = [10, 20, 30, 40]
+
+# 2. Crear una nueva lista reversa usando el slicing [::-1]
+reversa = original[::-1]
+
+# 3. Mostrar reversa
+print(f"Lista original: {original}") # Salida: [10, 20, 30, 40]
+print(f"Lista reversa: {reversa}") # Salida: [40, 30, 20, 10]
+
+</pre>
+<a href="#ejercicio_56" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_57">Respuesta 57</h2>
+<pre>
+# Ejercicio 57: Funciones all() y any()
+# Conceptos: Función all(), Función any(), Evaluación lógica de secuencias.
+
+# 1. Declarar la lista de edades
+edades = [22, 18, 25, 30]
+
+# 2. Evaluar: ¿todas las edades son >= 18?
+# Usamos un generador para la condición: (edad >= 18 for edad in edades)
+todos_mayores = all(edad >= 18 for edad in edades)
+print(f"¿Todas las edades son >= 18?: {todos_mayores}") # Salida: True
+
+# 3. Evaluar: ¿alguna de las edades es < 20?
+# Usamos un generador para la condición: (edad < 20 for edad in edades)
+alguno_menor = any(edad < 20 for edad in edades)
+print(f"¿Alguna edad es < 20?: {alguno_menor}") # Salida: True (debido a 18)
+
+</pre>
+<a href="#ejercicio_57" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_58">Respuesta 58</h2>
+<pre>
+# Ejercicio 58: Funciones sum(), min() y max()
+# Conceptos: Función sum(), Funciones min() y max(), Agregación.
+
+# 1. Declarar la lista de ventas
+ventas = [150.50, 200.00, 75.25]
+
+# 2. Calcular y mostrar el total con sum()
+total_ventas = sum(ventas)
+print(f"Total de ventas: {total_ventas:.2f}") # Salida: 425.75
+
+# 3. Encontrar y mostrar la venta mínima y máxima
+venta_minima = min(ventas)
+venta_maxima = max(ventas)
+print(f"Venta mínima: {venta_minima:.2f}") # Salida: 75.25
+print(f"Venta máxima: {venta_maxima:.2f}") # Salida: 200.00
+
+</pre>
+<a href="#ejercicio_58" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_59">Respuesta 59</h2>
+<pre>
+# Ejercicio 59: Copia por Referencia vs. Copia por Valor (Slicing)
+# Conceptos: Copia por referencia, Copia por valor, L1[:], Mutabilidad.
+
+# 1. Declarar L1
+L1 = [1, 2, 3]
+
+# 2. Copia por referencia. L2 apunta al mismo objeto que L1.
+L2 = L1
+
+# 3. Copia por valor/slicing. L3 apunta a un nuevo objeto con los mismos valores.
+L3 = L1[:]
+
+# 4. Modificar L1[0]
+L1[0] = 99
+
+# 5. Imprimir L1, L2 y L3 y comentar
+print(f"L1 (Original modificado): {L1}") # Salida: [99, 2, 3]
+print(f"L2 (Copia por referencia): {L2}") # Salida: [99, 2, 3] <-- SE MODIFICÓ
+print(f"L3 (Copia por valor [:]): {L3}") # Salida: [1, 2, 3] <-- NO SE MODIFICÓ
+
+# Comentario: L2 se modificó porque es una referencia a L1. L3 no se modificó porque es una copia superficial (por valor).
+
+</pre>
+<a href="#ejercicio_59" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_60">Respuesta 60</h2>
+<pre>
+# Ejercicio 60: Función reversed() y Método .reverse()
+# Conceptos: Función reversed(), Método .reverse(), Iteradores.
+
+# 1. Declarar la lista items
+items = [1, 2, 3]
+
+# 2. Aplicar .reverse() (destructivo)
+items.reverse()
+print(f"Lista 'items' después de .reverse() (destructivo): {items}") # Salida: [3, 2, 1]
+
+# 3. Declarar una tupla (inmutable)
+numeros = (4, 5, 6)
+
+# 4. Usar reversed() (no destructivo, devuelve un iterador) y convertir a lista
+numeros_revertidos = list(reversed(numeros))
+print(f"Tupla 'numeros' original: {numeros}") # Salida: (4, 5, 6) (No cambia)
+print(f"Resultado de list(reversed(numeros)): {numeros_revertidos}") # Salida: [6, 5, 4]
+
+</pre>
+<a href="#ejercicio_60" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_61">Respuesta 61</h2>
+<pre>
+# Ejercicio 61: Diccionario (dict)
+# Conceptos: Tipo dict, Clave-valor, Mutabilidad.
+
+# 1. Declarar un diccionario
+perfil = {
+    "nombre": "Carlos",
+    "edad": 35,
+    "ciudad": "Madrid"
+}
+
+# 2. Acceder y mostrar el valor de la clave "edad"
+edad = perfil["edad"]
+print(f"Edad: {edad}") # Salida: 35
+
+# 3. Agregar un nuevo par clave-valor
+perfil["email"] = "carlos@ejemplo.com"
+
+# 4. Mostrar el diccionario completo
+print(f"Diccionario final: {perfil}")
+# Salida: {'nombre': 'Carlos', 'edad': 35, 'ciudad': 'Madrid', 'email': 'carlos@ejemplo.com'}
+
+</pre>
+<a href="#ejercicio_61" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_62">Respuesta 62</h2>
+<pre>
+# Ejercicio 62: Método .get()
+# Conceptos: Método .get(), Valor por defecto, Prevención de KeyError.
+
+# 1. Declarar un diccionario
+config = {"tema": "oscuro", "fuente": "Arial"}
+
+# 2. Acceder al valor de la clave "tema" de forma directa
+tema = config["tema"]
+print(f"Tema accedido directamente: {tema}") # Salida: oscuro
+
+# 3. Utilizar .get() para acceder a una clave inexistente con valor por defecto
+idioma = config.get("idioma", "Español")
+print(f"Idioma (con valor por defecto): {idioma}") # Salida: Español
+
+# 4. Intento de acceso directo a clave inexistente (comentado)
+# print(config["inexistente"]) # Generaría: KeyError: 'inexistente'
+
+</pre>
+<a href="#ejercicio_62" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_63">Respuesta 63</h2>
+<pre>
+# Ejercicio 63: Iteración sobre Diccionarios
+# Conceptos: Métodos .keys(), .values(), .items(), Iteración.
+
+perfil = {"nombre": "Ana", "edad": 28, "ciudad": "Barcelona"}
+
+# 1. Imprimir solo las claves (.keys())
+print("--- Claves ---")
+for clave in perfil.keys():
+    print(clave)
+# Salida: nombre, edad, ciudad
+
+# 2. Imprimir solo los valores (.values())
+print("--- Valores ---")
+for valor in perfil.values():
+    print(valor)
+# Salida: Ana, 28, Barcelona
+
+# 3. Imprimir claves y valores (.items())
+print("--- Pares Clave-Valor ---")
+for clave, valor in perfil.items():
+    print(f"Clave: {clave}, Valor: {valor}")
+# Salida: Clave: nombre, Valor: Ana ...
+
+</pre>
+<a href="#ejercicio_63" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_64">Respuesta 64</h2>
+<pre>
+# Ejercicio 64: Conjunto (set)
+# Conceptos: Tipo set, Elementos únicos, Método .add().
+
+# 1. Declarar un conjunto con duplicados
+datos = {1, 2, 3, 2, 1, 4}
+print(f"Conjunto inicial (sin duplicados): {datos}") # Salida: {1, 2, 3, 4}
+
+# 2. Agregar el número 5
+datos.add(5)
+print(f"Después de agregar 5: {datos}") # Salida: {1, 2, 3, 4, 5}
+
+# 3. Intentar agregar el número 2 de nuevo (no hay cambio, es único)
+datos.add(2)
+print(f"Después de agregar 2 (sin cambios): {datos}") # Salida: {1, 2, 3, 4, 5}
+
+</pre>
+<a href="#ejercicio_64" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_65">Respuesta 65</h2>
+<pre>
+# Ejercicio 65: Operaciones de Conjuntos
+# Conceptos: Unión (|), Intersección (&), Diferencia (-).
+
+# 1. Declarar los conjuntos
+A = {1, 2, 3, 4}
+B = {3, 4, 5, 6}
+
+# 2. Calcular y mostrar la UNIÓN (A U B)
+union = A | B
+print(f"Unión (A | B): {union}") # Salida: {1, 2, 3, 4, 5, 6}
+
+# 3. Calcular y mostrar la INTERSECCIÓN (A ∩ B)
+interseccion = A & B
+print(f"Intersección (A & B): {interseccion}") # Salida: {3, 4}
+
+# 4. Calcular y mostrar la DIFERENCIA (A - B)
+diferencia = A - B
+print(f"Diferencia (A - B): {diferencia}") # Salida: {1, 2}
+
+</pre>
+<a href="#ejercicio_65" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_66">Respuesta 66</h2>
+<pre>
+# Ejercicio 66: E/S de Archivos (open, read, close)
+# Conceptos: Función open(), Modo de lectura ('r'), Método .read(), Método .close().
+
+# Creación de archivo de prueba (conceptual: requiere sistema de archivos)
+# with open('registro.txt', 'w') as f:
+#     f.write("Línea de prueba 1\n")
+#     f.write("Línea de prueba 2\n")
+
+try:
+    # Abrir el archivo en modo lectura
+    archivo = open('registro.txt', 'r')
+
+    # Leer todo el contenido
+    contenido = archivo.read()
+    
+    # 3. Mostrar el contenido leído
+    print("Contenido leído:")
+    print(contenido)
+
+finally:
+    # 4. Asegurarse de cerrar el archivo
+    if 'archivo' in locals() and not archivo.closed:
+        archivo.close()
+    print("\nArchivo cerrado exitosamente.")
+
+# Nota: En un entorno real, debe existir 'registro.txt' para que la lectura funcione.
+
+</pre>
+<a href="#ejercicio_66" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_67">Respuesta 67</h2>
+<pre>
+# Ejercicio 67: Bloque with open(...) as f:
+# Conceptos: with open(...) as, Gestión de contexto, Método .readlines().
+
+# Bloque 1: Escritura con 'with' (cierre automático garantizado)
+print("--- Bloque de Escritura ---")
+lineas_a_escribir = ["Línea A\n", "Línea B\n", "Línea C\n"]
+try:
+    with open('registro.txt', 'w') as f:
+        f.writelines(lineas_a_escribir)
+    print("Escritura completada. Archivo cerrado.")
+except IOError as e:
+    print(f"Error de E/S al escribir: {e}")
+
+
+# Bloque 2: Lectura con 'with' y .readlines()
+print("--- Bloque de Lectura ---")
+try:
+    with open('registro.txt', 'r') as f:
+        # 3. Leer el contenido línea por línea
+        lineas_leidas = f.readlines()
+
+    # 4. Mostrar la lista de líneas
+    print(f"Lista de líneas leídas: {lineas_leidas}")
+except IOError as e:
+    print(f"Error de E/S al leer: {e}")
+
+</pre>
+<a href="#ejercicio_67" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_68">Respuesta 68</h2>
+<pre>
+# Ejercicio 68: try-except ValueError
+# Conceptos: Bloque try, Bloque except, Excepción ValueError.
+
+# Simulación de entrada de usuario inválida (p. ej., "abc")
+entrada_usuario = "abc"
+print(f"Entrada de usuario: '{entrada_usuario}'")
+
+try:
+    # 2. Intentar convertir la entrada a un entero
+    numero = int(entrada_usuario)
+    print(f"Número convertido: {numero}")
+
+except ValueError:
+    # 3. Si la conversión falla, capturar el error
+    print("Error: No se ha introducido un número válido.")
+    
+# Salida esperada: Error: No se ha introducido un número válido.
+
+</pre>
+<a href="#ejercicio_68" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_69">Respuesta 69</h2>
+<pre>
+# Ejercicio 69: try-except-else
+# Conceptos: Cláusula else en try-except, Ejecución sin excepción.
+
+def realizar_division(divisor):
+    print(f"\n--- Probando con divisor = {divisor} ---")
+    try:
+        # 2. Calcular la división
+        resultado = 10 / divisor
+
+    except ZeroDivisionError:
+        # Si ocurre una excepción, 'else' se omite
+        print("Manejo de Error: División por cero no permitida.")
+        
+    else:
+        # 3. El bloque 'else' se ejecuta solo si 'try' fue exitoso
+        print(f"Resultado de la división (ejecutado por 'else'): {resultado}")
+
+# Prueba 1: Sin excepción (else se ejecuta)
+realizar_division(5)
+# Salida: Resultado de la división (ejecutado por 'else'): 2.0
+
+# Prueba 2: Con excepción (else se omite)
+realizar_division(0)
+# Salida: Manejo de Error: División por cero no permitida.
+
+</pre>
+<a href="#ejercicio_69" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_70">Respuesta 70  </h2>
+<pre>
+# Ejercicio 70: Bloque finally
+# Conceptos: Bloque finally, Código de limpieza, Garantía de ejecución.
+
+def intentar_calculo(divisor):
+    print(f"\n--- Intentando con divisor = {divisor} ---")
+    try:
+        # 1. Intento de división (provocará error si divisor es 0)
+        resultado = 10 / divisor
+        print(f"División exitosa: {resultado}")
+
+    except ZeroDivisionError:
+        print("Excepción capturada: Error de división por cero.")
+        
+    finally:
+        # 2. El bloque 'finally' se ejecuta siempre, haya o no excepción.
+        print("Finalizando intento de cálculo. (finally ejecutado)")
+
+# Prueba 1: Sin error (la división funciona)
+intentar_calculo(2)
+
+# Prueba 2: Con error (se lanza y se captura ZeroDivisionError)
+intentar_calculo(0)
+
+</pre>
+<a href="#ejercicio_70" class="boton">Regresar al Ejercicio</a>
+
+
+<h2 id="respuesta_71">Respuesta 71</h2>
+<pre>
+# Ejercicio 71: Escritura de Archivos CSV
+# Conceptos: Módulo 'csv', 'w' (modo escritura), csv.writer(), writerows().
+
+import csv
+import os
+# El archivo se escribirá y luego se usará en el Ejercicio 72.
+
+# 1. Definir los datos a escribir
+datos = [['Nombre', 'Edad'], ['Alice', 30], ['Bob', 25]]
+
+# 2. Abrir el archivo en modo escritura ('w')
+# Se usa 'newline='' para evitar filas en blanco en Windows/macOS.
+try:
+    with open('datos.csv', mode='w', newline='') as archivo_csv:
+        # 3. Crear el objeto escritor
+        escritor = csv.writer(archivo_csv)
+
+        # 4. Escribir todas las filas a la vez
+        escritor.writerows(datos)
+
+    print("Archivo 'datos.csv' creado y escrito con éxito.")
+except IOError as e:
+    print(f"Error de I/O al escribir el archivo: {e}")
+
+# Verificación (simulada)
+if os.path.exists('datos.csv'):
+    print("El archivo 'datos.csv' existe para el siguiente ejercicio.")
+</pre>
+<a href="#ejercicio_71" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_72">Respuesta 72</h2>
+<pre>
+# Ejercicio 72: Lectura de Archivos CSV
+# Conceptos: Módulo 'csv', 'r' (modo lectura), csv.reader(), Iteración.
+
+import csv
+
+# 1. Se asume que 'datos.csv' existe del Ejercicio 71
+print("Lectura de 'datos.csv':")
+
+try:
+    # 2. Abrir el archivo en modo lectura ('r')
+    with open('datos.csv', mode='r', newline='') as archivo_csv:
+        # 3. Crear el objeto lector
+        lector = csv.reader(archivo_csv)
+
+        # 4. Iterar y mostrar cada fila
+        filas_leidas = []
+        for fila in lector:
+            filas_leidas.append(fila)
+        
+    print(f"Filas leídas: {filas_leidas}")
+    # Salida esperada: [['Nombre', 'Edad'], ['Alice', '30'], ['Bob', '25']]
+
+except FileNotFoundError:
+    print("Error: El archivo 'datos.csv' no fue encontrado.")
+except Exception as e:
+    print(f"Error inesperado durante la lectura: {e}")
+
+</pre>
+<a href="#ejercicio_72" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_73">Respuesta 73 </h2>
+<pre>
+# Ejercicio 73: Captura de Múltiples Excepciones
+# Conceptos: except (Error1, Error2), Manejo generalizado de errores.
+
+def operacion_division(x):
+    """Intenta dividir 10 por x."""
+    return 10 / x
+
+# Caso A: ZeroDivisionError (x = 0)
+x_caso_a = 0
+
+# Caso B: TypeError (x = cadena)
+x_caso_b = "diez"
+
+print(f"--- Prueba con x = {x_caso_a} (ZeroDivisionError) ---")
+try:
+    resultado = operacion_division(x_caso_a)
+    print(f"Resultado: {resultado}")
+# Captura ZeroDivisionError O TypeError
+except (ZeroDivisionError, TypeError) as e:
+    print(f"Error generalizado capturado (Caso A): Se ha producido una excepción de división o de tipo. Detalle: {type(e).__name__}")
+
+
+print(f"\n--- Prueba con x = '{x_caso_b}' (TypeError) ---")
+try:
+    resultado = operacion_division(x_caso_b)
+    print(f"Resultado: {resultado}")
+# Captura ZeroDivisionError O TypeError
+except (ZeroDivisionError, TypeError) as e:
+    print(f"Error generalizado capturado (Caso B): Se ha producido una excepción de división o de tipo. Detalle: {type(e).__name__}")
+
+</pre>
+<a href="#ejercicio_73" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_74">Respuesta 74</h2>
+<pre>
+# Ejercicio 74: Lanzamiento de Excepciones (raise)
+# Conceptos: Palabra clave 'raise', Lanzamiento de ValueError.
+
+def verificar_edad(edad):
+    """Verifica si la edad es válida y lanza un ValueError si es negativa."""
+    if edad < 0:
+        # Lanza una excepción ValueError con un mensaje específico
+        raise ValueError("La edad no puede ser negativa.")
+    return f"Edad válida: {edad} años."
+
+edad_invalida = -5
+
+print(f"Intentando verificar edad: {edad_invalida}")
+try:
+    # Llamada a la función con el valor negativo
+    mensaje = verificar_edad(edad_invalida)
+    print(mensaje)
+except ValueError as e:
+    # Captura la excepción ValueError lanzada y muestra el mensaje
+    print(f"Excepción capturada: {e}")
+    # Salida: Excepción capturada: La edad no puede ser negativa.
+
+</pre>
+<a href="#ejercicio_74" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_75">Respuesta 75</h2>
+<pre>
+# Ejercicio 75: Diccionarios Anidados
+# Conceptos: Diccionarios anidados, Acceso por doble clave.
+
+# 1. Declarar el diccionario anidado 'proyectos'
+proyectos = {
+    "ProyectoAlpha": {
+        "estado": "En progreso",
+        "miembros": ["Sara", "Tomás", "Luis"]
+    },
+    "ProyectoBeta": {
+        "estado": "Finalizado",
+        "miembros": ["Marta", "Daniel"]
+    }
+}
+
+# 2. Acceder y mostrar el 'estado' del primer proyecto
+estado_alpha = proyectos["ProyectoAlpha"]["estado"]
+print(f"Estado de ProyectoAlpha: {estado_alpha}") # Salida: En progreso
+
+# 3. Acceder y mostrar la lista de 'miembros' del segundo proyecto
+miembros_beta = proyectos["ProyectoBeta"]["miembros"]
+print(f"Miembros de ProyectoBeta: {miembros_beta}") # Salida: ['Marta', 'Daniel']
+
+</pre>
+<a href="#ejercicio_75" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_76">Respuesta 76</h2>
+<pre>
+# Ejercicio 76: Función defaultdict
+# Conceptos: defaultdict, collections, Inicialización automática.
+
+from collections import defaultdict
+
+# 1. Crear un defaultdict donde el valor por defecto es int (0)
+contador = defaultdict(int)
+
+# 2. Lista de palabras
+palabras = ["A", "B", "A", "C", "B", "A"]
+
+# 3. Iterar y contar la frecuencia
+print("Conteo de frecuencia con defaultdict:")
+for palabra in palabras:
+    # No es necesario verificar si la clave 'palabra' existe; defaultdict la inicializa a 0.
+    contador[palabra] += 1
+    
+print(f"Resultado del conteo: {dict(contador)}")
+# Salida: {'A': 3, 'B': 2, 'C': 1}
+
+</pre>
+<a href="#ejercicio_76" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_77">Respuesta 77</h2>
+<pre>
+# Ejercicio 77: Función Counter
+# Conceptos: Counter, collections, Frecuencia de elementos, most_common().
+
+from collections import Counter
+
+# 1. Declarar la lista de colores
+colores = ["rojo", "azul", "rojo", "verde", "azul", "rojo", "amarillo"]
+
+# 2. Crear un objeto Counter a partir de la lista
+conteo_colores = Counter(colores)
+print(f"Conteo completo: {conteo_colores}")
+# Salida: Counter({'rojo': 3, 'azul': 2, 'verde': 1, 'amarillo': 1})
+
+# 3. Mostrar los 2 elementos más comunes
+mas_comunes = conteo_colores.most_common(2)
+print(f"Los 2 colores más comunes: {mas_comunes}")
+# Salida: [('rojo', 3), ('azul', 2)]
+
+</pre>
+<a href="#ejercicio_77" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_78">Respuesta 78</h2>
+<pre>
+# Ejercicio 78: Eliminación de Duplicados con set
+# Conceptos: Conversión list a set, Elementos únicos, Conversión set a list.
+
+# 1. Lista con duplicados
+numeros_raw = [1, 5, 2, 8, 5, 1, 9, 2]
+print(f"Lista original con duplicados: {numeros_raw}")
+
+# 2. Convertir la lista a un set para eliminar los duplicados
+numeros_set = set(numeros_raw)
+print(f"Set intermedio (elementos únicos): {numeros_set}")
+
+# 3. Convertir el set resultante de nuevo a una lista
+numeros_limpios = list(numeros_set)
+print(f"Lista final sin duplicados: {numeros_limpios}")
+# El orden puede variar ya que los sets no garantizan el orden
+
+</pre>
+<a href="#ejercicio_78" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_79">Respuesta 79</h2>
+<pre>
+# Ejercicio 79: Interacción con el Sistema de Archivos (os.path)
+# Conceptos: Módulo 'os', os.path.exists(), os.path.isdir().
+
+import os
+
+# Se asume que 'datos.csv' existe del Ejercicio 71
+nombre_archivo = 'datos.csv'
+
+# 2. Verificar si el archivo existe
+existe_archivo = os.path.exists(nombre_archivo)
+print(f"¿Existe el archivo '{nombre_archivo}'?: {existe_archivo}")
+# Si el Ejercicio 71 se ejecutó, el resultado debe ser True.
+
+# 3. Verificar si la ruta actual ('.') es un directorio
+es_directorio_actual = os.path.isdir('.')
+print(f"¿La ruta actual ('.') es un directorio?: {es_directorio_actual}")
+# El resultado siempre debe ser True.
+
+</pre>
+<a href="#ejercicio_79" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_80">Respuesta 80  </h2>
+<pre>
+# Ejercicio 80: Captura Genérica de Excepciones
+# Conceptos: except Exception as e, Captura genérica, Inspección del objeto error.
+
+lista = [10, 20, 30]
+
+try:
+    # Operación que causa un error: Acceso a un índice fuera de rango (IndexError)
+    elemento = lista[10] 
+    print(f"Elemento accedido: {elemento}") # Esta línea se omite
+    
+# 2. Captura genérica de cualquier excepción
+except Exception as e:
+    # 3. Imprimir el tipo de error y el mensaje de error
+    tipo_error = type(e).__name__ # Obtiene el nombre de la clase de la excepción
+    mensaje_error = str(e)       # Obtiene el mensaje de la excepción
+    
+    print("--- ¡Excepción Capturada Genéricamente! ---")
+    print(f"Tipo de error: {tipo_error}")
+    print(f"Mensaje de error: {mensaje_error}")
+    # Salida esperada:
+    # Tipo de error: IndexError
+    # Mensaje de error: list index out of range
+
+</pre>
+<a href="#ejercicio_80" class="boton">Regresar al Ejercicio</a>
+
+
+
+<h2 id="respuesta_81">Respuesta 81</h2>
+<pre>
+# Ejercicio 81: Comprensión de Listas (List Comprehension)
+# Conceptos: Comprensión de Listas, Sintaxis concisa, Eficiencia.
+
+# 1. Crear una lista 'cuadrados' de los números del 1 al 10, elevados al cuadrado.
+# Sintaxis: [expresión for item in iterable]
+cuadrados = [x**2 for x in range(1, 11)]
+
+# 2. Mostrar la lista resultante
+print(f"Lista de cuadrados (1 al 10): {cuadrados}")
+# Salida: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+# Comparación con bucle for (menos conciso):
+# cuadrados_bucle = []
+# for x in range(1, 11):
+#     cuadrados_bucle.append(x**2)
+</pre>
+<a href="#ejercicio_81" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_82">Respuesta 82</h2>
+<pre>
+# Ejercicio 82: Comprensión de Listas con Condición 'if'
+# Conceptos: Filtrado en línea, Cláusula 'if' condicional.
+
+# 1. Crear una lista 'pares' de los números del 0 al 20 que sean pares.
+# Sintaxis: [expresión for item in iterable if condición]
+# range(21) genera números de 0 a 20.
+pares = [x for x in range(21) if x % 2 == 0]
+
+# 2. Mostrar la lista
+print(f"Números pares (0-20): {pares}")
+# Salida: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+</pre>
+<a href="#ejercicio_82" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_83">Respuesta 83</h2>
+<pre>
+# Ejercicio 83: Función Lambda (Función Anónima)
+# Conceptos: Función lambda, Sintaxis de una sola expresión, Funciones anónimas.
+
+# 1. Definir una función lambda 'duplicar'
+# Sintaxis: lambda argumentos: expresión
+duplicar = lambda x: x * 2
+
+# 2. Utilizar la función lambda
+numero = 15
+resultado = duplicar(numero)
+
+print(f"Resultado de duplicar({numero}): {resultado}") # Salida: 30
+
+# Comparación con 'def':
+# def duplicar_def(x):
+#     return x * 2
+</pre>
+<a href="#ejercicio_83" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_84">Respuesta 84</h2>
+<pre>
+# Ejercicio 84: Función map() con Lambda
+# Conceptos: Función map(), Transformación de secuencia.
+
+# 1. Declarar la lista de precios
+precios = [100, 50, 200]
+impuesto_fijo = 10
+
+# 2. Usar map() y lambda para sumar el impuesto a cada precio
+# map() devuelve un iterador, se convierte a list() para mostrar el resultado.
+precio_final = list(map(lambda p: p + impuesto_fijo, precios))
+
+print(f"Precios originales: {precios}")
+print(f"Precios con impuesto fijo ({impuesto_fijo}): {precio_final}")
+# Salida: [110, 60, 210]
+</pre>
+<a href="#ejercicio_84" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_85">Respuesta 85</h2>
+<pre>
+# Ejercicio 85: Función filter() con Lambda
+# Conceptos: Función filter(), Filtrado de secuencia.
+
+# 1. Declarar la lista de temperaturas
+temperaturas = [25, 15, 30, 8, 22]
+
+# 2. Usar filter() y lambda para seleccionar temperaturas > 20
+# filter() devuelve un iterador, se convierte a list() para mostrar el resultado.
+temperaturas_altas = list(filter(lambda t: t > 20, temperaturas))
+
+print(f"Temperaturas originales: {temperaturas}")
+print(f"Temperaturas > 20: {temperaturas_altas}")
+# Salida: [25, 30, 22]
+</pre>
+<a href="#ejercicio_85" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_86">Respuesta 86  </h2>
+<pre>
+# Ejercicio 86: Comprensión de Diccionarios (Dictionary Comprehension)
+# Conceptos: Comprensión de Diccionarios, Creación eficiente de dict.
+
+# 1. Crear la lista de nombres
+nombres = ['A', 'B', 'C']
+
+# 2. Usar Comprensión de Diccionarios: {clave: valor for item in iterable}
+# La clave es el nombre, el valor es su longitud (len()).
+diccionario = {nombre: len(nombre) for nombre in nombres}
+
+print(f"Lista de entrada: {nombres}")
+print(f"Diccionario resultante: {diccionario}")
+# Salida: {'A': 1, 'B': 1, 'C': 1}
+</pre>
+<a href="#ejercicio_86" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_87">Respuesta 87  </h2>
+<pre>
+# Ejercicio 87: Comprensión de Conjuntos (Set Comprehension)
+# Conceptos: Comprensión de Conjuntos, Transformación y eliminación de duplicados.
+
+# 1. Declarar la lista con duplicados y mayúsculas
+colores = ["rojo", "azul", "Rojo", "verde", "azul"]
+
+# 2. Usar Comprensión de Conjuntos: {expresión for item in iterable}
+# .lower() transforma a minúsculas, el set elimina automáticamente el duplicado "rojo".
+colores_unicos = {c.lower() for c in colores}
+
+print(f"Lista original: {colores}")
+print(f"Conjunto de colores únicos: {colores_unicos}")
+# Salida: {'rojo', 'azul', 'verde'} (el orden puede variar)
+</pre>
+<a href="#ejercicio_87" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_88">Respuesta 88   </h2>
+<pre>
+# Ejercicio 88: zip() con Comprensión de Diccionarios
+# Conceptos: Función zip(), Emparejamiento de secuencias.
+
+# 1. Declarar las listas
+claves = ['A', 'B', 'C']
+valores = [1, 2, 3]
+
+# 2. Usar zip() para emparejar y luego la Comprensión para crear el diccionario
+# zip() devuelve tuplas (clave, valor) que son desempaquetadas.
+dic_zip = {k: v for k, v in zip(claves, valores)}
+
+print(f"Diccionario creado con zip y comprensión: {dic_zip}")
+# Salida: {'A': 1, 'B': 2, 'C': 3}
+</pre>
+<a href="#ejercicio_88" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_89">Respuesta 89  </h2>
+<pre>
+# Ejercicio 89: Expresión Generadora (Generator Expression)
+# Conceptos: Generadores, Expresión generadora, next(), Ahorro de memoria.
+
+# 1. Crear la expresión generadora (se usan paréntesis)
+# No se evalúa inmediatamente, solo cuando se itera.
+generador = (x * 2 for x in range(1, 6))
+
+# 2. Obtener los dos primeros valores usando next()
+primero = next(generador)
+segundo = next(generador)
+
+# 3. Convertir el resto del generador a una lista
+resto = list(generador)
+
+print(f"Primer valor (next()): {primero}") # Salida: 2
+print(f"Segundo valor (next()): {segundo}") # Salida: 4
+print(f"Resto de los valores (list()): {resto}") # Salida: [6, 8, 10]
+</pre>
+<a href="#ejercicio_89" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_90">Respuesta 90  </h2>
+<pre>
+# Ejercicio 90: Función reduce()
+# Conceptos: Función reduce(), Módulo functools, Agregación acumulativa.
+
+# 1. Importar la función
+from functools import reduce
+
+# 2. Declarar la lista y la función lambda para la multiplicación
+numeros = [1, 2, 3, 4]
+multiplicacion_lambda = lambda x, y: x * y
+
+# 3. Usar reduce() para calcular el producto acumulativo: 1 * 2 * 3 * 4
+producto = reduce(multiplicacion_lambda, numeros)
+
+print(f"Lista de números: {numeros}")
+print(f"Producto acumulativo (reduce): {producto}")
+# Salida: 24 (1 * 2 = 2, 2 * 3 = 6, 6 * 4 = 24)
+</pre>
+<a href="#ejercicio_90" class="boton">Regresar al Ejercicio</a>
+
+
+
+<h2 id="respuesta_91">Respuesta 91</h2>
+<pre>
+# Ejercicio 91: Definición de Clase
+# Conceptos: class, Instancia, Función type()
+
+# 1. Definir la clase Vehiculo con pass
+class Vehiculo:
+    pass # Marcador de posición sin atributos ni métodos iniciales
+
+# 3. Crear una instancia (objeto)
+mi_auto = Vehiculo()
+
+# 4. Mostrar el tipo de la instancia
+print(f"Instancia creada: {mi_auto}")
+print(f"Tipo de la instancia: {type(mi_auto)}")
+# Salida: Tipo de la instancia: &lt;class '__main__.Vehiculo'&gt;
+
+</pre>
+<a href="#ejercicio_91" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_92">Respuesta 92</h2>
+<pre>
+# Ejercicio 92: Constructor __init__
+# Conceptos: Constructor __init__, Atributos de instancia, self
+
+# 1. Definir la clase Producto con __init__
+class Producto:
+    def __init__(self, nombre, precio):
+        # 2. Asignar los valores a los atributos de instancia
+        self.nombre = nombre
+        self.precio = precio
+
+# 3. Crear una instancia de Producto
+laptop = Producto("Laptop", 1200.00)
+
+# 4. Mostrar sus atributos
+print(f"Producto: {laptop.nombre}") # Salida: Producto: Laptop
+print(f"Precio: {laptop.precio:.2f}") # Salida: Precio: 1200.00
+
+</pre>
+<a href="#ejercicio_92" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_93">Respuesta 93</h2>
+<pre>
+# Ejercicio 93: Método de Instancia
+# Conceptos: Métodos de instancia, self, Comportamiento del objeto
+
+# 1. Reutilizar la clase Producto
+class Producto:
+    def __init__(self, nombre, precio):
+        self.nombre = nombre
+        self.precio = precio
+
+    # 2. Agregar un método para calcular el IVA (21%)
+    def calcular_iva(self):
+        tasa_iva = 0.21
+        precio_final = self.precio * (1 + tasa_iva)
+        return precio_final
+
+# 3. Crear una instancia
+monitor = Producto("Monitor", 350.00)
+
+# 4. Llamar al método y mostrar el resultado
+precio_final = monitor.calcular_iva()
+print(f"Precio base: {monitor.precio:.2f}")
+print(f"Precio final con IVA (21%): {precio_final:.2f}") # Salida: 423.50
+
+</pre>
+<a href="#ejercicio_93" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_94">Respuesta 94</h2>
+<pre>
+# Ejercicio 94: Método Mágico __str__
+# Conceptos: Método __str__, Representación legible para el usuario
+
+# 1. Reutilizar la clase Producto
+class Producto:
+    def __init__(self, nombre, precio):
+        self.nombre = nombre
+        self.precio = precio
+
+    def calcular_iva(self):
+        return self.precio * 1.21
+
+    # 2. Definir el método __str__
+    def __str__(self):
+        return f"Producto: {self.nombre}, Precio base: {self.precio:.2f}"
+
+# 3. Crear una instancia
+mouse = Producto("Mouse Óptico", 25.00)
+
+# 4. Imprimir la instancia directamente
+print(mouse) # Salida: Producto: Mouse Óptico, Precio base: 25.00
+
+</pre>
+<a href="#ejercicio_94" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_95">Respuesta 95</h2>
+<pre>
+# Ejercicio 95: Herencia y Sobrescritura
+# Conceptos: Herencia, Clase Padre, Clase Hija, Sobrescritura de métodos
+
+# 1. Definir clase padre Animal
+class Animal:
+    def hablar(self):
+        print("Sonido genérico")
+
+# 2. Definir clase hija Perro que hereda de Animal
+class Perro(Animal):
+    # 3. Sobrescritura del método hablar
+    def hablar(self):
+        print("Guau!")
+
+# 4. Crear instancias y llamar al método
+animal_generico = Animal()
+mi_perro = Perro()
+
+print("Llamada desde Animal:")
+animal_generico.hablar() # Salida: Sonido genérico
+
+print("Llamada desde Perro:")
+mi_perro.hablar() # Salida: Guau!
+
+</pre>
+<a href="#ejercicio_95" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_96">Respuesta 96</h2>
+<pre>
+# Ejercicio 96: Función super()
+# Conceptos: super(), Inicialización del constructor padre
+
+# 1. Definir la clase padre Persona
+class Persona:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        print(f"Persona {self.nombre} inicializada.")
+
+# 2. Definir la clase hija Empleado
+class Empleado(Persona):
+    # 3. Usar super() en el constructor de Empleado
+    def __init__(self, nombre, salario):
+        # Llama al __init__ de la clase padre (Persona) para inicializar 'nombre'
+        super().__init__(nombre)
+        self.salario = salario
+
+# 4. Crear una instancia de Empleado y mostrar atributos
+empleado1 = Empleado("David", 50000)
+
+print(f"\nEmpleado: {empleado1.nombre}") # Salida: David
+print(f"Salario: {empleado1.salario:.2f}") # Salida: 50000.00
+
+</pre>
+<a href="#ejercicio_96" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_97">Respuesta 97</h2>
+<pre>
+# Ejercicio 97: Método de Clase (@classmethod)
+# Conceptos: @classmethod, Atributos de clase (cls), Atributo de clase
+
+# 1. Definir la clase Contador con atributo de clase
+class Contador:
+    cuenta_total = 0  # Atributo de clase
+
+    # 2. Definir un método de clase usando @classmethod
+    @classmethod
+    def incrementar_total(cls):
+        # cls hace referencia a la clase Contador, no a una instancia
+        cls.cuenta_total += 1
+
+# 3. Llamar al método a través de la clase (no se necesita instancia)
+Contador.incrementar_total()
+Contador.incrementar_total()
+Contador.incrementar_total()
+
+# 4. Mostrar el valor de cuenta_total
+print(f"Total después de 3 incrementos: {Contador.cuenta_total}") # Salida: 3
+
+</pre>
+<a href="#ejercicio_97" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_98">Respuesta 98  </h2>
+<pre>
+# Ejercicio 98: Método Estático (@staticmethod)
+# Conceptos: @staticmethod, Funciones utilitarias
+
+# 1. Definir la clase Utilidades
+class Utilidades:
+    # 2. Definir un método estático que no requiere self (instancia) ni cls (clase)
+    @staticmethod
+    def sumar_dos(a, b):
+        return a + b
+
+# 3. Llamar al método estático directamente desde la clase
+resultado = Utilidades.sumar_dos(5, 3)
+
+print(f"Resultado de sumar_dos(5, 3): {resultado}") # Salida: 8
+
+</pre>
+<a href="#ejercicio_98" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_99">Respuesta 99</h2>
+<pre>
+# Ejercicio 99: Encapsulación (Convención _atributo)
+# Conceptos: Encapsulación (convención), Atributos protegidos (_)
+
+# 1. Definir la clase Cuenta con _saldo
+class Cuenta:
+    def __init__(self, saldo_inicial):
+        # El guion bajo único indica que es un atributo 'protegido' o interno
+        self._saldo = saldo_inicial
+
+    # 2. Método público para consultar el saldo
+    def consultar_saldo(self):
+        return self._saldo
+
+# 3. Crear una instancia y mostrar el saldo a través del método público
+mi_cuenta = Cuenta(500.00)
+saldo_inicial = mi_cuenta.consultar_saldo()
+print(f"Saldo inicial (vía método): {saldo_inicial:.2f}") # Salida: 500.00
+
+# 4. Acceder y modificar el atributo _saldo directamente (demostrando que es una convención)
+mi_cuenta._saldo = 10000.00
+print(f"Saldo modificado (acceso directo): {mi_cuenta._saldo:.2f}") # Salida: 10000.00
+
+</pre>
+<a href="#ejercicio_99" class="boton">Regresar al Ejercicio</a>
+
+<h2 id="respuesta_100">Respuesta 100</h2>
+<pre>
+# Ejercicio 100: Decorador @property (Getter)
+# Conceptos: @property, Getter, Interfaz de propiedad
+
+import math # Necesario para math.pi
+
+# 1. Definir la clase Circulo con _radio
+class Circulo:
+    def __init__(self, radio):
+        self._radio = radio
+
+    # 2. Definir el método 'radio' decorado con @property (getter)
+    @property
+    def radio(self):
+        # Permite acceder a self._radio como un atributo, no como un método
+        return self._radio
+
+    # 3. Método para calcular el área
+    def area(self):
+        return math.pi * (self._radio ** 2)
+
+# 4. Crear una instancia
+mi_circulo = Circulo(5.0)
+
+# Acceder al radio como un atributo (mi_circulo.radio), no como un método
+radio_accesado = mi_circulo.radio
+
+# Mostrar los resultados
+print(f"Radio (vía @property): {radio_accesado:.2f}") # Salida: 5.00
+print(f"Área: {mi_circulo.area():.2f}") # Salida: 78.54
+
+</pre>
+<a href="#ejercicio_100" class="boton">Regresar al Ejercicio</a>
+
+
+
+
+  </body>
+  
+  <br><br>
+  <div class="footer-text">
+	<center>
+    <h4>&#169; 2024, 2025 Dr. Octavio Juárez</h4>
+    <h5>octavio.juarez@unison.mx</h5>
+    </center>
+</div>
+  
+</html>
