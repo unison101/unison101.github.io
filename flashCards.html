@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Flashcards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('./fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 300 800;
+    font-style: normal italic;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  height: 200px;
+  margin: 0 auto 20px auto;
+  padding: 20px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  overflow-y: auto;
+  position: relative; 
+}
+  .card:hover {
+    /* background-color: #e0e0e0; */
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  button {
+    flex: 1 1 45%;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  /* El indicador de la tarjeta se MOVIÓ para posicionamiento fuera del .card */
+  .card-indicator {
+    /* La ubicación absoluta es inefectiva aquí, se redefine. */
+  }
+
+  /* Contenedor del contador e indicador, centrado como los demás */
+  .info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 10px auto;
+    padding: 0 5px; /* Pequeño padding para consistencia visual */
+  }
+
+  /* Estilo para el contador */
+  #counter {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+  }
+
+  /* Estilo para el indicador de pregunta/respuesta */
+  #indicator {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+  <div class="info-bar">
+    <div id="counter"></div>
+    <div id="indicator"></div>
+  </div>
+  
+  <div class="card" id="card">
+    <div id="card-content"></div> 
+  </div>
+
+  <div class="controls">
+    <button onclick="prevCard()">Anterior</button>
+    <button onclick="nextCard()">Siguiente</button>
+    <button onclick="shuffleCards()">Barajar</button>
+    <button onclick="resetOrder()">Orden original</button>
+  </div>
+
+  <script>
+
+const TARJETAS = [
+{
+pregunta: "¿Qué problema físico no podía explicar la física clásica a finales del siglo XIX conocido como la 'catástrofe ultravioleta'?",
+respuesta: "El problema de la radiación del cuerpo negro. La teoría clásica predecía que un cuerpo negro emitiría infinita energía en las frecuencias ultravioleta, lo cual contradecía las observaciones experimentales."
+},
+{
+pregunta: "¿Qué propuso Max Planck en 1900 para resolver el problema de la radiación del cuerpo negro?",
+respuesta: "Planck propuso que la energía se emite en paquetes discretos llamados 'cuantos', donde E = hν (energía = constante de Planck × frecuencia). Esta fue la hipótesis cuántica original."
+},
+{
+pregunta: "¿Cuál es el valor aproximado de la constante de Planck (h) y cuáles son sus unidades?",
+respuesta: "h ≈ 6.626 × 10<sup>-34</sup> J·s (joules por segundo). Es una constante fundamental que relaciona la energía de un fotón con su frecuencia."
+},
+{
+pregunta: "Describe el experimento del efecto fotoeléctrico y por qué era problemático para la física clásica.",
+respuesta: "Al iluminar una superficie metálica con luz, se emiten electrones. La física clásica predecía que la energía de los electrones dependería de la intensidad de la luz, pero experimentalmente dependía de la frecuencia, no de la intensidad."
+},
+{
+pregunta: "¿Cómo explicó Einstein el efecto fotoeléctrico en 1905?",
+respuesta: "Einstein propuso que la luz está compuesta de partículas (fotones) con energía E = hν. Un electrón absorbe un fotón completo, y si hν > función trabajo del metal, el electrón es emitido con energía cinética E<sub>c</sub> = hν - φ."
+},
+{
+pregunta: "¿Qué es la función trabajo (φ) de un metal?",
+respuesta: "Es la energía mínima necesaria para extraer un electrón de la superficie del metal. Cada metal tiene una función trabajo característica. Si la energía del fotón es menor que φ, no se emiten electrones sin importar la intensidad."
+},
+{
+pregunta: "¿Qué experimento demostró que los rayos X se dispersan como partículas y cuál fue su resultado principal?",
+respuesta: "El experimento de Compton (1923). Demostró que los rayos X se dispersan como partículas (fotones) al colisionar con electrones, cambiando su longitud de onda según: Δλ = (h/m<sub>e</sub>c)(1 - cos θ)."
+},
+{
+pregunta: "¿Qué son las líneas espectrales de emisión de los átomos y por qué eran un misterio para la física clásica?",
+respuesta: "Son frecuencias específicas de luz que emite cada elemento al ser excitado. La física clásica no podía explicar por qué los átomos solo emiten frecuencias discretas en lugar de un espectro continuo."
+},
+{
+pregunta: "¿Cuáles fueron los principales postulados del modelo atómico de Bohr (1913)?",
+respuesta: "1) Los electrones giran en órbitas circulares estacionarias sin radiar energía. 2) El momento angular está cuantizado: L = nℏ (n = 1, 2, 3...). 3) La radiación se emite/absorbe solo cuando el electrón cambia de órbita: ΔE = hν."
+},
+{
+pregunta: "¿Qué es ℏ (h-barra) y cómo se relaciona con h?",
+respuesta: "ℏ = h/2π ≈ 1.055 × 10<sup>-34</sup> J·s. Es la constante de Planck reducida y aparece frecuentemente en ecuaciones de mecánica cuántica, especialmente en relaciones de momento angular."
+},
+{
+pregunta: "Escribe la fórmula de Rydberg para las líneas espectrales del hidrógeno y explica cada término.",
+respuesta: "1/λ = R<sub>H</sub>(1/n<sub>f</sub><sup>2</sup> - 1/n<sub>i</sub><sup>2</sup>), donde R<sub>H</sub> = 1.097 × 10<sup>7</sup> m<sup>-1</sup> es la constante de Rydberg, n<sub>i</sub> es el nivel inicial y n<sub>f</sub> es el nivel final."
+},
+{
+pregunta: "¿Qué es el radio de Bohr (a<sub>0</sub>) y cuál es su valor?",
+respuesta: "Es el radio de la primera órbita del electrón en el átomo de hidrógeno según el modelo de Bohr. a<sub>0</sub> ≈ 0.529 Å (angstroms) = 5.29 × 10<sup>-11</sup> m."
+},
+{
+pregunta: "¿Cuál es la energía del electrón en el átomo de hidrógeno según Bohr?",
+respuesta: "E<sub>n</sub> = -13.6 eV/n<sup>2</sup>, donde n = 1, 2, 3... es el número cuántico principal. El signo negativo indica que el electrón está ligado al núcleo."
+},
+{
+pregunta: "¿Cuáles fueron las principales limitaciones del modelo de Bohr?",
+respuesta: "1) Solo funcionaba para átomos hidrogenoides (un electrón). 2) No explicaba la estructura fina de las líneas espectrales. 3) No explicaba los efectos Zeeman y Stark. 4) No tenía fundamento teórico sólido para la cuantización."
+},
+{
+pregunta: "¿Qué propuso Louis de Broglie en 1924?",
+respuesta: "De Broglie propuso que así como la luz tiene naturaleza dual (onda-partícula), toda la materia también presenta dualidad onda-partícula. Asoció a cada partícula con una longitud de onda: λ = h/p."
+},
+{
+pregunta: "¿Cómo se calcula la longitud de onda de De Broglie de una partícula y cuándo es observable?",
+respuesta: "λ = h/p = h/(mv). Es observable solo para partículas muy pequeñas (electrones, neutrones, átomos) o muy lentas. Para objetos macroscópicos, λ es tan pequeña que los efectos cuánticos son inobservables."
+},
+{
+pregunta: "Calcula la longitud de onda de De Broglie de un electrón con velocidad 10<sup>6</sup> m/s (m<sub>e</sub> = 9.11 × 10<sup>-31</sup> kg).",
+respuesta: "λ = h/(m<sub>e</sub>v) = (6.626 × 10<sup>-34</sup>)/(9.11 × 10<sup>-31</sup> × 10<sup>6</sup>) ≈ 7.3 × 10<sup>-10</sup> m = 7.3 Å. Esta longitud es comparable a distancias atómicas."
+},
+{
+pregunta: "¿Qué experimento confirmó la naturaleza ondulatoria de los electrones?",
+respuesta: "El experimento de Davisson-Germer (1927), que demostró la difracción de electrones al atravesar un cristal de níquel, confirmando la hipótesis de De Broglie. También el experimento de G.P. Thomson con láminas delgadas."
+},
+{
+pregunta: "Describe el experimento de la doble rendija con electrones y su significado.",
+respuesta: "Los electrones disparados uno a uno a través de dos rendijas crean un patrón de interferencia, como las ondas. Esto demuestra que cada electrón interfiere consigo mismo, mostrando su naturaleza ondulatoria incluso cuando se comporta como partícula individual."
+},
+{
+pregunta: "¿Qué es el principio de complementariedad de Bohr?",
+respuesta: "Los aspectos ondulatorio y corpuscular de la materia y la luz son complementarios: ambos son necesarios para una descripción completa, pero nunca se manifiestan simultáneamente en el mismo experimento. El tipo de medición determina qué aspecto observamos."
+},
+{
+pregunta: "Enuncia el principio de incertidumbre de Heisenberg para posición y momento.",
+respuesta: "Δx · Δp ≥ ℏ/2, donde Δx es la incertidumbre en la posición y Δp es la incertidumbre en el momento. No es posible conocer simultáneamente con precisión arbitraria la posición y el momento de una partícula."
+},
+{
+pregunta: "¿El principio de incertidumbre es una limitación experimental o una propiedad fundamental de la naturaleza?",
+respuesta: "Es una propiedad fundamental de la naturaleza, no una limitación de nuestros instrumentos. Refleja que posición y momento no pueden tener valores definidos simultáneamente en mecánica cuántica."
+},
+{
+pregunta: "Enuncia la relación de incertidumbre para energía y tiempo.",
+respuesta: "ΔE · Δt ≥ ℏ/2. Esto significa que la incertidumbre en la energía de un estado multiplicada por el tiempo que dura ese estado debe ser mayor o igual a ℏ/2."
+},
+{
+pregunta: "¿Por qué el principio de incertidumbre no afecta nuestra vida cotidiana?",
+respuesta: "Porque ℏ es extremadamente pequeño (10<sup>-34</sup> J·s). Para objetos macroscópicos, las incertidumbres son tan minúsculas que resultan totalmente imperceptibles. Solo son significativas a escala atómica y subatómica."
+},
+{
+pregunta: "Si conoces la posición de un electrón con precisión Δx = 1 Å, ¿cuál es aproximadamente la incertidumbre mínima en su velocidad?",
+respuesta: "Δv ≥ ℏ/(2m<sub>e</sub>Δx) ≈ (1.055 × 10<sup>-34</sup>)/(2 × 9.11 × 10<sup>-31</sup> × 10<sup>-10</sup>) ≈ 5.8 × 10<sup>5</sup> m/s. La incertidumbre en la velocidad es comparable a la velocidad del electrón mismo."
+},
+{
+pregunta: "¿Qué es la función de onda ψ(x,t)?",
+respuesta: "Es una función matemática compleja que describe completamente el estado cuántico de un sistema. Contiene toda la información que se puede conocer sobre una partícula o sistema cuántico."
+},
+{
+pregunta: "¿Qué representa |ψ(x,t)|<sup>2</sup> según la interpretación de Born?",
+respuesta: "|ψ(x,t)|<sup>2</sup> representa la densidad de probabilidad de encontrar la partícula en la posición x en el tiempo t. No predice dónde está la partícula, sino la probabilidad de encontrarla en cada ubicación."
+},
+{
+pregunta: "¿Qué condición debe cumplir una función de onda válida respecto a la normalización?",
+respuesta: "∫<sub>-∞</sub><sup>+∞</sup> |ψ(x,t)|<sup>2</sup> dx = 1. Esto garantiza que la probabilidad total de encontrar la partícula en algún lugar del espacio es 100%."
+},
+{
+pregunta: "Escribe la ecuación de Schrödinger dependiente del tiempo en una dimensión.",
+respuesta: "iℏ ∂ψ/∂t = -(ℏ<sup>2</sup>/2m) ∂<sup>2</sup>ψ/∂x<sup>2</sup> + V(x)ψ, donde i es la unidad imaginaria, m es la masa de la partícula y V(x) es el potencial."
+},
+{
+pregunta: "¿Qué es la ecuación de Schrödinger independiente del tiempo y cuándo se usa?",
+respuesta: "Ĥψ = Eψ, donde Ĥ es el operador hamiltoniano y E es la energía. Se usa cuando el potencial no depende del tiempo, resultando en estados estacionarios con energía definida."
+},
+{
+pregunta: "¿Qué son los estados estacionarios?",
+respuesta: "Son soluciones de la ecuación de Schrödinger independiente del tiempo donde la dependencia temporal es simplemente una fase: ψ(x,t) = φ(x)e<sup>-iEt/ℏ</sup>. La densidad de probabilidad |ψ|<sup>2</sup> no cambia con el tiempo."
+},
+{
+pregunta: "¿Qué propiedades debe tener una función de onda físicamente aceptable?",
+respuesta: "1) Ser continua. 2) Tener derivada continua (excepto en potenciales infinitos). 3) Ser normalizable (tender a cero en ±∞). 4) Ser de valor único (univaluada). 5) Ser de cuadrado integrable."
+},
+{
+pregunta: "Describe el modelo de partícula en una caja unidimensional (pozo cuadrado infinito).",
+respuesta: "Una partícula confinada en una región 0 < x < L donde V = 0, y V = ∞ fuera de esta región. La partícula no puede existir fuera de la caja (ψ = 0 para x ≤ 0 y x ≥ L)."
+},
+{
+pregunta: "¿Cuáles son las funciones de onda permitidas para una partícula en una caja de longitud L?",
+respuesta: "ψ<sub>n</sub>(x) = √(2/L) sin(nπx/L), donde n = 1, 2, 3... es el número cuántico. Estas funciones satisfacen las condiciones de frontera ψ(0) = ψ(L) = 0."
+},
+{
+pregunta: "¿Cuáles son los niveles de energía permitidos para una partícula en una caja?",
+respuesta: "E<sub>n</sub> = n<sup>2</sup>h<sup>2</sup>/(8mL<sup>2</sup>) = n<sup>2</sup>π<sup>2</sup>ℏ<sup>2</sup>/(2mL<sup>2</sup>), donde n = 1, 2, 3... La energía está cuantizada y no puede ser cero (E<sub>1</sub> es la energía de punto cero)."
+},
+{
+pregunta: "¿Qué es la energía de punto cero y por qué existe?",
+respuesta: "Es la energía mínima E<sub>1</sub> que tiene una partícula confinada (no puede tener E = 0). Existe debido al principio de incertidumbre: si la partícula está confinada (Δx es finito), su momento no puede ser cero (Δp > 0), por lo tanto tiene energía cinética."
+},
+{
+pregunta: "¿Cómo cambian los niveles de energía si se duplica la longitud de la caja?",
+respuesta: "Como E<sub>n</sub> ∝ 1/L<sup>2</sup>, si L se duplica, las energías se reducen a 1/4 de su valor original. Los niveles se acercan entre sí cuando la caja es más grande."
+},
+{
+pregunta: "¿Cuántos nodos tiene la función de onda ψ<sub>n</sub> dentro de una caja (sin contar los extremos)?",
+respuesta: "Tiene (n - 1) nodos. ψ<sub>1</sub> no tiene nodos, ψ<sub>2</sub> tiene 1 nodo en x = L/2, ψ<sub>3</sub> tiene 2 nodos, etc. El número de nodos aumenta con la energía."
+},
+{
+pregunta: "¿Qué es la degeneración de un nivel de energía?",
+respuesta: "Es el número de estados cuánticos diferentes que tienen la misma energía. En la caja 1D no hay degeneración, pero en cajas 2D y 3D puede haber múltiples combinaciones de números cuánticos con la misma energía total."
+},
+{
+pregunta: "Para una partícula en una caja 3D (dimensiones L<sub>x</sub>, L<sub>y</sub>, L<sub>z</sub>), ¿cuál es la expresión de la energía?",
+respuesta: "E<sub>n<sub>x</sub>,n<sub>y</sub>,n<sub>z</sub></sub> = (h<sup>2</sup>/8m)[n<sub>x</sub><sup>2</sup>/L<sub>x</sub><sup>2</sup> + n<sub>y</sub><sup>2</sup>/L<sub>y</sub><sup>2</sup> + n<sub>z</sub><sup>2</sup>/L<sub>z</sub><sup>2</sup>], donde n<sub>x</sub>, n<sub>y</sub>, n<sub>z</sub> = 1, 2, 3..."
+},
+{
+pregunta: "¿Qué es el efecto túnel cuántico?",
+respuesta: "Es el fenómeno por el cual una partícula puede atravesar una barrera de potencial incluso cuando su energía es menor que la altura de la barrera. Es imposible en física clásica pero permitido en mecánica cuántica."
+},
+{
+pregunta: "¿Por qué ocurre el efecto túnel?",
+respuesta: "Porque la función de onda no se hace exactamente cero dentro de una barrera de potencial finita; decrece exponencialmente. Si la barrera es suficientemente delgada, la función de onda tiene amplitud no nula al otro lado, permitiendo una probabilidad de transmisión."
+},
+{
+pregunta: "¿De qué factores depende la probabilidad de tunelización?",
+respuesta: "Depende de: 1) El ancho de la barrera (a mayor ancho, menor probabilidad). 2) La altura de la barrera relativa a la energía de la partícula. 3) La masa de la partícula (partículas más ligeras tunelizan más fácilmente)."
+},
+{
+pregunta: "Da dos ejemplos de fenómenos naturales donde el efecto túnel es esencial.",
+respuesta: "1) Fusión nuclear en el Sol: los protones tunelizan la barrera de repulsión coulómbica. 2) Decaimiento α radiactivo: las partículas α escapan del núcleo atravesando la barrera de potencial nuclear."
+},
+{
+pregunta: "¿Qué aplicaciones tecnológicas utilizan el efecto túnel?",
+respuesta: "1) Microscopio de efecto túnel (STM): obtiene imágenes de átomos individuales. 2) Diodos túnel: dispositivos electrónicos ultrarrápidos. 3) Memorias flash: almacenan datos mediante tunelización de electrones."
+},
+{
+pregunta: "¿Cuál es el potencial del oscilador armónico cuántico?",
+respuesta: "V(x) = (1/2)kx<sup>2</sup> = (1/2)mω<sup>2</sup>x<sup>2</sup>, donde k es la constante de fuerza del resorte y ω = √(k/m) es la frecuencia angular. Es un potencial parabólico simétrico."
+},
+{
+pregunta: "¿Cuáles son los niveles de energía permitidos del oscilador armónico cuántico?",
+respuesta: "E<sub>n</sub> = (n + 1/2)ℏω, donde n = 0, 1, 2, 3... Los niveles están igualmente espaciados con separación ℏω. El estado base tiene energía E<sub>0</sub> = (1/2)ℏω (energía de punto cero)."
+},
+{
+pregunta: "¿Por qué el oscilador armónico cuántico tiene energía de punto cero?",
+respuesta: "Por el principio de incertidumbre: si la partícula estuviera en reposo en x = 0, tanto su posición como su momento serían conocidos con certeza, violando Δx · Δp ≥ ℏ/2. La energía mínima es el compromiso entre energía cinética y potencial."
+},
+{
+pregunta: "¿Cómo son las funciones de onda del oscilador armónico?",
+respuesta: "Son productos de polinomios de Hermite H<sub>n</sub> por una función gaussiana: ψ<sub>n</sub>(x) ∝ H<sub>n</sub>(αx)e<sup>-α²x²/2</sup>, donde α = √(mω/ℏ). Las funciones tienen paridad definida: par para n par, impar para n impar."
+},
+{
+pregunta: "¿Por qué es importante el oscilador armónico en química?",
+respuesta: "Modela las vibraciones moleculares. Los enlaces químicos se comportan aproximadamente como resortes, y las moléculas vibran con frecuencias cuantizadas según E = (n + 1/2)ℏω. Es fundamental en espectroscopía infrarroja."
+},
+{
+pregunta: "¿Qué diferencia hay entre los niveles de energía clásico y cuántico del oscilador armónico?",
+respuesta: "Clásicamente, el oscilador puede tener cualquier energía ≥ 0. Cuánticamente, solo valores discretos E<sub>n</sub> = (n + 1/2)ℏω son permitidos, y la energía mínima no es cero sino (1/2)ℏω."
+},
+{
+pregunta: "¿Qué es un operador en mecánica cuántica?",
+respuesta: "Es una operación matemática que actúa sobre una función de onda y produce otra función. Los operadores representan observables físicos (cantidades medibles) como posición, momento, energía, etc."
+},
+{
+pregunta: "¿Cuál es el operador de posición en mecánica cuántica?",
+respuesta: "El operador de posición es simplemente la multiplicación por x: x̂ψ = xψ. En el espacio de posiciones, medir la posición significa multiplicar por la coordenada."
+},
+{
+pregunta: "¿Cuál es el operador de momento lineal en una dimensión?",
+respuesta: "p̂ = -iℏ ∂/∂x. Es un operador diferencial que involucra la derivada espacial de la función de onda."
+},
+{
+pregunta: "¿Cuál es el operador hamiltoniano para una partícula en un potencial V(x)?",
+respuesta: "Ĥ = -(ℏ<sup>2</sup>/2m) ∂<sup>2</sup>/∂x<sup>2</sup> + V(x). Es la suma del operador de energía cinética y el operador de energía potencial."
+},
+{
+pregunta: "¿Qué es un eigenestado (autoestado) y un eigenvalor (autovalor)?",
+respuesta: "Si Âψ = aψ (el operador  actúa sobre ψ y produce la misma función multiplicada por un número), entonces ψ es un eigenestado de  con eigenvalor a. Al medir la observable A en ese estado, el resultado es con certeza a."
+},
+{
+pregunta: "¿Qué significa que un operador sea hermítico (autoadjunto)?",
+respuesta: "Un operador  es hermítico si  = † (es igual a su adjunto). Los operadores hermíticos tienen eigenvalores reales, lo cual es necesario ya que representan cantidades físicas medibles."
+},
+{
+pregunta: "¿Cómo se calcula el valor esperado (valor medio) de un observable A?",
+respuesta: "⟨A⟩ = ∫ ψ* Âψ dx = ⟨ψ|Â|ψ⟩. Es el promedio de muchas mediciones de A sobre sistemas preparados en el estado ψ."
+},
+{
+pregunta: "¿Qué es el conmutador de dos operadores  y B̂?",
+respuesta: "[Â, B̂] = ÂB̂ - B̂Â. Mide si los operadores conmutan (pueden aplicarse en cualquier orden). Si [Â, B̂] = 0, los observables A y B pueden medirse simultáneamente con precisión."
+},
+{
+pregunta: "Calcula el conmutador [x̂, p̂] y explica su significado.",
+respuesta: "[x̂, p̂] = iℏ. Este conmutador no nulo es la base matemática del principio de incertidumbre de Heisenberg. Posición y momento no pueden medirse simultáneamente con precisión arbitraria."
+},
+{
+pregunta: "¿Cómo se define el operador de momento angular orbital L̂ en mecánica cuántica?",
+respuesta: "L̂ = r̂ × p̂ (producto vectorial de posición y momento). En coordenadas cartesianas, L̂<sub>z</sub> = x̂p̂<sub>y</sub> - ŷp̂<sub>x</sub> = -iℏ(x∂/∂y - y∂/∂x)."
+},
+{
+pregunta: "¿Qué cantidades del momento angular están cuantizadas?",
+respuesta: "El módulo al cuadrado L̂<sup>2</sup> con eigenvalores l(l+1)ℏ<sup>2</sup> (l = 0, 1, 2...) y una componente (usualmente L̂<sub>z</sub>) con eigenvalores m<sub>l</sub>ℏ (m<sub>l</sub> = -l, -l+1, ..., l-1, l)."
+},
+{
+pregunta: "¿Por qué no se pueden conocer simultáneamente las tres componentes del momento angular?",
+respuesta: "Porque los operadores L̂<sub>x</sub>, L̂<sub>y</sub> y L̂<sub>z</sub> no conmutan entre sí: [L̂<sub>x</sub>, L̂<sub>y</sub>] = iℏL̂<sub>z</sub> (y permutaciones cíclicas). Solo L̂<sup>2</sup> y una componente (L̂<sub>z</sub>) pueden tener valores definidos simultáneamente."
+},
+{
+pregunta: "¿Qué son los armónicos esféricos Y<sub>lm</sub>(θ,φ)?",
+respuesta: "Son las funciones propias simultáneas de L̂<sup>2</sup> y L̂<sub>z</sub> en coordenadas esféricas. Describen la parte angular de las funciones de onda en problemas con simetría esférica (como el átomo de hidrógeno)."
+},
+{
+pregunta: "Para un estado con l = 2, ¿cuáles son los posibles valores de m<sub>l</sub> y cuántos estados hay?",
+respuesta: "m<sub>l</sub> puede ser -2, -1, 0, +1, +2. Hay 2l + 1 = 5 estados posibles con diferentes orientaciones del momento angular pero la misma magnitud."
+},
+{
+pregunta: "¿Qué es el spin del electrón?",
+respuesta: "Es un momento angular intrínseco del electrón (no relacionado con movimiento orbital). Es una propiedad cuántica sin análogo clásico. El electrón tiene spin 1/2, con dos posibles orientaciones: m<sub>s</sub> = +1/2 (spin up ↑) o m<sub>s</sub> = -1/2 (spin down ↓)."
+},
+{
+pregunta: "¿Cuál es el momento angular total de spin de un electrón?",
+respuesta: "El módulo del spin es √(s(s+1))ℏ = √(3/4)ℏ, donde s = 1/2 es el número cuántico de spin. La componente z puede ser S<sub>z</sub> = ±ℏ/2."
+},
+{
+pregunta: "¿Qué establece el principio de exclusión de Pauli?",
+respuesta: "Dos electrones (o fermiones en general) no pueden ocupar el mismo estado cuántico completo simultáneamente. En un átomo, dos electrones pueden tener los mismos números cuánticos n, l, m<sub>l</sub> solo si tienen spins opuestos."
+},
+{
+pregunta: "¿Cuál es el potencial coulombiano que experimenta el electrón en el átomo de hidrógeno?",
+respuesta: "V(r) = -ke²/r = -(1/4πε<sub>0</sub>)(e²/r), donde e es la carga del electrón, k es la constante de Coulomb, y r es la distancia del electrón al protón. Es un potencial atractivo que depende solo de r."
+},
+{
+pregunta: "¿Cuáles son los tres números cuánticos que describen los orbitales del átomo de hidrógeno?",
+respuesta: "n (número cuántico principal, n = 1, 2, 3...),l (número cuántico azimutal u orbital, l = 0, 1, 2, ..., n-1), y m<sub>l</sub> (número cuántico magnético, m<sub>l</sub> = -l, ..., 0, ..., +l)."
+},
+{
+pregunta: "¿Cuál es la fórmula para los niveles de energía del átomo de hidrógeno?",
+respuesta: "E<sub>n</sub> = -13.6 eV/n² = -(me⁴/8ε₀²h²)(1/n²). La energía depende solo de n, no de l o m<sub>l</sub>. Los niveles se acercan cuando n aumenta, convergiendo a E = 0 (ionización)."
+},
+{
+pregunta: "¿Qué representa el número cuántico principal n?",
+respuesta: "Determina principalmente la energía del orbital y el tamaño promedio (distancia media del electrón al núcleo). También limita los valores posibles de l: para un dado n, l puede ser 0, 1, 2, ..., n-1."
+},
+{
+pregunta: "¿Qué representa el número cuántico l (orbital)?",
+respuesta: "Determina la magnitud del momento angular orbital: L = √(l(l+1))ℏ. También define la forma del orbital. Los valores l = 0, 1, 2, 3, 4... corresponden a los orbitales s, p, d, f, g..."
+},
+{
+pregunta: "¿Qué representa el número cuántico magnético m<sub>l</sub>?",
+respuesta: "Determina la componente z del momento angular: L<sub>z</sub> = m<sub>l</sub>ℏ. Especifica la orientación espacial del orbital. En ausencia de campo magnético, todos los estados con diferente m<sub>l</sub> pero mismo n y l tienen la misma energía (son degenerados)."
+},
+{
+pregunta: "¿Cuántos orbitales hay en cada subcapa s, p, d, f?",
+respuesta: "s (l=0): 1 orbital. p (l=1): 3 orbitales. d (l=2): 5 orbitales. f (l=3): 7 orbitales. En general, hay 2l+1 orbitales en cada subcapa."
+},
+{
+pregunta: "¿Cuál es la función de onda radial del estado base del hidrógeno (1s)?",
+respuesta: "R<sub>10</sub>(r) = 2(1/a<sub>0</sub>)<sup>3/2</sup> e<sup>-r/a₀</sup>, donde a<sub>0</sub> es el radio de Bohr. La probabilidad de encontrar el electrón decrece exponencialmente con la distancia."
+},
+{
+pregunta: "¿En qué distancia es más probable encontrar el electrón en el estado 1s del hidrógeno?",
+respuesta: "La distancia más probable es r = a<sub>0</sub> (radio de Bohr). Esto se obtiene del máximo de la función de distribución radial P(r) = r²|R(r)|². Aunque la densidad de probabilidad es máxima en r = 0, el factor r² favorece distancias finitas."
+},
+{
+pregunta: "¿Qué son los nodos radiales y cuántos tiene un orbital con números cuánticos n y l?",
+respuesta: "Son superficies esféricas donde la función de onda radial se hace cero (ψ = 0, pero r ≠ 0). Un orbital tiene (n - l - 1) nodos radiales. Por ejemplo, 1s tiene 0 nodos, 2s tiene 1 nodo, 2p tiene 0 nodos."
+},
+{
+pregunta: "¿Qué son los nodos angulares y cuántos tiene un orbital según l?",
+respuesta: "Son planos o conos donde la función de onda angular se hace cero. Un orbital tiene l nodos angulares. Los orbitales s (l=0) no tienen nodos angulares, los p tienen 1, los d tienen 2, etc."
+},
+{
+pregunta: "¿Por qué los orbitales p tienen forma de 'mancuerna' o 'pesa'?",
+respuesta: "Porque la función de onda angular Y<sub>1m</sub> para l=1 tiene dependencia con cos θ (para p<sub>z</sub>) o sin θ (para p<sub>x</sub>, p<sub>y</sub>), creando dos lóbulos separados por un plano nodal que pasa por el núcleo."
+},
+{
+pregunta: "¿Por qué no se puede resolver exactamente la ecuación de Schrödinger para átomos con más de un electrón?",
+respuesta: "Debido a las interacciones electrón-electrón (repulsión coulombiana entre todos los pares de electrones). Estas interacciones crean un problema de 'muchos cuerpos' que no tiene solución analítica exacta."
+},
+{
+pregunta: "¿Qué es la aproximación orbital y cómo simplifica el problema multielectrónico?",
+respuesta: "Consiste en expresar la función de onda total como un producto (o determinante) de funciones de un electrón (orbitales). Cada electrón se mueve en un campo promedio creado por el núcleo y los demás electrones."
+},
+{
+pregunta: "¿Qué es la carga nuclear efectiva (Z<sub>ef</sub>)?",
+respuesta: "Es la carga nuclear neta que 'siente' un electrón después de considerar el apantallamiento (shielding) de los otros electrones. Z<sub>ef</sub> = Z - σ, donde Z es el número atómico y σ es la constante de apantallamiento."
+},
+{
+pregunta: "¿Por qué en átomos multielectrónicos la energía depende tanto de n como de l?",
+respuesta: "Porque los electrones más internos apantallan la carga nuclear. Los electrones s penetran más hacia el núcleo que los p, d, f con el mismo n, experimentando mayor Z<sub>ef</sub> y teniendo menor energía. Orden típico: E<sub>ns</sub> < E<sub>np</sub> < E<sub>nd</sub> < E<sub>nf</sub>."
+},
+{
+pregunta: "Escribe el orden general de llenado de orbitales atómicos (regla de Aufbau).",
+respuesta: "1s < 2s < 2p < 3s < 3p < 4s < 3d < 4p < 5s < 4d < 5p < 6s < 4f < 5d < 6p < 7s < 5f < 6d... Se puede recordar con el diagrama diagonal de Moeller."
+},
+{
+pregunta: "¿Qué establece la regla de máxima multiplicidad de Hund?",
+respuesta: "Al llenar orbitales degenerados (misma energía), los electrones ocupan primero cada orbital con spins paralelos antes de aparear. Esto minimiza la repulsión electrón-electrón y maximiza el spin total."
+},
+{
+pregunta: "Escribe la configuración electrónica del oxígeno (Z = 8).",
+respuesta: "1s² 2s² 2p⁴. Los 4 electrones en 2p se distribuyen según Hund: dos orbitales con un electrón cada uno (spins paralelos) y un orbital con dos electrones apareados."
+},
+{
+pregunta: "¿Qué son los electrones de valencia?",
+respuesta: "Son los electrones en la capa más externa (mayor n) de un átomo. Participan en los enlaces químicos y determinan la mayoría de las propiedades químicas del elemento."
+},
+{
+pregunta: "Explica por qué el cromo tiene configuración [Ar] 3d⁵ 4s¹ en lugar de [Ar] 3d⁴ 4s².",
+respuesta: "La configuración 3d⁵ 4s¹ es más estable debido a: 1) La subcapa 3d semillena (todos los orbitales con un electrón) tiene estabilidad extra. 2) Minimiza la repulsión electrón-electrón. 3) La diferencia energética entre 3d y 4s es pequeña."
+},
+{
+pregunta: "¿Qué son las reglas de Slater y para qué sirven?",
+respuesta: "Son un conjunto de reglas empíricas para estimar la constante de apantallamiento σ y calcular Z<sub>ef</sub>. Asignan diferentes contribuciones al apantallamiento según el tipo de electrón (mismo grupo, grupos internos, etc.)."
+},
+{
+pregunta: "¿Qué es el acoplamiento spin-órbita?",
+respuesta: "Es la interacción entre el momento angular orbital (L) y el momento angular de spin (S) del electrón. Esta interacción causa un desdoblamiento pequeño de los niveles de energía, produciendo la estructura fina de las líneas espectrales."
+},
+{
+pregunta: "¿Qué es el momento angular total J en un átomo?",
+respuesta: "J = L + S (suma vectorial del momento angular orbital y de spin). El número cuántico j puede tomar valores j = |l - s|, |l - s| + 1, ..., l + s. Para un electrón: j = l ± 1/2."
+},
+{
+pregunta: "¿Cuántos estados resultan del acoplamiento spin-órbita para un electrón p (l = 1)?",
+respuesta: "Dos estados: j = 3/2 (del acoplamiento paralelo l + s) y j = 1/2 (del acoplamiento antiparalelo l - s). Ejemplo: las líneas D del sodio (589.0 y 589.6 nm) provienen de las transiciones 3p<sub>3/2</sub> → 3s y 3p<sub>1/2</sub> → 3s."
+},
+{
+pregunta: "¿Qué es el efecto Zeeman?",
+respuesta: "Es el desdoblamiento de las líneas espectrales cuando un átomo se coloca en un campo magnético externo. Los niveles con diferente m<sub>l</sub> o m<sub>j</sub> adquieren energías ligeramente diferentes debido a la interacción con el campo."
+},
+{
+pregunta: "¿Cuál es la diferencia entre efecto Zeeman normal y anómalo?",
+respuesta: "Normal: ocurre cuando se ignora el spin (átomos con S = 0), produciendo 2l+1 líneas. Anómalo: ocurre cuando el spin es importante, produciendo patrones más complejos. Históricamente se llamó 'anómalo' pero es el caso general."
+},
+{
+pregunta: "¿Cómo explica la mecánica cuántica la periodicidad de la tabla periódica?",
+respuesta: "La configuración electrónica se repite periódicamente: elementos en el mismo grupo tienen la misma configuración de electrones de valencia. Las propiedades químicas dependen principalmente de estos electrones externos, explicando la periodicidad."
+},
+{
+pregunta: "¿Qué es la energía de ionización y cómo varía en la tabla periódica?",
+respuesta: "Es la energía necesaria para remover un electrón de un átomo gaseoso. Aumenta de izquierda a derecha en un período (mayor Z<sub>ef</sub>) y disminuye de arriba a abajo en un grupo (mayor distancia del núcleo, mayor apantallamiento)."
+},
+{
+pregunta: "¿Qué es la afinidad electrónica?",
+respuesta: "Es la energía liberada cuando un átomo gaseoso neutro gana un electrón. Generalmente aumenta de izquierda a derecha en un período (los halógenos tienen altas afinidades electrónicas) y tiene variaciones complejas en grupos."
+},
+{
+pregunta: "¿Cómo explica la mecánica cuántica el radio atómico y sus tendencias?",
+respuesta: "El radio depende de n (capa de valencia) y Z<sub>ef</sub>. Aumenta hacia abajo en un grupo (mayor n) y disminuye de izquierda a derecha en un período (mayor Z<sub>ef</sub> contrae los orbitales). El radio es aproximadamente ⟨r⟩ ∝ n²/Z<sub>ef</sub>."
+},
+{
+pregunta: "¿Por qué los gases nobles son químicamente inertes según la mecánica cuántica?",
+respuesta: "Tienen configuraciones electrónicas con capas completamente llenas (ns² np⁶), que son excepcionalmente estables. Su alta energía de ionización y baja (o negativa) afinidad electrónica hacen energéticamente desfavorable ganar o perder electrones."
+},
+{
+pregunta: "¿Qué son las reglas de selección en transiciones atómicas?",
+respuesta: "Son reglas que determinan qué transiciones electrónicas están permitidas. Para transiciones de dipolo eléctrico: Δl = ±1, Δm<sub>l</sub> = 0, ±1. Transiciones que violan estas reglas son 'prohibidas' (tienen probabilidad muy baja)."
+},
+{
+pregunta: "¿Por qué existen las reglas de selección?",
+respuesta: "Provienen de la conservación del momento angular: un fotón tiene spin 1, por lo que al ser absorbido o emitido debe cambiar el momento angular del electrón en ±ℏ. Esto requiere Δl = ±1 para transiciones dipolares eléctricas."
+},
+{
+pregunta: "¿Qué tipos de espectroscopía se basan en transiciones cuánticas de los electrones?",
+respuesta: "Espectroscopía UV-Visible (transiciones entre niveles electrónicos), espectroscopía de absorción atómica, espectroscopía de emisión atómica, espectroscopía de fotoemisión (XPS), y espectroscopía de fluorescencia."
+},
+{
+pregunta: "¿Qué es el principio de Franck-Condon y cuándo es importante?",
+respuesta: "Establece que las transiciones electrónicas son tan rápidas (~10<sup>-15</sup> s) que los núcleos no cambian de posición durante la transición. Es crucial para entender espectros vibracionales y la forma de bandas de absorción/emisión en moléculas."
+},
+{
+pregunta: "¿Qué es la fluorescencia y la fosforescencia desde el punto de vista cuántico?",
+respuesta: "Fluorescencia: emisión rápida (~10<sup>-9</sup> s) desde un estado excitado singlete. Fosforescencia: emisión lenta (ms a horas) desde un estado triplete, requiere cambio de spin (prohibido), por eso es más lenta."
+},
+{
+pregunta: "¿Qué es la aproximación de Born-Oppenheimer?",
+respuesta: "Separa el movimiento de los electrones del de los núcleos, asumiendo que los núcleos se mueven mucho más lentamente (son ~2000 veces más pesados). Permite resolver la ecuación de Schrödinger electrónica para posiciones fijas de los núcleos."
+},
+{
+pregunta: "¿Qué es el método de orbitales moleculares (OM)?",
+respuesta: "Describe los electrones en moléculas ocupando orbitales moleculares que se extienden sobre toda la molécula. Los OM se construyen como combinaciones lineales de orbitales atómicos (CLOA o LCAO): ψ<sub>OM</sub> = c₁φ₁ + c₂φ₂ + ..."
+},
+{
+pregunta: "¿Qué son los orbitales moleculares enlazantes y antienlazantes?",
+respuesta: "Enlazantes (σ, π): concentran densidad electrónica entre los núcleos, estabilizan la molécula (E < E<sub>atómicos</sub>). Antienlazantes (σ*, π*): tienen un nodo entre los núcleos, desestabilizan la molécula (E > E<sub>atómicos</sub>)."
+},
+{
+pregunta: "¿Cómo se calcula el orden de enlace en teoría de OM?",
+respuesta: "Orden de enlace = (n° e<sup>-</sup> enlazantes - n° e<sup>-</sup> antienlazantes)/2. Orden 1 = enlace simple, orden 2 = enlace doble, orden 3 = enlace triple. Un orden de 0 significa que la molécula no es estable."
+},
+{
+pregunta: "¿Por qué O₂ es paramagnético según la teoría de OM?",
+respuesta: "La configuración electrónica de O₂ tiene dos electrones desapareados en orbitales π* degenerados (siguiendo la regla de Hund). Estos electrones desapareados dan a O₂ un momento magnético, haciéndolo paramagnético."
+},
+{
+pregunta: "¿Qué es la hibridación y cómo se relaciona con la mecánica cuántica?",
+respuesta: "Es la mezcla matemática de orbitales atómicos para formar nuevos orbitales híbridos que explican mejor la geometría molecular. Ejemplos: sp (lineal), sp² (trigonal plana), sp³ (tetraédrica). Es una construcción matemática útil, no un fenómeno físico real."
+},
+{
+pregunta: "¿Qué es la resonancia desde el punto de vista cuántico?",
+respuesta: "Cuando una molécula no puede describirse adecuadamente con una sola estructura de Lewis, la función de onda real es una combinación (superposición) de varias estructuras contribuyentes. La molécula real es un híbrido de resonancia con energía menor que cualquier estructura individual."
+},
+{
+pregunta: "¿Qué es el método de Hartree-Fock (HF)?",
+respuesta: "Es un método aproximado para resolver la ecuación de Schrödinger multielectrónica. Cada electrón se mueve en un campo promedio (autoconsistente) creado por todos los demás. Ignora la correlación electrónica instantánea."
+},
+{
+pregunta: "¿Qué es la teoría del funcional de la densidad (DFT)?",
+respuesta: "Un método que expresa la energía del sistema como un funcional de la densidad electrónica ρ(r) en lugar de la función de onda completa. Es computacionalmente más eficiente que métodos post-HF y muy usado en química cuántica moderna."
+},
+{
+pregunta: "¿Qué es un conjunto de funciones base (basis set)?",
+respuesta: "Es un conjunto de funciones matemáticas usadas para construir los orbitales moleculares. Ejemplos: funciones tipo Slater (STO), funciones tipo Gauss (GTO). Bases más grandes dan mejor precisión pero mayor costo computacional."
+},
+{
+pregunta: "¿Qué es el entrelazamiento cuántico?",
+respuesta: "Es una correlación cuántica entre partículas donde el estado de una no puede describirse independientemente de la otra, incluso a grandes distancias. La medición de una afecta instantáneamente el estado de la otra. Einstein lo llamó 'acción fantasmal a distancia'."
+},
+{
+pregunta: "¿Qué es el principio de superposición?",
+respuesta: "Si ψ₁ y ψ₂ son estados posibles de un sistema, entonces cualquier combinación lineal αψ₁ + βψ₂ también es un estado posible. Un sistema puede estar en una superposición de estados hasta que se realiza una medición (colapso de la función de onda)."
+},
+{
+pregunta: "¿Qué es la decoherencia cuántica?",
+respuesta: "Es el proceso por el cual un sistema cuántico pierde sus propiedades cuánticas (superposición, interferencia) debido a interacciones con el entorno. Explica la transición del comportamiento cuántico al clásico y por qué no vemos superposiciones macroscópicas."
+},
+{
+pregunta: "¿Qué aplicaciones tecnológicas tiene la mecánica cuántica en la actualidad?",
+respuesta: "Semiconductores y transistores, láseres, LED, resonancia magnética nuclear (RMN), espectroscopía, microscopía de efecto túnel, computación cuántica, criptografía cuántica, relojes atómicos, GPS."
+},
+{
+pregunta: "¿Qué es un qubit en computación cuántica?",
+respuesta: "Es la unidad básica de información cuántica. A diferencia de un bit clásico (0 o 1), un qubit puede estar en superposición: |ψ⟩ = α|0⟩ + β|1⟩, donde |α|² + |β|² = 1. Esto permite procesamiento paralelo masivo."
+},
+{
+pregunta: "¿Qué es la interpretación de Copenhague?",
+respuesta: "La interpretación estándar propuesta por Bohr y Heisenberg. Establece que: 1) La función de onda da probabilidades, no certezas. 2) La medición colapsa la función de onda. 3) No tiene sentido hablar de propiedades antes de la medición. 4) Complementariedad onda-partícula."
+},
+{
+pregunta: "¿Qué es el problema de la medición en mecánica cuántica?",
+respuesta: "El problema de explicar cómo y por qué la medición causa el 'colapso' de la función de onda desde una superposición a un estado definido. ¿Qué cuenta como medición? ¿Cuándo ocurre exactamente el colapso? No hay consenso completo."
+},
+{
+pregunta: "¿Qué propone la interpretación de muchos mundos?",
+respuesta: "Propuesta por Everett (1957), sugiere que no hay colapso: todas las posibilidades en una superposición ocurren en 'ramas' o 'mundos' paralelos que se separan en cada medición. El universo se ramifica continuamente."
+},
+{
+pregunta: "¿Qué es el experimento mental del gato de Schrödinger y qué ilustra?",
+respuesta: "Un gato en una caja está en superposición vivo/muerto según la desintegración de un átomo radiactivo. Ilustra la paradoja de aplicar la mecánica cuántica a objetos macroscópicos y el problema de la medición. Demuestra lo contraintuitivo de la superposición."
+},
+{
+pregunta: "¿Qué son las variables ocultas y la desigualdad de Bell?",
+respuesta: "Teorías de variables ocultas proponen que la mecánica cuántica es incompleta y existen variables 'ocultas' que determinan los resultados. Bell (1964) demostró que estas teorías hacen predicciones diferentes a la MC. Experimentos confirman que la naturaleza viola las desigualdades de Bell, descartando variables ocultas locales."
+},
+{
+pregunta: "¿Cómo explica la mecánica cuántica la estabilidad del enlace covalente H₂?",
+respuesta: "Los dos electrones ocupan un orbital molecular σ enlazante formado por la combinación de orbitales 1s. La densidad electrónica aumenta entre los núcleos, reduciendo la repulsión núcleo-núcleo y creando una región de energía potencial baja que mantiene unidos los átomos."
+},
+{
+pregunta: "¿Qué determina si una molécula absorberá luz visible (será coloreada)?",
+respuesta: "La diferencia de energía entre el HOMO (orbital molecular ocupado más alto) y el LUMO (orbital desocupado más bajo). Si ΔE<sub>HOMO-LUMO</sub> ≈ 1.8-3.1 eV, la molécula absorbe luz visible y aparece coloreada."
+},
+{
+pregunta: "¿Cómo se relaciona la espectroscopía IR con la mecánica cuántica?",
+respuesta: "Las moléculas vibran como osciladores armónicos cuánticos con energías E<sub>v</sub> = (v + 1/2)ℏω. La espectroscopía IR detecta transiciones Δv = ±1, permitiendo identificar grupos funcionales según sus frecuencias vibracionales características."
+},
+{
+pregunta: "¿Qué es la espectroscopía RMN desde la perspectiva cuántica?",
+respuesta: "Detecta transiciones entre niveles de energía del spin nuclear en un campo magnético. Los núcleos con spin (¹H, ¹³C, ³¹P) se alinean con o contra el campo. La radiofrecuencia causa transiciones ΔE = ℏω = γℏB₀, donde γ es la relación giromagnética."
+},
+{
+pregunta: "¿Cómo explica la mecánica cuántica la quiralidad y la actividad óptica?",
+respuesta: "Moléculas quirales no tienen plano de simetría. Sus funciones de onda no son simétricas respecto a reflexión. Interactúan diferentemente con luz polarizada circularmente (que tiene momento angular definido), rotando el plano de polarización."
+},
+{
+pregunta: "¿Qué son las reglas de Woodward-Hoffmann y cuál es su base cuántica?",
+respuesta: "Predicen si reacciones pericíclicas son térmicamente o fotoquímicamente permitidas, basándose en la simetría de los orbitales moleculares. La conservación de simetría orbital determina si la reacción puede proceder con barrera baja (permitida) o alta (prohibida)."
+},
+{
+pregunta: "¿Cómo se relaciona la teoría de ácidos y bases duros y blandos (HSAB) con la mecánica cuántica?",
+respuesta: "Ácidos/bases duros tienen orbitales de frontera con gran diferencia de energía (poco polarizables), favoreciendo interacciones iónicas. Ácidos/bases blandos tienen orbitales de frontera cercanos en energía (muy polarizables), favoreciendo interacciones covalentes según teoría de perturbaciones."
+},
+{
+pregunta: "Resume los postulados fundamentales de la mecánica cuántica.",
+respuesta: "1) El estado se describe por ψ. 2) Observables son operadores hermíticos. 3) Mediciones dan eigenvalores. 4) ⟨A⟩ = ∫ ψ*Âψ dx. 5) La evolución temporal sigue iℏ∂ψ/∂t = Ĥψ. 6) Sistemas idénticos (fermiones/bosones) tienen funciones de onda antisimétrica/simétrica."
+}
+];
+
+
+
+    let tarjetas = [...TARJETAS];
+    let index = 0;
+    let mostrandoPregunta = true;
+
+    const cardContainer = document.getElementById('card'); // Nuevo
+    const cardContent = document.getElementById('card-content');
+    const indicator = document.getElementById('indicator');
+    const counter = document.getElementById('counter');
+    const totalTarjetas = TARJETAS.length;
+
+    function actualizarContador() {
+      counter.textContent = `${index + 1}/${totalTarjetas}`;
+    }
+
+    function mostrarTarjeta() {
+      const contenido = mostrandoPregunta ? tarjetas[index].pregunta : tarjetas[index].respuesta;
+      const etiqueta = mostrandoPregunta ? "Pregunta" : "Respuesta";
+      
+      cardContent.innerHTML = contenido;
+      indicator.textContent = etiqueta;
+      actualizarContador();
+    }
+
+    // El listener permanece en el contenedor de la tarjeta para voltearla
+    cardContainer.addEventListener('click', () => {
+      mostrandoPregunta = !mostrandoPregunta;
+      mostrarTarjeta();
+    });
+
+    function nextCard() {
+      index = (index + 1) % tarjetas.length;
+      mostrandoPregunta = true;
+      mostrarTarjeta();
+    }
+
+    function prevCard() {
+      index = (index - 1 + tarjetas.length) % tarjetas.length;
+      mostrandoPregunta = true;
+      mostrarTarjeta();
+    }
+
+    function shuffleCards() {
+      tarjetas = [...tarjetas].sort(() => Math.random() - 0.5);
+      index = 0;
+      mostrandoPregunta = true;
+      mostrarTarjeta();
+    }
+
+    function resetOrder() {
+      tarjetas = [...TARJETAS];
+      index = 0;
+      mostrandoPregunta = true;
+      mostrarTarjeta();
+    }
+
+    mostrarTarjeta();
+  </script>
+</body>
+</html>
